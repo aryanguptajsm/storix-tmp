@@ -12,7 +12,8 @@ import {
   ArrowUpRight,
   Sparkles,
   Zap,
-  BarChart3
+  BarChart3,
+  ShoppingBag
 } from "lucide-react";
 import { 
   BarChart, 
