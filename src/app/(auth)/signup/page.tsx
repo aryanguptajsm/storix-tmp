@@ -123,7 +123,7 @@ export default function SignupPage() {
                 required
               />
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
                   label="Username"
                   name="username"
@@ -131,6 +131,7 @@ export default function SignupPage() {
                   value={formData.username}
                   onChange={handleChange}
                   icon={<User size={18} />}
+                  className="w-full"
                   required
                 />
                 <Input
@@ -140,6 +141,7 @@ export default function SignupPage() {
                   value={formData.storeName}
                   onChange={handleChange}
                   icon={<Layout size={18} />}
+                  className="w-full"
                   required
                 />
               </div>

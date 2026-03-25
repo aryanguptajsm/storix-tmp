@@ -91,6 +91,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 icon={<Mail size={18} />}
+                className="w-full"
                 required
               />
               <Input
@@ -100,6 +101,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 icon={<Lock size={18} />}
+                className="w-full"
                 required
               />
 
