@@ -42,8 +42,10 @@ export async function signOut() {
 }
 
 let getUserPromise: Promise<any> | null = null;
+let cachedUser: any = null;
 
 export async function getUser() {
+  if (cachedUser) return cachedUser;
   if (getUserPromise) return getUserPromise;
 
   getUserPromise = (async () => {
@@ -53,6 +55,7 @@ export async function getUser() {
         error,
       } = await supabase.auth.getUser();
       if (error) throw error;
+      cachedUser = user;
       return user;
     } catch (err) {
       console.error("getUser error:", err);
