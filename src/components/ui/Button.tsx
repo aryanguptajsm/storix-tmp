@@ -4,7 +4,7 @@ import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "icon";
   loading?: boolean;
 }
 
@@ -35,6 +35,7 @@ export function Button({
     sm: "px-3 py-1.5 text-xs",
     md: "px-5 py-2.5 text-sm",
     lg: "px-7 py-3.5 text-base",
+    icon: "w-10 h-10 p-2",
   };
 
   return (
