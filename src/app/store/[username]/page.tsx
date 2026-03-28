@@ -249,16 +249,18 @@ export default function PublicStorePage() {
               >
                 {/* Image Container */}
                 <div className="relative aspect-[4/5] bg-black/5 flex items-center justify-center overflow-hidden">
-                   {product.image_url ? (
-                     <Image
-                       src={product.image_url}
-                       alt={product.title}
-                       fill
-                       className="object-contain group-hover:scale-110 transition-transform duration-500 p-4"
-                     />
-                   ) : (
-                     <Package className="w-12 h-12 text-muted" />
-                   )}
+                    {product.image_url ? (
+                      <Image
+                        src={product.image_url}
+                        alt={product.title}
+                        fill
+                        loading="lazy"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        className="object-contain group-hover:scale-110 transition-transform duration-500 p-4"
+                      />
+                    ) : (
+                      <Package className="w-12 h-12 text-muted" />
+                    )}
                    
                    {/* Badge */}
                    <div className="absolute top-2 left-2 px-2 py-1 rounded bg-[var(--store-card)] shadow-sm text-[10px] font-black text-[var(--store-primary)] uppercase tracking-tighter z-10">

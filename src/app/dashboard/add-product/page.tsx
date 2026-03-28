@@ -19,7 +19,11 @@ import {
   DollarSign,
   Type,
   Zap,
-  ArrowRight
+  ArrowRight,
+  Upload,
+  Image as ImageIcon,
+  Trash2,
+  Link as LinkIcon
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,6 +38,8 @@ export default function AddProductPage() {
   
   const [productData, setProductData] = useState<any>(null);
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   async function handleScrape() {
     if (!url) return;
@@ -90,6 +96,51 @@ export default function AddProductPage() {
       setGenerating(false);
     }
   }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file.");
+      return;
+    }
+
+    setUploading(true);
+    const supabase = createClient();
+    try {
+      const user = await getUser();
+      if (!user) throw new Error("Authentication failed.");
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `product-images/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+
+      setProductData({ ...productData, image: publicUrl });
+      toast.success("High-fidelity asset uploaded!");
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      toast.error(err.message || "Failed to upload image.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  const handleImageReset = () => {
+    if (productData) {
+      setProductData({ ...productData, image: "" });
+    }
+  };
 
   async function handleSave() {
     if (!productData) {
@@ -200,7 +251,7 @@ export default function AddProductPage() {
       {productData && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-slide-up">
           <div className="lg:col-span-4 space-y-6">
-            <Card className="glass overflow-hidden border-white/10">
+            <Card className="glass overflow-hidden border-white/10 group/preview">
               <CardContent className="p-0">
                 <div className="relative aspect-square bg-white flex items-center justify-center p-8 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5" />
@@ -212,12 +263,45 @@ export default function AddProductPage() {
                       className="object-contain p-8 z-10"
                     />
                   ) : (
-                    <Package className="w-20 h-20 text-muted/10" />
+                    <div className="flex flex-col items-center gap-4 text-muted/20">
+                      <Package className="w-20 h-20" />
+                      <span className="text-xs font-bold uppercase tracking-widest">No Asset Detected</span>
+                    </div>
                   )}
+                  <div className="absolute inset-0 bg-black/0 group-hover/preview:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover/preview:opacity-100 z-20">
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      className="gap-2 rounded-xl"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                    >
+                      {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                      Update Asset
+                    </Button>
+                    {productData.image && (
+                      <Button 
+                        variant="danger" 
+                        size="sm" 
+                        className="h-9 w-9 p-0 rounded-xl"
+                        onClick={handleImageReset}
+                      >
+                        <Trash2 size={14} />
+                      </Button>
+                    )}
+                  </div>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    className="hidden" 
+                    accept="image/*" 
+                    onChange={handleFileUpload} 
+                  />
                   <div className="absolute top-4 left-4 px-3 py-1 rounded-xl glass border-white/10 text-[10px] font-black text-foreground uppercase tracking-widest z-20 shadow-sm">
                     {productData.platform}
                   </div>
                 </div>
+                <div className="p-6 pt-0 space-y-6">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted/60">Unit Status</span>
                     <span className="text-[10px] font-black uppercase tracking-widest text-success bg-success/10 px-2 py-0.5 rounded-full">Detected</span>
@@ -240,6 +324,7 @@ export default function AddProductPage() {
                       </div>
                     )}
                   </div>
+                </div>
               </CardContent>
             </Card>
             
@@ -283,6 +368,23 @@ export default function AddProductPage() {
                     onChange={(e) => setProductData({ ...productData, title: e.target.value })}
                     className="bg-white/5 border-white/5 focus:border-primary/30 font-bold"
                   />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Asset Location (URL)</label>
+                    <div className="flex items-center gap-1 text-[8px] font-bold text-muted/40 uppercase">
+                      <LinkIcon size={10} />
+                      Direct Link
+                    </div>
+                  </div>
+                  <Input
+                    value={productData.image}
+                    onChange={(e) => setProductData({ ...productData, image: e.target.value })}
+                    placeholder="https://example.com/image.jpg"
+                    className="bg-white/5 border-white/5 focus:border-primary/30 font-mono text-xs"
+                  />
+                  <p className="text-[9px] text-muted italic">Pro Tip: High-resolution PNGs with transparent backgrounds look best in the store.</p>
                 </div>
 
                 {aiSuggestions.length > 0 && (

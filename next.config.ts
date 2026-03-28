@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.flipkart.com" },
       { protocol: "https", hostname: "**.cloudinary.com" },
       { protocol: "https", hostname: "**.imgix.net" },
+      { protocol: "https", hostname: "**.supabase.co" },
     ],
   },
 };

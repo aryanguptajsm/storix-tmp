@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Fallback: basic meta extraction
-    if (!title) {
+    if (!title || !image) {
       try {
         const { data: html } = await axios.get(url, {
           timeout: 10000,
@@ -93,16 +93,45 @@ export async function POST(req: NextRequest) {
         });
         const cheerio = await import("cheerio");
         const $ = cheerio.load(html);
-        title = $("title").text().trim() || $('meta[property="og:title"]').attr("content") || "";
-        description =
+        if (!title) title = $("title").text().trim() || $('meta[property="og:title"]').attr("content") || "";
+        if (!description) description =
           $('meta[name="description"]').attr("content") ||
           $('meta[property="og:description"]').attr("content") ||
           "";
-        image =
-          $('meta[property="og:image"]').attr("content") || "";
+        
+        if (!image) {
+           // Try high-fidelity meta tags first
+           image = 
+             $('meta[property="og:image:secure_url"]').attr("content") ||
+             $('meta[property="og:image"]').attr("content") ||
+             $('meta[name="twitter:image"]').attr("content") ||
+             "";
+           
+           // If still no image, look for large images on the page
+           if (!image) {
+             const images: string[] = [];
+             $("img").each((_, img) => {
+               const src = $(img).attr("src");
+               const width = parseInt($(img).attr("width") || "0");
+               const height = parseInt($(img).attr("height") || "0");
+               if (src && !src.includes("sprite") && !src.includes("pixel")) {
+                 if (width > 200 || height > 200 || (!width && !height)) {
+                   images.push(src);
+                 }
+               }
+             });
+             if (images.length > 0) image = images[0];
+           }
+        }
       } catch {
         // Fallback also failed
       }
+    }
+
+    // Clean up image URL (Amazon often has versioning in URLs like ._AC_...)
+    if (image.includes("media-amazon.com/images/I/")) {
+       // Try to get high-res version if version string exists
+       image = image.replace(/\._[A-Z0-9,_]+_\./i, ".");
     }
 
     return NextResponse.json({
