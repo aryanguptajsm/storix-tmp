@@ -127,21 +127,23 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Navigation Tabs */}
-        <div className="lg:col-span-3 space-y-2">
-          {tabs.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => setActiveTab(item.label)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 group ${
-                activeTab === item.label 
-                  ? "bg-primary/10 text-primary-light border border-primary/20" 
-                  : "text-muted hover:text-foreground hover:bg-white/5 border border-transparent"
-              }`}
-            >
-              <item.icon size={18} className={activeTab === item.label ? "text-primary" : "text-muted group-hover:text-primary-light"} />
-              {item.label}
-            </button>
-          ))}
+        <div className="lg:col-span-3">
+          <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 scrollbar-hide no-scrollbar">
+            {tabs.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => setActiveTab(item.label)}
+                className={`flex-shrink-0 lg:w-full flex items-center justify-center lg:justify-start gap-3 px-6 lg:px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 group whitespace-nowrap ${
+                  activeTab === item.label 
+                    ? "bg-primary/10 text-primary-light border border-primary/20 shadow-sm" 
+                    : "text-muted hover:text-foreground hover:bg-white/5 border border-transparent"
+                }`}
+              >
+                <item.icon size={18} className={activeTab === item.label ? "text-primary" : "text-muted group-hover:text-primary-light"} />
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="lg:col-span-9 space-y-8">

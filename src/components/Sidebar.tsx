@@ -144,10 +144,10 @@ export function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Enhanced Responsive Transitions */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-64 bg-surface border-r border-white/5 flex flex-col transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-72 lg:w-64 bg-surface border-r border-border transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
+          mobileOpen ? "translate-x-0 shadow-2xl shadow-primary/20" : "-translate-x-full lg:translate-x-0 shadow-none"
         }`}
       >
         {nav}

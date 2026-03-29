@@ -175,24 +175,23 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-black text-foreground tracking-tight">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight leading-tight">
               Welcome back, {profile?.store_name || "Store Owner"}!
             </h1>
-            <div className="p-1 rounded-md bg-primary/10 text-primary animate-bounce-subtle">
+            <div className="p-1 rounded-md bg-primary/10 text-primary animate-bounce-subtle hidden sm:block">
               <Sparkles size={16} />
             </div>
           </div>
-          <p className="text-muted font-medium">
+          <p className="text-sm md:text-base text-muted font-medium">
             Your affiliate empire is growing. Here's the latest intel.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <Button 
             variant="secondary" 
-            className="gap-2 bg-white/5 border-white/5 hover:bg-white/10 group"
+            className="flex-1 md:flex-initial gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-11 px-4 text-xs md:text-sm font-bold"
             onClick={() => {
               const url = `${window.location.origin}/store/${profile?.username}`;
               navigator.clipboard.writeText(url);
@@ -200,22 +199,22 @@ export default function DashboardPage() {
             }}
           >
             <Copy size={16} />
-            Copy Link
+            <span className="hidden sm:inline">Copy Link</span>
           </Button>
-          <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank">
-            <Button variant="secondary" className="gap-2 bg-white/5 border-white/5 hover:bg-white/10 group">
+          <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 md:flex-initial">
+            <Button variant="secondary" className="w-full gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-11 px-4 text-xs md:text-sm font-bold">
               <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              View Live Store
+              <span className="hidden sm:inline">Live Store</span>
+              <span className="sm:hidden">View</span>
             </Button>
           </Link>
-          <Link href="/dashboard/add-product">
-            <Button className="gap-2 shadow-lg shadow-primary/25 group">
+          <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 md:flex-initial">
+            <Button className="w-full gap-2 shadow-lg shadow-primary/25 group h-11 px-6 text-xs md:text-sm font-black uppercase tracking-wider">
               <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
               Add Product
             </Button>
           </Link>
         </div>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="glass relative overflow-hidden group hover:border-primary/20 transition-all duration-500">
