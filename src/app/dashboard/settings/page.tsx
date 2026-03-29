@@ -27,6 +27,7 @@ import {
   ShoppingBag,
   LayoutGrid
 } from "lucide-react";
+import { SettingsSkeleton } from "@/components/ui/SettingsSkeleton";
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -98,14 +99,7 @@ export default function SettingsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="relative">
-          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse-glow" />
-          <div className="relative animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full shadow-lg shadow-primary/20" />
-        </div>
-      </div>
-    );
+    return <SettingsSkeleton />;
   }
 
   const tabs = [

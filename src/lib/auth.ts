@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
-import { UserProfile } from "./types";
+export type { UserProfile } from "./types";
+import type { UserProfile } from "./types";
 
 let userPromise: Promise<any> | null = null;
 
