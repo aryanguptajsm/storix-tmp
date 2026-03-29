@@ -27,5 +27,7 @@ export async function GET(request: Request) {
   }
 
   // Return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`);
+  const errorMessage = code ? "Failed to exchange auth code" : "No auth code provided";
+  console.error("Auth Callback Failure:", errorMessage);
+  return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errorMessage)}`);
 }

@@ -1,8 +1,10 @@
 export interface UserProfile {
   id: string;
+  email?: string;
   username: string;
   store_name: string;
   store_description?: string;
+  avatar_url?: string | null;
   theme?: string;
   created_at: string;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getUser, getProfile, UserProfile } from "@/lib/auth";
+import { getUser, getProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -18,7 +18,8 @@ import {
   LayoutGrid,
   Activity,
   Copy,
-  Check
+  Check,
+  Settings
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
