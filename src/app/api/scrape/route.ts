@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
+import { createClient } from "@/lib/supabase-server";
 
 export async function POST(req: NextRequest) {
   try {
+    // SECURITY: Authenticate the scraping request
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized access. Command sequence denied." }, { status: 401 });
+    }
+
     const { url } = await req.json();
 
     if (!url) {

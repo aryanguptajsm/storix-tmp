@@ -1,11 +1,7 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { getUser, getProfile } from "@/lib/auth";
-import { createClient } from "@/lib/supabase";
+import React from "react";
+import { createClient } from "@/lib/supabase-server";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { toast } from "sonner";
 import { 
   Plus, 
   MousePointerClick, 
@@ -15,122 +11,89 @@ import {
   Sparkles,
   Zap,
   ArrowRight,
-  LayoutGrid,
-  Activity,
-  Copy,
-  Check,
   Settings
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Skeleton } from "@/components/ui/Skeleton";
-import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
+import { redirect } from "next/navigation";
+import { CopyLinkButton } from "@/components/dashboard/CopyLinkButton";
+import Image from "next/image";
 
-import { UserProfile, Product } from "@/lib/types";
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [configError, setConfigError] = useState(false);
-  const [dbStatus, setDbStatus] = useState<{ productsTable: boolean }>({ productsTable: true });
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    totalClicks: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [recentProducts, setRecentProducts] = useState<Product[]>([]);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    async function loadDashboard() {
-      const supabase = createClient();
-      try {
-        const user = await getUser();
-        if (!user) {
-          router.push("/login");
-          return;
-        }
-        setUser(user);
-
-        // Check if database is initialized
-        const { error: probeError } = await supabase
-          .from("products")
-          .select("id")
-          .limit(1);
-        
-        if (probeError && probeError.code === "PGRST205") {
-          setDbStatus({ productsTable: false });
-          console.error("DATABASE_OFFLINE: 'products' table not found in public schema.");
-        } else {
-          setDbStatus({ productsTable: true });
-        }
-
-        let profile = await getProfile(user.id);
-        
-        // Auto-initialize profile if trigger didn't run or user existed before trigger
-        if (!profile) {
-          console.log("Profile missing, initializing...");
-          const { data: newProfile, error: initError } = await supabase
-            .from("profiles")
-            .insert({
-              id: user.id,
-              username: user.email?.split("@")[0].toLowerCase() + Math.floor(1000 + Math.random() * 9000).toString(),
-              store_name: (user.email?.split("@")[0] || "My") + "'s Store",
-            })
-            .select()
-            .single();
-          
-          if (!initError) profile = newProfile;
-        }
-        
-        // Set profile
-        setProfile(profile);
-
-        // Fetch stats and recent products
-        const [productsRes, clicksRes, recentRes] = await Promise.all([
-          supabase
-            .from("products")
-            .select("*", { count: "exact", head: true })
-            .eq("user_id", user.id),
-          supabase
-            .from("clicks")
-            .select("*", { count: "exact", head: true })
-            .eq("user_id", user.id),
-          supabase
-            .from("products")
-            .select("*")
-            .eq("user_id", user.id)
-            .order("created_at", { ascending: false })
-            .limit(5)
-        ]);
-
-        if (productsRes.error || clicksRes.error) {
-           console.error("Supabase Query Error (likely invalid key):", productsRes.error || clicksRes.error);
-           setConfigError(true);
-        }
-
-        setStats({
-          totalProducts: productsRes.count || 0,
-          totalClicks: clicksRes.count || 0,
-        });
-        setRecentProducts((recentRes.data as Product[]) || []);
-      } catch (err) {
-        console.error("Error loading dashboard:", err);
-        setConfigError(true);
-        toast.error("Failed to load dashboard data");
-      } finally {
-        setLoading(false);
-      }
-
-    }
-
-    loadDashboard();
-  }, [router]);
-
-  if (loading) {
-    return <DashboardSkeleton />;
+  if (!user || userError) {
+    redirect("/login");
   }
+
+  // Check if database is initialized
+  const { error: probeError } = await supabase
+    .from("products")
+    .select("id")
+    .limit(1);
+
+  let configError = false;
+  let productsTableExists = true;
+
+  if (probeError && probeError.code === "PGRST205") {
+    productsTableExists = false;
+  } else if (probeError && probeError.message.includes("Invalid API key")) {
+    configError = true;
+  }
+
+  let profile = null;
+  const { data: existingProfile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  profile = existingProfile;
+
+  // Auto-initialize profile
+  if (!profile && !configError && productsTableExists) {
+    const { data: newProfile, error: initError } = await supabase
+      .from("profiles")
+      .insert({
+        id: user.id,
+        username: user.email?.split("@")[0].toLowerCase() + Math.floor(1000 + Math.random() * 9000).toString(),
+        store_name: (user.email?.split("@")[0] || "My") + "'s Store",
+      })
+      .select()
+      .single();
+    
+    if (!initError) profile = newProfile;
+  }
+
+  // Fetch stats and recent products in parallel
+  const [productsRes, clicksRes, recentRes] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("clicks")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("products")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(5)
+  ]);
+
+  if (productsRes.error || clicksRes.error) {
+     if (productsRes.error?.message.includes("key") || clicksRes.error?.message.includes("key")) {
+       configError = true;
+     }
+  }
+
+  const stats = {
+    totalProducts: productsRes.count || 0,
+    totalClicks: clicksRes.count || 0,
+  };
+  const recentProducts = recentRes.data || [];
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
@@ -154,8 +117,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {!configError && !dbStatus.productsTable && (
-
+      {!configError && !productsTableExists && (
         <div className="p-6 rounded-3xl border border-danger/30 bg-danger/5 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-6 animate-pulse-glow shadow-2xl shadow-danger/10">
           <div className="flex items-center gap-4 text-center md:text-left">
             <div className="w-12 h-12 rounded-2xl bg-danger/20 flex items-center justify-center text-danger flex-shrink-0">
@@ -175,46 +137,36 @@ export default function DashboardPage() {
         </div>
       )}
 
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight leading-tight">
-              Welcome back, {profile?.store_name || "Store Owner"}!
-            </h1>
-            <div className="p-1 rounded-md bg-primary/10 text-primary animate-bounce-subtle hidden sm:block">
-              <Sparkles size={16} />
-            </div>
+      <div className="space-y-1">
+        <div className="flex items-center gap-2 flex-wrap">
+          <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight leading-tight">
+            Welcome back, {profile?.store_name || "Store Owner"}!
+          </h1>
+          <div className="p-1 rounded-md bg-primary/10 text-primary animate-bounce-subtle hidden sm:block">
+            <Sparkles size={16} />
           </div>
-          <p className="text-sm md:text-base text-muted font-medium">
-            Your affiliate empire is growing. Here's the latest intel.
-          </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <Button 
-            variant="secondary" 
-            className="flex-1 md:flex-initial gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-11 px-4 text-xs md:text-sm font-bold"
-            onClick={() => {
-              const url = `${window.location.origin}/store/${profile?.username}`;
-              navigator.clipboard.writeText(url);
-              toast.success("Store link copied to clipboard!");
-            }}
-          >
-            <Copy size={16} />
-            <span className="hidden sm:inline">Copy Link</span>
+        <p className="text-sm md:text-base text-muted font-medium">
+          Your affiliate empire is growing. Here's the latest intel.
+        </p>
+      </div>
+      
+      <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <CopyLinkButton username={profile?.username || ""} />
+        <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 md:flex-initial">
+          <Button variant="secondary" className="w-full gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-11 px-4 text-xs md:text-sm font-bold">
+            <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+            <span className="hidden sm:inline">Live Store</span>
+            <span className="sm:hidden">View</span>
           </Button>
-          <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 md:flex-initial">
-            <Button variant="secondary" className="w-full gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-11 px-4 text-xs md:text-sm font-bold">
-              <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              <span className="hidden sm:inline">Live Store</span>
-              <span className="sm:hidden">View</span>
-            </Button>
-          </Link>
-          <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 md:flex-initial">
-            <Button className="w-full gap-2 shadow-lg shadow-primary/25 group h-11 px-6 text-xs md:text-sm font-black uppercase tracking-wider">
-              <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
-              Add Product
-            </Button>
-          </Link>
-        </div>
+        </Link>
+        <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 md:flex-initial">
+          <Button className="w-full gap-2 shadow-lg shadow-primary/25 group h-11 px-6 text-xs md:text-sm font-black uppercase tracking-wider">
+            <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+            Add Product
+          </Button>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="glass relative overflow-hidden group hover:border-primary/20 transition-all duration-500">
@@ -304,7 +256,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 relative">
                         {product.image_url ? (
-                          <img src={product.image_url} alt="" className="object-contain w-full h-full p-1" />
+                          <Image src={product.image_url} alt="" fill className="object-contain p-1" sizes="40px" />
                         ) : (
                           <Package className="w-full h-full p-2 text-muted/20" />
                         )}
