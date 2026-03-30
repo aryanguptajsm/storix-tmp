@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS public.products (
     image_url TEXT,
     platform TEXT, -- e.g., 'amazon', 'flipkart'
     price TEXT,
+    original_price TEXT,
+    discount_percentage TEXT,
     original_url TEXT NOT NULL,
     affiliate_url TEXT,
     category TEXT,
