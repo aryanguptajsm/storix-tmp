@@ -24,7 +24,11 @@ export async function middleware(request: NextRequest) {
   ) {
     // We only rewrite if updateSession didn't issue a redirect (status 3xx)
     if (res.status === 200) {
-      return NextResponse.rewrite(new URL(`/${currentHost}${url.pathname}${url.search}`, request.url));
+      if (url.pathname === "/") {
+        return NextResponse.rewrite(new URL(`/store/${currentHost}${url.search}`, request.url));
+      } else {
+        return NextResponse.rewrite(new URL(`/store/${currentHost}${url.pathname}${url.search}`, request.url));
+      }
     }
   }
 
