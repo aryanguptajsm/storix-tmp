@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
+import { ChatWidget } from "@/components/ui/ChatWidget";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -35,6 +36,7 @@ export default function RootLayout({
             },
           }}
         />
+        <ChatWidget />
       </body>
     </html>
   );
