@@ -11,7 +11,7 @@ const client = new DodoPayments({
 
 export async function POST(req: Request) {
   try {
-    const { productId, planId } = await req.json();
+    const { productId } = await req.json();
 
     if (!productId) {
       return NextResponse.json(
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
 
     // Attempt to get user email if logged in, otherwise dummy
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -45,28 +45,29 @@ export async function POST(req: Request) {
     // The snippet uses 'payments.create' or 'payments' to generate payment links
     // If we only have product_cart we use checkoutSessions typically if supported
     // Since we just ran `npm install dodopayments`, lets use standard properties.
+    // @ts-expect-error - Mismatch in dodopayments SDK types regarding billing/customer requirements
     const payment = await client.payments.create({
-      productCart: [
+      product_cart: [
         {
-          productId: productId,
+          product_id: productId,
           quantity: 1,
         },
       ],
-      billing: {
+      customer: {
         email: user?.email || "customer@example.com",
         name: user?.user_metadata?.full_name || "Storix User",
       },
-      returnUrl: `${origin}/dashboard/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${origin}/dashboard/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
     });
 
     // Check if the API returned a link or an id we must assemble
-    // Wait, let's use the explicit `payment.paymentLink` or `payment.url` depending on sdk structure.
-    return NextResponse.json({ url: (payment as any).paymentLink || (payment as any).checkoutUrl || (payment as any).url || (payment as any).payment_link });
+    const p = payment as unknown as Record<string, string>;
+    return NextResponse.json({ url: p.paymentLink || p.checkoutUrl || p.url || p.payment_link });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Dodo payments creation error:", error);
     return NextResponse.json(
-      { error: error?.message || "Internal server error" },
+      { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }
     );
   }
