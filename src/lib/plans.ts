@@ -27,6 +27,7 @@ export interface Plan {
   limits: PlanLimits;
   features: string[];
   razorpayPlanId?: string;
+  dodoProductId?: string;
 }
 
 export const PLANS: Record<PlanId, Plan> = {
@@ -92,6 +93,7 @@ export const PLANS: Record<PlanId, Plan> = {
       'Email capture widget',
     ],
     razorpayPlanId: process.env.RAZORPAY_PRO_PLAN_ID,
+    dodoProductId: 'pdt_0NbhRaCdMO2up7ejl9wfZ',
   },
   business: {
     id: 'business',

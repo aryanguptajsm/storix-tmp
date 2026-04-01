@@ -1,0 +1,164 @@
+
+> storix-tmp@0.1.0 lint
+> eslint
+
+
+/home/aryan/storix/src/app/(auth)/login/page.tsx
+  10:22  warning  'Globe' is defined but never used         @typescript-eslint/no-unused-vars
+  48:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  62:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/app/(auth)/signup/page.tsx
+  59:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/app/api/seo/sitemap.xml/route.ts
+   4:27  warning  'req' is defined but never used                @typescript-eslint/no-unused-vars
+  14:19  warning  'products' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/app/dashboard/add-product/page.tsx
+   19:3   warning  'DollarSign' is defined but never used     @typescript-eslint/no-unused-vars
+   24:12  warning  'ImageIcon' is defined but never used      @typescript-eslint/no-unused-vars
+   64:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+   93:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  132:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  170:15  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  183:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/app/dashboard/billing/page.tsx
+    4:29  warning  'CardHeader' is defined but never used            @typescript-eslint/no-unused-vars
+    4:41  warning  'CardTitle' is defined but never used             @typescript-eslint/no-unused-vars
+  163:17  warning  'isDowngrade' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/app/dashboard/builder/page.tsx
+  93:6  warning  React Hook useEffect has a missing dependency: 'loadBlocks'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aryan/storix/src/app/dashboard/earnings/page.tsx
+  5:10  warning  'Button' is defined but never used      @typescript-eslint/no-unused-vars
+  7:3   warning  'DollarSign' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/app/dashboard/edit-product/[id]/page.tsx
+   16:3   warning  'Sparkles' is defined but never used      @typescript-eslint/no-unused-vars
+   19:3   warning  'Trash2' is defined but never used        @typescript-eslint/no-unused-vars
+   21:11  warning  'LinkIcon' is defined but never used      @typescript-eslint/no-unused-vars
+   33:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   64:16  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+   64:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:14  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  101:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  133:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/app/dashboard/page.tsx
+   59:79  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/home/aryan/storix/src/app/dashboard/page.tsx:59:79
+  57 |       .insert({
+  58 |         id: user.id,
+> 59 |         username: user.email?.split("@")[0].toLowerCase() + Math.floor(1000 + Math.random() * 9000).toString(),
+     |                                                                               ^^^^^^^^^^^^^ Cannot call impure function
+  60 |         store_name: (user.email?.split("@")[0] || "My") + "'s Store",
+  61 |       })
+  62 |       .select()  react-hooks/purity
+  150:49  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react/no-unescaped-entities
+
+/home/aryan/storix/src/app/dashboard/settings/page.tsx
+  17:3   warning  'Bell' is defined but never used          @typescript-eslint/no-unused-vars
+  20:3   warning  'ArrowRight' is defined but never used    @typescript-eslint/no-unused-vars
+  69:16  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  90:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/app/dashboard/setup/page.tsx
+  10:3  warning  'CheckCircle2' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/app/store/[username]/page.tsx
+   4:10  warning  'StoreSkeleton' is defined but never used                        @typescript-eslint/no-unused-vars
+  76:92  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/home/aryan/storix/src/app/storix/page.tsx
+  13:3    warning  'Clock' is defined but never used                                @typescript-eslint/no-unused-vars
+  14:3    warning  'Layout' is defined but never used                               @typescript-eslint/no-unused-vars
+  46:25   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  46:52   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  46:107  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  90:65   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  92:27   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/home/aryan/storix/src/components/Sidebar.tsx
+  32:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/components/ThemeProvider.tsx
+  29:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/aryan/storix/src/components/ThemeProvider.tsx:29:7
+  27 |     const savedMode = localStorage.getItem("storix-app-mode") as "light" | "dark";
+  28 |     if (savedMode) {
+> 29 |       setAppMode(savedMode);
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  30 |     } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+  31 |       setAppMode("light");
+  32 |     }  react-hooks/set-state-in-effect
+
+/home/aryan/storix/src/components/store/ProductCard.tsx
+  7:3  warning  'Tag' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/components/store/StoreHeader.tsx
+  4:47  warning  'ChevronLeft' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/components/store/StoreView.tsx
+  62:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/components/store/TrustSection.tsx
+  4:28  warning  'Sparkles' is defined but never used     @typescript-eslint/no-unused-vars
+  4:38  warning  'ShoppingBag' is defined but never used  @typescript-eslint/no-unused-vars
+  4:77  warning  'Globe' is defined but never used        @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/components/ui/ChatWidget.tsx
+   35:10  warning  'userName' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   75:18  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   90:6   warning  React Hook useEffect has a missing dependency: 'messages.length'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+  120:11  error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/home/aryan/storix/src/components/ui/ChatWidget.tsx:120:11
+  118 |     // Add user message
+  119 |     const userMsg: ChatMessage = {
+> 120 |       id: Date.now().toString(),
+      |           ^^^^^^^^^^ Cannot call impure function
+  121 |       role: 'user',
+  122 |       content: messageText.trim(),
+  123 |       timestamp: new Date(),     react-hooks/purity
+  151:14  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/home/aryan/storix/src/components/ui/ChatWidget.tsx:151:14
+  149 |       setMessages(prev => [...prev, response!]);
+  150 |       setIsTyping(false);
+> 151 |     }, 600 + Math.random() * 800);
+      |              ^^^^^^^^^^^^^ Cannot call impure function
+  152 |   };
+  153 |
+  154 |   const handleActionClick = (action: QuickAction) => {  react-hooks/purity
+
+/home/aryan/storix/src/lib/auth.ts
+  5:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aryan/storix/src/lib/middleware.ts
+  1:35  warning  'CookieOptions' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/aryan/storix/src/lib/supabase-server.ts
+  18:20  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  25:20  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 63 problems (27 errors, 36 warnings)
+
