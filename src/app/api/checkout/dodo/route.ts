@@ -67,8 +67,11 @@ export async function POST(req: Request) {
         email: user?.email || "customer@example.com",
         name: user?.user_metadata?.full_name || "Storix User",
       },
+      billing_address: {
+        country: "IN",
+      },
       return_url: `${origin}/dashboard/billing?success=true`,
-    });
+    } as any);
 
     return NextResponse.json({ url: session.checkout_url || "" });
 

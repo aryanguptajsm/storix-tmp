@@ -93,7 +93,7 @@ export const PLANS: Record<PlanId, Plan> = {
       'Email capture widget',
     ],
     razorpayPlanId: process.env.RAZORPAY_PRO_PLAN_ID,
-    dodoProductId: 'pdt_0NbhRaCdMO2up7ejl9wfZ',
+    dodoProductId: process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO || 'pdt_0NbhRaCdMO2up7ejl9wfZ',
   },
   business: {
     id: 'business',
