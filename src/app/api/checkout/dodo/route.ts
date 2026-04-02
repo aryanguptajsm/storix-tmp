@@ -5,10 +5,7 @@ import DodoPayments from "dodopayments";
 
 const isProd = process.env.NODE_ENV === "production";
 
-const client = new DodoPayments({
-  bearerToken: process.env.DODO_API_KEY || "",
-  environment: isProd ? "live_mode" : "test_mode",
-});
+
 
 export async function POST(req: Request) {
   try {
@@ -19,6 +16,11 @@ export async function POST(req: Request) {
         { status: 503 }
       );
     }
+
+    const client = new DodoPayments({
+      bearerToken: process.env.DODO_API_KEY,
+      environment: isProd ? "live_mode" : "test_mode",
+    });
 
     const { productId } = await req.json();
 
@@ -80,11 +82,16 @@ export async function POST(req: Request) {
     const p = payment as unknown as Record<string, string>;
     return NextResponse.json({ url: p.paymentLink || p.checkoutUrl || p.url || p.payment_link });
 
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("Dodo payments creation error:", error);
+    
+    // Bubble up API and validation errors with their correct status codes instead of a generic 500
+    const statusCode = error.status || error.statusCode || 500;
+    const errorMessage = error.message || "An unexpected issue occurred while initiating checkout.";
+    
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Internal server error" },
-      { status: 500 }
+      { error: errorMessage, details: error },
+      { status: statusCode }
     );
   }
 }
