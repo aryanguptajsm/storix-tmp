@@ -167,7 +167,9 @@ export default function SettingsPage() {
                       { id: "default", name: "Default (Shopify-like)", color: "bg-[#FF4D67]", desc: "Clean and high-energy." },
                       { id: "midnight", name: "Midnight (Premium)", color: "bg-[#6C5CE7]", desc: "Sleek and professional." },
                       { id: "minimalist", name: "Minimalist", color: "bg-[#111111]", desc: "Pure white label feel." },
-                      { id: "neon", name: "Cyber Neon", color: "bg-[#00FFD1]", desc: "Futuristic and bold." }
+                      { id: "neon", name: "Cyber Neon", color: "bg-[#00FFD1]", desc: "Futuristic and bold." },
+                      { id: "amazon", name: "Amazon Style (High Profile)", color: "bg-[#FF9900]", desc: "Trusted e-commerce feel." },
+                      { id: "flipkart", name: "Flipkart Style (High Profile)", color: "bg-[#2874F0]", desc: "Vibrant marketplace look." }
                     ].map((themeItem) => (
                       <button
                         key={themeItem.id}
