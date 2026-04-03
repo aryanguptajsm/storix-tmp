@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  compress: true,
   images: {
+    minimumCacheTTL: 86400, // Cache optimized images for 24 hours
     remotePatterns: [
       { protocol: "https", hostname: "**.amazon.com" },
       { protocol: "https", hostname: "**.media-amazon.com" },
@@ -27,3 +29,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+

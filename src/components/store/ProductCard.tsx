@@ -28,9 +28,10 @@ interface ProductCardProps {
   product: Product;
   onBuyNow: (product: Product) => void;
   isLoading?: boolean;
+  priority?: boolean;
 }
 
-export function ProductCard({ product, onBuyNow, isLoading }: ProductCardProps) {
+export function ProductCard({ product, onBuyNow, priority = false }: ProductCardProps) {
   const hasDiscount = product.original_price && product.original_price !== product.price;
   
   return (
@@ -45,6 +46,7 @@ export function ProductCard({ product, onBuyNow, isLoading }: ProductCardProps) 
             src={product.image_url}
             alt={product.title}
             fill
+            priority={priority}
             className="object-contain p-6 scale-95 group-hover:scale-105 transition-transform duration-700 ease-out"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
@@ -120,20 +122,10 @@ export function ProductCard({ product, onBuyNow, isLoading }: ProductCardProps) 
           <Button 
             className="w-full h-14 rounded-2xl bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-xl shadow-[var(--store-primary)]/20 flex items-center justify-center gap-3 font-black text-xs uppercase tracking-[0.2em] group/btn border-none transform active:scale-95 transition-all hover-shine"
             onClick={() => onBuyNow(product)}
-            disabled={isLoading}
           >
-            {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Redirecting...</span>
-              </div>
-            ) : (
-              <>
-                <ShoppingBag size={18} className="group-hover/btn:rotate-12 transition-transform" />
-                <span>Grab This Deal</span>
-                <ExternalLink size={16} className="opacity-50 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-all" />
-              </>
-            )}
+            <ShoppingBag size={18} className="group-hover/btn:rotate-12 transition-transform" />
+            <span>Grab This Deal</span>
+            <ExternalLink size={16} className="opacity-50 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-all" />
           </Button>
         </div>
       </div>

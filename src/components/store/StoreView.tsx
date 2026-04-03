@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { 
   ShoppingBag, 
   ArrowRight, 
@@ -40,30 +40,23 @@ interface StoreViewProps {
 }
 
 export function StoreView({ profile, products }: StoreViewProps) {
-  const [trackingId, setTrackingId] = useState<string | null>(null);
+  const handleBuyNow = (product: Product) => {
 
-  const handleBuyNow = async (product: Product) => {
-    setTrackingId(product.id);
-    try {
-      const res = await fetch("/api/track-click", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: product.id,
-          userId: profile?.id,
-        }),
-      });
-      const data = await res.json();
-      if (data.redirectUrl) {
-        window.open(data.redirectUrl, "_blank");
-      } else {
-        window.open(product.original_url, "_blank");
-      }
-    } catch (err) {
-      window.open(product.original_url, "_blank");
-    } finally {
-      setTrackingId(null);
-    }
+    // Open the product URL IMMEDIATELY — no waiting for the API
+    window.open(product.original_url, "_blank");
+
+    // Fire-and-forget: track the click in the background (non-blocking)
+    fetch("/api/track-click", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productId: product.id,
+        userId: profile?.id,
+        redirectUrl: product.original_url,
+      }),
+    }).catch(() => {
+      // Silently ignore tracking errors — redirect already happened
+    });
   };
 
   return (
@@ -159,7 +152,6 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   key={product.id}
                   product={product}
                   onBuyNow={handleBuyNow}
-                  isLoading={trackingId === product.id}
                 />
               ))}
             </div>

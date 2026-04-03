@@ -1,11 +1,13 @@
 import React from "react";
 import { createClient } from "@/lib/supabase-server";
 import { StoreView } from "@/components/store/StoreView";
-import { StoreSkeleton } from "@/components/ui/StoreSkeleton";
 import { Button } from "@/components/ui/Button";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
+
+// Cache rendered pages for 60s (ISR) — drastically speeds up repeat visits
+export const revalidate = 60;
 
 interface Props {
   params: { username: string };
@@ -37,29 +39,22 @@ export default async function PublicStorePage({ params }: Props) {
   // Normalized username for query robustness
   const normalizedUsername = username.toLowerCase();
 
-  // Fetch Profile and Products in parallel for "Rocket Speed"
-  const [profileRes, productsRes] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("id, store_name, store_description, username, theme")
-      .eq("username", normalizedUsername)
-      .single(),
-    supabase
-      .from("profiles")
-      .select("id")
-      .eq("username", normalizedUsername)
-      .single()
-      .then(async ({ data }) => {
-        if (!data) return { data: [], error: null };
-        return supabase
-          .from("products")
-          .select("*")
-          .eq("user_id", data.id)
-          .order("created_at", { ascending: false });
-      })
-  ]);
+  // Single profile fetch — id is reused for products query (no double roundtrip)
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, store_name, store_description, username, theme")
+    .eq("username", normalizedUsername)
+    .single();
 
-  const profile = profileRes.data;
+  // Only fetch products if we have a valid profile
+  const productsRes = profile
+    ? await supabase
+        .from("products")
+        .select("id, title, image_url, platform, price, original_price, discount_percentage, original_url")
+        .eq("user_id", profile.id)
+        .order("created_at", { ascending: false })
+    : { data: [] };
+
   const products = productsRes.data || [];
 
   if (!profile) {
