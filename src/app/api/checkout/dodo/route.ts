@@ -2,35 +2,53 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import DodoPayments from "dodopayments";
+import type { CheckoutSessionCreateParams } from "dodopayments/resources/checkout-sessions";
+
+// Singleton-like: create the Dodo client once per cold start, not per request
+function getDodoClient(): DodoPayments | null {
+  // The SDK looks for DODO_PAYMENTS_API_KEY by default.
+  // We also support DODO_API_KEY for backward compatibility.
+  const apiKey =
+    process.env.DODO_PAYMENTS_API_KEY ||
+    process.env.DODO_API_KEY;
+
+  if (!apiKey) return null;
+
+  const environment = apiKey.startsWith("test_") ? "test_mode" : "live_mode";
+
+  return new DodoPayments({
+    bearerToken: apiKey,
+    environment,
+    timeout: 15000, // 15s timeout — fail fast instead of hanging
+  });
+}
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.DODO_API_KEY) {
-      console.error("DODO_API_KEY is not configured.");
+    const client = getDodoClient();
+
+    if (!client) {
+      console.error(
+        "Dodo Payments API key is missing. " +
+        "Set DODO_PAYMENTS_API_KEY or DODO_API_KEY in .env.local"
+      );
       return NextResponse.json(
-        { error: "Payment gateway is not currently available." },
+        { error: "Payment gateway is not configured. Please contact support." },
         { status: 503 }
       );
     }
 
-    const apiKey = process.env.DODO_API_KEY;
-    const environment = apiKey.startsWith("test_") ? "test_mode" : "live_mode";
+    const body = await req.json();
+    const { productId, planId } = body;
 
-    const client = new DodoPayments({
-      bearerToken: apiKey,
-      environment: environment,
-    });
-
-    const { productId } = await req.json();
-
-    if (!productId) {
+    if (!productId || typeof productId !== "string") {
       return NextResponse.json(
-        { error: "Product ID is missing." },
+        { error: "A valid Product ID is required." },
         { status: 400 }
       );
     }
 
-    // Attempt to get user email if logged in, otherwise dummy
+    // Get logged-in user email for pre-filling checkout
     const cookieStore = await cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -44,47 +62,82 @@ export async function POST(req: Request) {
       }
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    // Create the session
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
+    // Build the return URL securely
+    const host =
+      req.headers.get("x-forwarded-host") ||
+      req.headers.get("host") ||
+      "localhost:3000";
     const protocol = req.headers.get("x-forwarded-proto") || "http";
     const origin = `${protocol}://${host}`;
 
-    // Note: Dodo Payments might expect 'payments' or 'checkoutSessions' in their newer verisons.
-    // The snippet uses 'payments.create' or 'payments' to generate payment links
-    // If we only have product_cart we use checkoutSessions typically if supported
-    // Since we just ran `npm install dodopayments`, lets use standard properties.
-    // Utilize checkoutSessions API for creating checkout links for products/subscriptions
-    const session = await client.checkoutSessions.create({
+    // Build properly typed checkout session params
+    const sessionParams: CheckoutSessionCreateParams = {
       product_cart: [
         {
           product_id: productId,
           quantity: 1,
         },
       ],
-      customer: {
-        email: user?.email || "customer@example.com",
-        name: user?.user_metadata?.full_name || "Storix User",
-      },
-      billing_address: {
-        country: "IN",
-      },
       return_url: `${origin}/dashboard/billing?success=true`,
-    } as any);
+      cancel_url: `${origin}/pricing`,
+      metadata: {
+        plan_id: planId || "pro",
+        user_id: user?.id || "",
+      },
+    };
 
-    return NextResponse.json({ url: session.checkout_url || "" });
+    // Add customer info if available
+    if (user?.email) {
+      sessionParams.customer = {
+        email: user.email,
+        name: user.user_metadata?.full_name || undefined,
+      };
+    }
 
-  } catch (error: any) {
-    console.error("Dodo payments creation error:", error);
-    
-    // Bubble up API and validation errors with their correct status codes instead of a generic 500
-    const statusCode = error.status || error.statusCode || 500;
-    const errorMessage = error.message || "An unexpected issue occurred while initiating checkout.";
-    
-    return NextResponse.json(
-      { error: errorMessage, details: error },
-      { status: statusCode }
-    );
+    // Add billing address default for Indian customers
+    sessionParams.billing_address = {
+      country: "IN",
+    };
+
+    const session = await client.checkoutSessions.create(sessionParams);
+
+    if (!session.checkout_url) {
+      console.error("Dodo returned no checkout_url:", session);
+      return NextResponse.json(
+        { error: "Payment gateway did not return a checkout URL." },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({
+      url: session.checkout_url,
+      sessionId: session.session_id,
+    });
+  } catch (error: unknown) {
+    console.error("Dodo checkout session creation error:", error);
+
+    // Extract structured error info from Dodo SDK errors
+    if (error && typeof error === "object" && "status" in error) {
+      const apiError = error as { status: number; message?: string };
+      return NextResponse.json(
+        {
+          error:
+            apiError.message ||
+            "Payment provider returned an error. Please try again.",
+        },
+        { status: apiError.status || 500 }
+      );
+    }
+
+    const msg =
+      error instanceof Error
+        ? error.message
+        : "An unexpected error occurred during checkout.";
+
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

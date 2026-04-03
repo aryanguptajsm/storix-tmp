@@ -30,6 +30,10 @@ export default function PricingPage() {
     if (planId === "pro" && plan.dodoProductId) {
       setLoadingPlan(planId);
       try {
+        // 20s timeout to avoid hung requests
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
+
         const res = await fetch("/api/checkout/dodo", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -37,34 +41,33 @@ export default function PricingPage() {
             productId: plan.dodoProductId,
             planId,
           }),
+          signal: controller.signal,
         });
-        
+        clearTimeout(timeout);
+
         const data = await res.json();
-        
+
         if (data.url) {
           window.location.href = data.url;
           return;
-        } else if (data.error) {
-          alert(`Checkout failed: ${data.error}`);
-        } else if (data._links?.payment_link?.href) { // alternative format Dodo uses sometimes
-          window.location.href = data._links.payment_link.href;
-          return;
-        } else if (data.checkoutUrl) {
-           window.location.href = data.checkoutUrl;
-           return;
-        } else {
-           console.log("Unknown Dodo payload:", data);
-           // Fallback to basic link mechanism if available on payload
-           alert(`Failed to redirect to Dodo Checkout Sessions`);
         }
-      } catch (e) {
+
+        // Show error via toast (imported from sonner)
+        const { toast } = await import("sonner");
+        toast.error(data.error || "Failed to start checkout. Please try again.");
+      } catch (e: unknown) {
+        const { toast } = await import("sonner");
+        if (e instanceof DOMException && e.name === "AbortError") {
+          toast.error("Checkout timed out. Please check your connection and try again.");
+        } else {
+          toast.error("Failed to initiate checkout. Please try again.");
+        }
         console.error("Checkout Error:", e);
-        alert("Failed to initiate checkout. Please try again.");
       } finally {
         setLoadingPlan(null);
       }
     } else {
-      // Fallback for business plan if razorpay or default login flow
+      // Fallback for business plan or missing dodoProductId
       window.location.href = `/signup?plan=${planId}`;
     }
   };
