@@ -10,14 +10,8 @@ import { toast } from "sonner";
 import { 
   Settings, 
   User, 
-  Store, 
-  Globe, 
-  Save, 
   Shield, 
   Bell,
-  Sparkles,
-  Zap,
-  ArrowRight,
   Loader2,
   CreditCard,
   Mail,
@@ -25,7 +19,8 @@ import {
   Camera,
   DollarSign,
   ShoppingBag,
-  LayoutGrid
+  Sparkles,
+  Save
 } from "lucide-react";
 import { SettingsSkeleton } from "@/components/ui/SettingsSkeleton";
 
@@ -191,59 +186,6 @@ export default function SettingsPage() {
                     <label className="block text-sm font-bold text-muted uppercase tracking-widest text-[10px]">Access Key</label>
                     <Link href="/auth/reset-password">
                       <Button variant="secondary" className="w-full h-11 gap-2 bg-white/5 border-white/5 hover:bg-white/10">
-                        <Lock size={16} />
-                        Update Security Key
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-            <Card className="glass overflow-hidden">
-              <CardHeader className="p-6 border-b border-white/5 bg-white/[0.01]">
-                <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                     <User size={20} />
-                   </div>
-                   <div>
-                     <CardTitle className="text-lg font-bold">Personal Profile</CardTitle>
-                     <p className="text-xs text-muted font-medium mt-0.5">Manage your identity and contact details.</p>
-                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="flex items-center gap-6">
-                  <div className="relative group">
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl font-black text-white border-2 border-white/5 overflow-hidden">
-                      {profile?.store_name?.[0]?.toUpperCase() || "S"}
-                    </div>
-                    <button className="absolute -bottom-2 -right-2 p-2 rounded-xl bg-surface border border-white/10 text-muted hover:text-primary transition-all shadow-xl">
-                      <Camera size={16} />
-                    </button>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-foreground">{profile?.store_name || "Merchant"}</h4>
-                    <p className="text-sm text-muted">{formData.email}</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-black uppercase tracking-widest">
-                       <Shield size={10} />
-                       Verified account
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
-                  <Input
-                    label="Account Email"
-                    value={formData.email}
-                    disabled
-                    icon={<Mail size={16} />}
-                    className="bg-white/5 border-white/5 opacity-60 cursor-not-allowed"
-                  />
-                  <div className="space-y-1.5">
-                    <label className="block text-sm font-bold text-muted uppercase tracking-widest text-[10px]">Access Key</label>
-                    <Link href="/auth/reset-password">
-                      <Button variant="secondary" className="w-full gap-2 bg-white/5 border-white/5">
                         <Lock size={16} />
                         Update Security Key
                       </Button>
