@@ -63,9 +63,9 @@ export const PLANS: Record<PlanId, Plan> = {
   pro: {
     id: 'pro',
     name: 'Pro',
-    price: 69900, // ₹699
-    priceDisplay: '₹699',
-    currency: 'INR',
+    price: 499, // $4.99
+    priceDisplay: '$4.99',
+    currency: 'USD',
     interval: 'month',
     description: 'For serious affiliate marketers who want to scale.',
     badge: 'Most Popular',
@@ -93,7 +93,7 @@ export const PLANS: Record<PlanId, Plan> = {
       'Email capture widget',
     ],
     razorpayPlanId: process.env.RAZORPAY_PRO_PLAN_ID,
-    dodoProductId: process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO || 'pdt_0NbhRaCdMO2up7ejl9wfZ',
+    dodoProductId: process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_PRO || 'pdt_0NbypC6YbYRrM6MgrSrwk',
   },
   business: {
     id: 'business',

@@ -68,12 +68,13 @@ export async function POST(req: Request) {
     } = await supabase.auth.getUser();
 
     // Build the return URL securely
-    const host =
-      req.headers.get("x-forwarded-host") ||
-      req.headers.get("host") ||
-      "localhost:3000";
-    const protocol = req.headers.get("x-forwarded-proto") || "http";
-    const origin = `${protocol}://${host}`;
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
+    const xProtocol = req.headers.get("x-forwarded-proto");
+    const protocol = xProtocol ? xProtocol.split(',')[0].trim() : "http"; // Robust protocol detection
+    
+    // In production, force HTTPS unless explicitly on localhost
+    const finalProtocol = (host.includes("localhost") || host.includes("127.0.0.1")) ? protocol : "https";
+    const origin = `${finalProtocol}://${host}`;
 
     // Build properly typed checkout session params
     const sessionParams: CheckoutSessionCreateParams = {
@@ -99,10 +100,8 @@ export async function POST(req: Request) {
       };
     }
 
-    // Add billing address default for Indian customers
-    sessionParams.billing_address = {
-      country: "IN",
-    };
+    // Removed hardcoded billing address to support international customers ($4.99 plan)
+    // Dodo Payments hosted checkout will handle country selection
 
     const session = await client.checkoutSessions.create(sessionParams);
 
