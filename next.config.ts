@@ -19,10 +19,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.supabase.co" },
     ],
   },
-  devIndicators: {
-    appIsrStatus: false,
-    buildActivity: false,
-  } as unknown,
+  devIndicators: false,
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts"],
   },

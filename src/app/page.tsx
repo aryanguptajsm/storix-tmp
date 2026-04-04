@@ -78,7 +78,8 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#09090F] selection:bg-[#6C5CE7]/30 selection:text-white overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-[#09090F] selection:bg-[#6C5CE7]/30 selection:text-white overflow-x-hidden noise-overlay">
+
 
       {/* ─── Navigation ─── */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/[0.04]">
@@ -156,29 +157,29 @@ export default function LandingPage() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-[clamp(2.5rem,8vw,6rem)] font-black tracking-tight mb-6 leading-[1.05] animate-fade-in-up animation-delay-100">
+            <h1 className="text-[clamp(2.5rem,8vw,6rem)] font-black tracking-tighter mb-6 leading-[0.95] animate-fade-in-up animation-delay-100">
               <span className="text-white">Build Your Affiliate</span>
               <br />
-              <span className="bg-gradient-to-r from-[#6C5CE7] via-[#A29BFE] to-[#FD79A8] bg-clip-text text-transparent animate-gradient-x">
+              <span className="bg-gradient-to-r from-[#6C5CE7] via-[#A29BFE] to-[#FD79A8] bg-clip-text text-transparent animate-gradient-x text-glow">
                 Storefront in Minutes
               </span>
             </h1>
 
             {/* Subheadline */}
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-white/40 mb-10 animate-fade-in-up animation-delay-200 leading-relaxed font-medium">
+            <p className="max-w-2xl mx-auto text-lg md:text-xl text-white/50 mb-10 animate-fade-in-up animation-delay-200 leading-relaxed font-medium">
               Paste product links, let AI generate high-converting titles, and launch your stunning affiliate store. Start earning from every click.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-300">
               <Link href="/signup">
-                <Button size="lg" className="h-14 px-8 text-base rounded-2xl min-w-[240px] shadow-2xl shadow-primary/30 hover:shadow-primary/50 group">
+                <Button size="lg" className="h-14 px-8 text-base rounded-2xl min-w-[240px] shadow-2xl shadow-primary/30 hover:shadow-primary/50 group hover-shine">
                   Start Building Free
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link href="/store/demo">
-                <Button variant="secondary" size="lg" className="h-14 px-8 text-base rounded-2xl min-w-[200px] border-white/10 hover:border-white/20 backdrop-blur-sm group">
+                <Button variant="secondary" size="lg" className="h-14 px-8 text-base rounded-2xl min-w-[200px] border-white/10 hover:border-white/20 backdrop-blur-md group hover-lift">
                   Live Demo
                   <ArrowUpRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </Button>
@@ -288,17 +289,17 @@ export default function LandingPage() {
               {features.map((feature, i) => (
                 <div
                   key={i}
-                  className="group relative rounded-2xl md:rounded-3xl border border-white/[0.06] bg-white/[0.02] p-8 md:p-10 hover:border-white/[0.12] transition-all duration-500 hover-lift card-3d overflow-hidden"
+                  className="group relative rounded-2xl md:rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 md:p-10 hover:border-primary/20 transition-all duration-500 hover-lift card-3d overflow-hidden glass-morphism"
                 >
                   {/* Hover gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                   <div className="card-3d-inner relative z-10">
                     <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-7 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-xl ${feature.shadow}`}>
                       <feature.icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold mb-3 text-white group-hover:text-white transition-colors">{feature.title}</h3>
-                    <p className="text-white/40 leading-relaxed font-medium">{feature.desc}</p>
+                    <h3 className="text-xl font-bold mb-3 text-white group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
+                    <p className="text-white/50 leading-relaxed font-medium">{feature.desc}</p>
                   </div>
                 </div>
               ))}
@@ -365,7 +366,7 @@ export default function LandingPage() {
                 Your Store, Your Brand,<br />
                 <span className="text-gradient">Everywhere.</span>
               </h2>
-              <p className="text-lg text-white/40 mb-10 leading-relaxed font-medium">
+              <p className="text-lg text-white/50 mb-10 leading-relaxed font-medium">
                 Storix provides a custom subdomain and a blazing fast storefront that looks premium on every device. No design skills required.
               </p>
 
