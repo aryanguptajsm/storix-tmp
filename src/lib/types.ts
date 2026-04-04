@@ -4,6 +4,8 @@ export interface UserProfile {
   username: string;
   store_name: string;
   store_description?: string;
+  store_logo?: string | null;
+
   avatar_url?: string | null;
   theme?: string;
   plan?: string;

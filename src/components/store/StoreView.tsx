@@ -60,7 +60,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
     <ThemeProvider initialTheme={profile.theme}>
       <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/20 scroll-smooth">
 
-      <StoreHeader storeName={profile.store_name} />
+      <StoreHeader storeName={profile.store_name} storeLogo={profile.store_logo} />
 
       {/* ─── Hero Section ─── */}
       <section className="relative pt-28 md:pt-36 pb-16 md:pb-24 px-4 sm:px-6 overflow-hidden bg-[var(--store-card)]">

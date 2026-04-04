@@ -21,10 +21,11 @@ import { ThemeToggle } from "./ui/ThemeToggle";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Manage Store", href: "/dashboard/store", icon: LayoutGrid },
   { label: "Products", href: "/dashboard/products", icon: Package },
   { label: "Earnings", href: "/dashboard/earnings", icon: DollarSign },
   { label: "Billing & Plans", href: "/dashboard/billing", icon: CreditCard },
-  { label: "Store Settings", href: "/dashboard/settings", icon: Settings },
+  { label: "Account Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function Sidebar() {

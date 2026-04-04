@@ -7,9 +7,10 @@ import Link from "next/link";
 
 interface StoreHeaderProps {
   storeName: string;
+  storeLogo?: string | null;
 }
 
-export function StoreHeader({ storeName }: StoreHeaderProps) {
+export function StoreHeader({ storeName, storeLogo }: StoreHeaderProps) {
   return (
     <nav className="sticky top-0 z-[60] w-full bg-[var(--store-card)] shadow-sm border-b border-[var(--store-border)] backdrop-blur-xl bg-opacity-70 transition-all duration-300">
       {/* progress Indicator Mockup */}
@@ -19,8 +20,12 @@ export function StoreHeader({ storeName }: StoreHeaderProps) {
         {/* Left: Logo & Brand */}
         <div className="flex items-center gap-3 group cursor-pointer">
           <div className="relative">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[var(--store-primary)] to-[var(--store-primary)]/60 rounded-xl flex items-center justify-center shadow-xl shadow-[var(--store-primary)]/20 animate-float">
-              <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 text-white" />
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[var(--store-primary)] to-[var(--store-primary)]/60 rounded-xl flex items-center justify-center shadow-xl shadow-[var(--store-primary)]/20 animate-float overflow-hidden">
+              {storeLogo ? (
+                <img src={storeLogo} alt={storeName} className="w-full h-full object-cover" />
+              ) : (
+                <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              )}
             </div>
             <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white border-2 border-[var(--store-primary)] flex items-center justify-center animate-pulse">
                <Sparkles className="w-2 h-2 text-[var(--store-primary)] fill-[var(--store-primary)]" />

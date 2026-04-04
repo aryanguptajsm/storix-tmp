@@ -33,7 +33,7 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("General");
+  const [activeTab, setActiveTab] = useState("Account");
   
   const [formData, setFormData] = useState({
     store_name: "",
@@ -103,7 +103,6 @@ export default function SettingsPage() {
   }
 
   const tabs = [
-    { label: "General", icon: Store },
     { label: "Account", icon: User },
     { label: "Payouts", icon: CreditCard },
     { label: "Security", icon: Shield },
@@ -147,143 +146,60 @@ export default function SettingsPage() {
         </div>
 
         <div className="lg:col-span-9 space-y-8">
-          {activeTab === "General" && (
-            <form onSubmit={handleUpdate} className="space-y-8">
-              <Card className="glass overflow-hidden">
-                <CardHeader className="p-6 border-b border-white/5 bg-white/[0.01]">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <LayoutGrid size={20} />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg font-bold">Visual Themes</CardTitle>
-                      <p className="text-xs text-muted font-medium mt-0.5">Select a signature style for your storefront deployment.</p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[
-                      { id: "default", name: "Default (Shopify-like)", color: "bg-[#FF4D67]", desc: "Clean and high-energy." },
-                      { id: "midnight", name: "Midnight (Premium)", color: "bg-[#6C5CE7]", desc: "Sleek and professional." },
-                      { id: "minimalist", name: "Minimalist", color: "bg-[#111111]", desc: "Pure white label feel." },
-                      { id: "neon", name: "Cyber Neon", color: "bg-[#00FFD1]", desc: "Futuristic and bold." },
-                      { id: "amazon", name: "Amazon Style (High Profile)", color: "bg-[#FF9900]", desc: "Trusted e-commerce feel." },
-                      { id: "flipkart", name: "Flipkart Style (High Profile)", color: "bg-[#2874F0]", desc: "Vibrant marketplace look." }
-                    ].map((themeItem) => (
-                      <button
-                        key={themeItem.id}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, theme: themeItem.id })}
-                        className={`group p-4 rounded-2xl border transition-all duration-300 text-left flex items-start gap-4 ${
-                          formData.theme === themeItem.id 
-                            ? "bg-primary/10 border-primary shadow-lg shadow-primary/5" 
-                            : "bg-white/5 border-white/5 hover:bg-white/[0.08]"
-                        }`}
-                      >
-                        <div className={`w-12 h-12 rounded-xl ${themeItem.color} flex-shrink-0 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                           <div className="w-6 h-6 bg-white/20 rounded-full blur-[2px]" />
-                        </div>
-                        <div className="flex-1">
-                          <h6 className="text-sm font-bold text-foreground">{themeItem.name}</h6>
-                          <p className="text-[10px] text-muted mt-0.5">{themeItem.desc}</p>
-                          {formData.theme === themeItem.id && (
-                            <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/20 text-primary-light text-[8px] font-black uppercase tracking-widest animate-fade-in">
-                              Active Configuration
-                            </div>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="glass overflow-hidden">
-                <CardHeader className="p-6 border-b border-white/5 bg-white/[0.01]">
-                  <div className="flex items-center gap-3">
-                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                       <Store size={20} />
-                     </div>
-                     <div>
-                       <CardTitle className="text-lg font-bold">Store Configuration</CardTitle>
-                       <p className="text-xs text-muted font-medium mt-0.5">Define your public presence and SEO slug.</p>
-                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-8 space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input
-                      label="Store Name"
-                      name="store_name"
-                      placeholder="My Affiliate Store"
-                      value={formData.store_name}
-                      onChange={handleChange}
-                      icon={<Sparkles size={16} />}
-                      className="bg-white/5 border-white/5"
-                    />
-                    <div className="space-y-1.5">
-                      <label className="block text-sm font-bold text-muted uppercase tracking-widest text-[10px]">Store Slug / URL</label>
-                      <div className="relative group">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/30 group-focus-within:text-primary transition-colors">
-                          <Globe size={16} />
-                        </div>
-                        <input
-                          name="username"
-                          value={formData.username}
-                          onChange={handleChange}
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/5 text-foreground font-bold focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
-                          placeholder="my-store-slug"
-                        />
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-muted/20 tracking-tighter uppercase whitespace-nowrap">
-                          .storix.ai
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Textarea
-                    label="Store Description (SEO)"
-                    name="store_description"
-                    placeholder="Describe your store for search engines..."
-                    value={formData.store_description}
-                    onChange={handleChange}
-                    className="bg-white/5 border-white/5 min-h-[120px]"
-                  />
-
-                  <div className="p-4 rounded-2xl bg-secondary/5 border border-secondary/10 flex items-start gap-4">
-                    <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary-light flex-shrink-0">
-                      <Zap size={16} />
-                    </div>
-                    <div className="flex-1">
-                      <h5 className="text-xs font-bold text-foreground">Live Deployment</h5>
-                      <p className="text-[11px] text-muted leading-relaxed mt-1">
-                        Your store is active at <span className="text-secondary-light font-bold">storix.ai/store/{formData.username || "username"}</span>. Changes to your slug will instantly update your public URL.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-muted font-medium">Verify all changes before authorizing deployment.</p>
-                </div>
-                <Button type="submit" className="gap-2 px-8 py-3 shadow-lg shadow-primary/20 group" loading={saving}>
-                  {saving ? (
-                    <Loader2 size={18} className="animate-spin" />
-                  ) : (
-                    <>
-                      <Save size={18} className="group-hover:translate-y-[-1px] transition-transform" />
-                      <span>Authorize Updates</span>
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-          )}
-
           {activeTab === "Account" && (
+            <Card className="glass overflow-hidden shadow-2xl shadow-black/20">
+              <CardHeader className="p-6 border-b border-white/5 bg-white/[0.01]">
+                <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                     <User size={20} />
+                   </div>
+                   <div>
+                     <CardTitle className="text-lg font-bold">Personal Profile</CardTitle>
+                     <p className="text-xs text-muted font-medium mt-0.5">Manage your identity and contact details.</p>
+                   </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-8 space-y-8">
+                <div className="flex items-center gap-6">
+                  <div className="relative group">
+                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl font-black text-white border-2 border-white/5 overflow-hidden">
+                      {profile?.store_name?.[0]?.toUpperCase() || "S"}
+                    </div>
+                    <button className="absolute -bottom-2 -right-2 p-2 rounded-xl bg-surface border border-white/10 text-muted hover:text-primary transition-all shadow-xl">
+                      <Camera size={16} />
+                    </button>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-bold text-foreground">{profile?.store_name || "Merchant"}</h4>
+                    <p className="text-sm text-muted">{formData.email}</p>
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-black uppercase tracking-widest">
+                       <Shield size={10} />
+                       Verified account
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
+                  <Input
+                    label="Account Email"
+                    value={formData.email}
+                    disabled
+                    icon={<Mail size={16} />}
+                    className="bg-white/5 border-white/5 opacity-60 cursor-not-allowed"
+                  />
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-bold text-muted uppercase tracking-widest text-[10px]">Access Key</label>
+                    <Link href="/auth/reset-password">
+                      <Button variant="secondary" className="w-full h-11 gap-2 bg-white/5 border-white/5 hover:bg-white/10">
+                        <Lock size={16} />
+                        Update Security Key
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
             <Card className="glass overflow-hidden">
               <CardHeader className="p-6 border-b border-white/5 bg-white/[0.01]">
                 <div className="flex items-center gap-3">

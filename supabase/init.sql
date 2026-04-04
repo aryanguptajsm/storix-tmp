@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     username TEXT UNIQUE, -- Used for subdomain routing (e.g., username.storix.in)
     store_name TEXT,
     store_description TEXT,
+    store_logo TEXT,
     theme TEXT DEFAULT 'default',
     plan TEXT DEFAULT 'free',
     subscription_id TEXT,
