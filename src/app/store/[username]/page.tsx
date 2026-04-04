@@ -84,12 +84,15 @@ export default async function PublicStorePage({ params }: Props) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-[#09090F] flex flex-col items-center justify-center p-6 text-center noise-overlay">
-        <div className="glass p-10 md:p-14 rounded-[3.5rem] border border-white/10 max-w-xl w-full shadow-2xl relative overflow-hidden">
+      <div className="min-h-screen bg-[#09090F] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        {/* Sub-grid background for the error page */}
+        <div className="absolute inset-0 grid-bg-subtle opacity-20 pointer-events-none" />
+        
+        <div className="glass p-10 md:p-14 rounded-[3.5rem] border border-white/10 max-w-xl w-full shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] relative overflow-hidden perspective-1000 hover-tilt preserve-3d">
           <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/10 rounded-full blur-[80px]" />
           <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/10 rounded-full blur-[80px]" />
           
-          <div className="w-24 h-24 bg-primary/10 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-primary shadow-inner border border-primary/20">
+          <div className="w-24 h-24 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 text-primary shadow-inner border border-primary/20 animate-float-slow">
             <ShoppingBag size={44} />
           </div>
           
@@ -101,24 +104,24 @@ export default async function PublicStorePage({ params }: Props) {
             The coordinates <span className="text-primary font-bold">/{username}</span> don't match any active storefront in our database.
           </p>
           
-          <div className="flex flex-col gap-4 animate-fade-in-up animation-delay-200">
+          <div className="flex flex-col gap-4 animate-fade-in-up animation-delay-200 preserve-3d">
             {isPotentialOwner ? (
-              <Link href="/dashboard/settings" className="w-full">
-                <Button size="lg" className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/30 text-base font-black uppercase tracking-widest gap-3 hover-shine">
+              <Link href="/dashboard/store" className="w-full">
+                <Button size="lg" className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/30 text-base font-black uppercase tracking-widest gap-3 hover-shine hover-tilt transition-all">
                   Claim This URL Now
-                  <Sparkles size={18} />
+                  <Sparkles size={18} className="animate-pulse" />
                 </Button>
               </Link>
             ) : (
               <Link href="/" className="w-full">
-                <Button size="lg" className="w-full h-16 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white shadow-xl text-base font-bold transition-all">
+                <Button size="lg" className="w-full h-16 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white shadow-xl text-base font-bold transition-all hover-lift">
                   Back to Home Base
                 </Button>
               </Link>
             )}
             
-            <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em] mt-4">
-              Verified by Storix Deployment System
+            <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.4em] mt-6">
+              Verified by Storix Fleet Command
             </p>
           </div>
         </div>
