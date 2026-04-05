@@ -18,17 +18,20 @@
   --surface-lighter: #E2E8F0;
   --border: rgba(226, 232, 240, 0.8);
   --muted: #64748B;
+  --primary: #059669;
+  --primary-light: #10B981;
+  --accent: #008B8B;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: #10B981;
-  --color-primary-light: #34D399;
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
   --color-primary-dark: #059669;
   --color-secondary: #00CEC9;
   --color-secondary-light: #55EFC4;
-  --color-accent: #10B981;
+  --color-accent: var(--accent);
   --color-accent-light: #34D399;
   --color-surface: var(--surface);
   --color-surface-light: var(--surface-light);
@@ -38,6 +41,7 @@
   --color-warning: #FDCB6E;
   --color-border: var(--border);
   --color-muted: var(--muted);
+  --color-focus-ring: var(--primary);
   --font-sans: var(--font-jakarta);
   --font-display: var(--font-outfit);
 }
