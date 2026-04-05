@@ -39,6 +39,7 @@
   --color-border: var(--border);
   --color-muted: var(--muted);
   --font-sans: var(--font-jakarta);
+  --font-display: var(--font-outfit);
 }
 
 * {
@@ -56,6 +57,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv05", "cv11";
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit, 'Outfit', sans-serif);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 /* ─── Scrollbar ─── */
@@ -171,6 +179,40 @@ body {
 .animate-shimmer-glass { animation: shimmer-glass 3s ease-in-out infinite; }
 .animate-drift-slow { animation: drift-slow 12s ease-in-out infinite; }
 .animate-mesh-flow { background-size: 400% 400%; animation: mesh-flow 15s ease infinite; }
+
+/* ─── Scroll Reveal Animations ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.reveal-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1);
+}
 
 /* Staggered Delays */
 .animation-delay-100 { animation-delay: 100ms; }
