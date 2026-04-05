@@ -50,8 +50,8 @@ export default function LandingPage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="relative">
-          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse-glow" />
-          <div className="relative animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full shadow-lg shadow-primary/20" />
+          <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full animate-pulse-glow" />
+          <div className="relative animate-spin h-10 w-10 border-4 border-emerald-500 border-t-transparent rounded-full shadow-lg shadow-emerald-500/20" />
         </div>
       </div>
     );
@@ -88,14 +88,14 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-black selection:bg-primary/30 selection:text-white overflow-x-hidden noise-overlay">
+    <div className="flex flex-col min-h-screen bg-black selection:bg-emerald-500/30 selection:text-white overflow-x-hidden noise-overlay">
 
 
       {/* ─── Navigation ─── */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 md:h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-primary/40 group-hover:scale-110 transition-all duration-300">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 group-hover:scale-110 transition-all duration-300">
               <ShoppingBag className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-black bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent tracking-tighter font-display">
@@ -118,7 +118,7 @@ export default function LandingPage() {
               <Button variant="ghost" className="text-white/60 hover:text-white">Sign In</Button>
             </Link>
             <Link href="/signup">
-              <Button className="ml-1 rounded-full px-6 shadow-lg shadow-primary/25">Get Started</Button>
+              <Button className="ml-1 rounded-full px-6 shadow-lg shadow-emerald-500/25 bg-emerald-500 hover:bg-emerald-600">Get Started</Button>
             </Link>
           </div>
 
@@ -144,7 +144,7 @@ export default function LandingPage() {
           {/* Animated Background Layers */}
           <div className="absolute inset-0 -z-10">
             {/* 1. Base Mesh Flow */}
-            <div className="absolute inset-0 mesh-primary opacity-40 animate-mesh-flow" />
+            <div className="absolute inset-0 mesh-emerald opacity-40 animate-mesh-flow" />
             
             {/* 2. Interactive Grid with Mouse Glow */}
             <div 
@@ -157,17 +157,17 @@ export default function LandingPage() {
             
             {/* 3. Sweeping Light Beams */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-0 left-[-20%] w-[140%] h-[2px] bg-gradient-to-r from-transparent via-primary/20 to-transparent animate-beam-sweep" />
-              <div className="absolute bottom-[20%] left-[-20%] w-[140%] h-[2px] bg-gradient-to-r from-transparent via-accent/10 to-transparent animate-beam-sweep animation-delay-2000" />
+              <div className="absolute top-0 left-[-20%] w-[140%] h-[2px] bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent animate-beam-sweep" />
+              <div className="absolute bottom-[20%] left-[-20%] w-[140%] h-[2px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent animate-beam-sweep animation-delay-2000" />
             </div>
 
             {/* 4. Drifting Orbs (Enhanced) */}
             <div 
-              className="absolute top-20 left-[10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] animate-morph transition-transform duration-700 ease-out"
+              className="absolute top-20 left-[10%] w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] animate-morph transition-transform duration-700 ease-out"
               style={{ transform: `translate(${mousePos.x * 0.5}px, ${mousePos.y * 0.5}px)` }}
             />
             <div 
-              className="absolute bottom-10 right-[10%] w-[450px] h-[450px] bg-accent/8 rounded-full blur-[120px] animate-morph animation-delay-400 transition-transform duration-700 ease-out"
+              className="absolute bottom-10 right-[10%] w-[450px] h-[450px] bg-cyan-500/8 rounded-full blur-[120px] animate-morph animation-delay-400 transition-transform duration-700 ease-out"
               style={{ transform: `translate(${mousePos.x * -0.4}px, ${mousePos.y * -0.4}px)` }}
             />
             
@@ -176,18 +176,18 @@ export default function LandingPage() {
               className="absolute top-1/3 right-[12%] opacity-20 animate-float-slow hidden lg:block transition-transform duration-500 ease-out"
               style={{ transform: `translate(${mousePos.x * 1.5}px, ${mousePos.y * 1.5}px) rotate(12deg)` }}
             >
-              <Zap className="w-32 h-32 text-primary filter drop-shadow(0 0 20px rgba(108,92,231,0.3))" />
+              <Zap className="w-32 h-32 text-emerald-400 filter drop-shadow(0 0 20px rgba(16,185,129,0.3))" />
             </div>
             <div 
               className="absolute bottom-1/3 left-[12%] opacity-20 animate-float-delayed hidden lg:block transition-transform duration-500 ease-out"
               style={{ transform: `translate(${mousePos.x * -1.2}px, ${mousePos.y * -1.2}px) rotate(-12deg)` }}
             >
-              <Layers className="w-32 h-32 text-secondary filter drop-shadow(0 0 20px rgba(0,206,201,0.2))" />
+              <Layers className="w-32 h-32 text-cyan-400 filter drop-shadow(0 0 20px rgba(0,206,201,0.2))" />
             </div>
 
             {/* 6. Orbiting particle */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div className="w-2 h-2 rounded-full bg-primary/40 animate-orbit" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500/40 animate-orbit" />
             </div>
           </div>
 
@@ -203,7 +203,7 @@ export default function LandingPage() {
                 </div>
                 <span className="text-sm font-semibold text-white/70">AI-Powered Affiliate Magic</span>
                 <div className="w-px h-4 bg-white/10" />
-                <span className="text-xs font-bold text-primary">New</span>
+                <span className="text-xs font-bold text-emerald-400">New</span>
               </div>
             </ScrollReveal>
 
@@ -310,7 +310,7 @@ export default function LandingPage() {
                     {/* Top bar */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl gradient-primary shadow-lg shadow-primary/20 animate-pulse-glow" />
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/20 shadow-lg shadow-emerald-500/20 animate-pulse-glow" />
                         <div className="space-y-2">
                           <div className="h-3 w-24 bg-white/[0.1] rounded-full" />
                           <div className="h-2 w-16 bg-white/[0.05] rounded-full" />
@@ -318,8 +318,8 @@ export default function LandingPage() {
                       </div>
                       <div className="flex gap-3">
                         <div className="h-9 w-20 bg-white/[0.05] rounded-xl border border-white/5" />
-                        <div className="h-9 w-9 bg-primary/20 rounded-xl border border-primary/20 flex items-center justify-center">
-                          <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                        <div className="h-9 w-9 bg-emerald-500/20 rounded-xl border border-emerald-500/20 flex items-center justify-center">
+                          <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
                         </div>
                       </div>
                     </div>
@@ -329,10 +329,10 @@ export default function LandingPage() {
                       {[1, 2, 3, 4, 5, 6].map(i => (
                         <div 
                           key={i} 
-                          className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 flex flex-col gap-3 hover:bg-white/[0.05] hover:border-primary/30 transition-all group/card"
+                          className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 flex flex-col gap-3 hover:bg-white/[0.05] hover:border-emerald-500/30 transition-all group/card"
                         >
                           <div className={`aspect-video rounded-xl relative overflow-hidden ${
-                            i % 3 === 0 ? 'bg-primary/10' : i % 2 === 0 ? 'bg-accent/10' : 'bg-secondary/10'
+                            i % 3 === 0 ? 'bg-emerald-500/10' : i % 2 === 0 ? 'bg-cyan-500/10' : 'bg-emerald-600/10'
                           }`}>
                             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
                             <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity bg-gradient-to-t from-black/20 to-transparent" />
@@ -343,8 +343,8 @@ export default function LandingPage() {
                           </div>
                           <div className="mt-auto flex justify-between items-center">
                             <div className="h-5 w-12 bg-white/[0.05] rounded-lg" />
-                            <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center">
-                              <ArrowRight className="w-3 h-3 text-primary" />
+                            <div className="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                              <ArrowRight className="w-3 h-3 text-emerald-400" />
                             </div>
                           </div>
                         </div>
@@ -377,9 +377,9 @@ export default function LandingPage() {
 
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16 md:mb-20">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
-                <Layers size={14} className="text-primary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">Core Features</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
+                <Layers size={14} className="text-emerald-400" />
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Core Features</span>
               </div>
               <h2 className="text-3xl md:text-5xl lg:text-6xl font-black mb-5 text-white tracking-tight leading-tight">
                 Scale your earnings<br className="hidden md:block" /> with AI
@@ -500,25 +500,25 @@ export default function LandingPage() {
 
             {/* 3D-style showcase grid */}
             <div className="flex-1 relative w-full max-w-lg">
-              <div className="absolute inset-0 bg-primary/10 blur-[100px] -z-10 animate-morph" />
+              <div className="absolute inset-0 bg-emerald-500/10 blur-[100px] -z-10 animate-morph" />
               <div className="grid grid-cols-2 gap-4" style={{ perspective: "800px" }}>
                 <div className="space-y-4 mt-12">
-                  <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.06] p-5 shadow-2xl hover:border-primary/20 transition-all duration-500 hover:-translate-y-2" style={{ transform: "rotateY(4deg)" }}>
+                  <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.06] p-5 shadow-2xl hover:border-emerald-500/20 transition-all duration-500 hover:-translate-y-2" style={{ transform: "rotateY(4deg)" }}>
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                        <TrendingUp size={16} className="text-primary" />
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                        <TrendingUp size={16} className="text-emerald-400" />
                       </div>
                       <span className="text-xs font-bold text-white/40">Analytics</span>
                     </div>
                     <div className="space-y-2">
                       <div className="h-2 w-full bg-white/[0.04] rounded-full overflow-hidden">
-                        <div className="h-full w-[72%] bg-gradient-to-r from-primary to-primary/60 rounded-full" />
+                        <div className="h-full w-[72%] bg-gradient-to-r from-emerald-500 to-emerald-500/60 rounded-full" />
                       </div>
                       <div className="h-2 w-full bg-white/[0.04] rounded-full overflow-hidden">
                         <div className="h-full w-[58%] bg-gradient-to-r from-cyan-500 to-cyan-500/60 rounded-full" />
                       </div>
                       <div className="h-2 w-full bg-white/[0.04] rounded-full overflow-hidden">
-                        <div className="h-full w-[85%] bg-gradient-to-r from-pink-500 to-pink-500/60 rounded-full" />
+                        <div className="h-full w-[85%] bg-gradient-to-r from-emerald-400 to-emerald-400/60 rounded-full" />
                       </div>
                     </div>
                   </div>
@@ -529,20 +529,20 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.06] p-5 hover:border-pink-500/20 transition-all duration-500 hover:-translate-y-2" style={{ transform: "rotateY(-4deg)" }}>
-                    <div className="aspect-[4/5] rounded-xl bg-gradient-to-br from-pink-500/10 to-purple-500/5 border border-pink-500/10 flex flex-col items-center justify-center gap-3 p-4">
+                  <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.06] p-5 hover:border-cyan-500/20 transition-all duration-500 hover:-translate-y-2" style={{ transform: "rotateY(-4deg)" }}>
+                    <div className="aspect-[4/5] rounded-xl bg-gradient-to-br from-cyan-500/10 to-emerald-500/5 border border-cyan-500/10 flex flex-col items-center justify-center gap-3 p-4">
                       <div className="w-12 h-12 rounded-xl bg-white/[0.04] flex items-center justify-center">
-                        <ShoppingBag size={20} className="text-pink-400/60" />
+                        <ShoppingBag size={20} className="text-cyan-400/60" />
                       </div>
                       <div className="h-2 w-2/3 bg-white/[0.06] rounded-full" />
                       <div className="h-2 w-1/2 bg-white/[0.04] rounded-full" />
-                      <div className="h-6 w-full bg-pink-500/10 rounded-lg mt-2" />
+                      <div className="h-6 w-full bg-cyan-500/10 rounded-lg mt-2" />
                     </div>
                   </div>
-                  <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.06] p-5 hover:border-amber-500/20 transition-all duration-500 hover:-translate-y-2" style={{ transform: "rotateY(-4deg)" }}>
+                  <div className="rounded-2xl bg-[#0A0A0A] border border-white/[0.06] p-5 hover:border-emerald-500/20 transition-all duration-500 hover:-translate-y-2" style={{ transform: "rotateY(-4deg)" }}>
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-[10px] font-bold text-white/30 uppercase">Revenue</span>
-                      <span className="text-xs font-black text-green-400">+24%</span>
+                      <span className="text-xs font-black text-emerald-400">+24%</span>
                     </div>
                     <div className="text-2xl font-black text-white/80">₹12.4K</div>
                     <div className="text-[10px] text-white/20 font-medium mt-1">This month</div>
@@ -553,36 +553,37 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ═══════ CTA ═══════ */}
-        <section className="py-24 md:py-32 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto relative">
-            {/* Glow */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 via-pink-500/10 to-primary/10 rounded-[3.5rem] blur-2xl -z-10" />
+        <ScrollReveal animation="reveal-scale" delay={100}>
+          <section className="py-24 md:py-32 px-4 sm:px-6">
+            <div className="max-w-4xl mx-auto relative">
+              {/* Glow */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-emerald-500/10 rounded-[3.5rem] blur-2xl -z-10" />
 
-            <div className="rounded-[2.5rem] md:rounded-[3rem] p-10 md:p-20 relative overflow-hidden bg-[#0A0A0A] border border-white/[0.06] shadow-2xl text-center">
-              {/* Background decoration */}
-              <div className="absolute top-0 right-0 w-80 h-80 bg-primary/8 rounded-full -translate-y-1/2 translate-x-1/3 blur-[100px]" />
-              <div className="absolute bottom-0 left-0 w-80 h-80 bg-pink-500/8 rounded-full translate-y-1/2 -translate-x-1/3 blur-[100px]" />
-              <div className="absolute inset-0 grid-pattern opacity-30" />
+              <div className="rounded-[2.5rem] md:rounded-[3rem] p-10 md:p-20 relative overflow-hidden bg-[#0A0A0A] border border-white/[0.06] shadow-2xl text-center">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/8 rounded-full -translate-y-1/2 translate-x-1/3 blur-[100px]" />
+                <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-500/8 rounded-full translate-y-1/2 -translate-x-1/3 blur-[100px]" />
+                <div className="absolute inset-0 grid-pattern opacity-30" />
 
-              <div className="relative z-10">
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-black mb-6 text-white leading-tight tracking-tight">
-                  Ready to build your<br />
-                  <span className="text-gradient">passive income?</span>
-                </h2>
-                <p className="text-white/40 text-lg mb-10 max-w-xl mx-auto font-medium">
-                  Join the new era of affiliate marketing. Fast, automated, and AI-powered.
-                </p>
-                <Link href="/signup">
-                  <Button size="lg" className="h-16 px-12 text-lg rounded-2xl shadow-2xl shadow-primary/30 hover:shadow-primary/50 group hover-shine">
-                    Get Started for Free
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+                <div className="relative z-10">
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-black mb-6 text-white leading-tight tracking-tight font-display">
+                    Ready to build your<br />
+                    <span className="text-gradient">passive income?</span>
+                  </h2>
+                  <p className="text-white/40 text-lg mb-10 max-w-xl mx-auto font-medium">
+                    Join the new era of affiliate marketing. Fast, automated, and AI-powered.
+                  </p>
+                  <Link href="/signup">
+                    <Button size="lg" className="h-16 px-12 text-lg rounded-2xl shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/50 group hover-shine font-black">
+                      Get Started for Free
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </ScrollReveal>
       </main>
 
       {/* ═══════ FOOTER ═══════ */}
@@ -590,10 +591,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
                 <ShoppingBag className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xl font-black text-white tracking-tighter">Storix</span>
+              <span className="text-xl font-black text-white tracking-tighter font-display">Storix</span>
             </div>
             <p className="text-white/30 text-sm max-w-xs font-medium">
               The AI-powered platform for affiliate creators to build stunning storefronts in minutes.
