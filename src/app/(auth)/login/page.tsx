@@ -7,7 +7,9 @@ import { signIn, signInWithGoogle } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Mail, Lock, Globe, ArrowRight } from "lucide-react";
+import { Mail, Lock, Globe, ArrowRight, ShieldCheck } from "lucide-react";
+import { TiltCard } from "@/components/ui/TiltCard";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { toast } from "sonner";
 
 const GoogleIcon = () => (
@@ -75,96 +77,109 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md relative z-10 animate-fade-in">
         <div className="text-center mb-8">
-          <div className="inline-block p-3 rounded-2xl bg-surface-light border border-border mb-4 animate-bounce-subtle">
-            <h1 className="text-4xl font-black bg-gradient-to-r from-primary via-primary-light to-secondary bg-clip-text text-transparent tracking-tighter">
-              Storix
-            </h1>
-          </div>
-          <p className="text-muted text-lg font-medium">Welcome back, Captain!</p>
-          <p className="text-muted/60 text-sm mt-1">Ready to scale your affiliate ecosystem?</p>
+          <ScrollReveal animation="reveal-scale">
+            <div className="inline-block p-3 rounded-2xl bg-surface-light border border-border mb-4 animate-bounce-subtle">
+              <h1 className="text-4xl font-black bg-gradient-to-r from-primary via-primary-light to-secondary bg-clip-text text-transparent tracking-tighter font-display">
+                Storix
+              </h1>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <p className="text-white text-2xl font-black tracking-tight font-display">Welcome back, Captain!</p>
+          </ScrollReveal>
+          <ScrollReveal delay={200}>
+            <p className="text-muted/60 text-sm mt-2 font-medium">Ready to scale your affiliate ecosystem?</p>
+          </ScrollReveal>
         </div>
 
-        <Card className="glass border-white/5 shadow-2xl overflow-hidden hover:border-primary/20 transition-colors duration-500">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary opacity-50" />
-          
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xl font-bold">Sign In</CardTitle>
-          </CardHeader>
-          
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <Input
-                label="Email Address"
-                type="email"
-                placeholder="commander@storix.ai"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                icon={<Mail size={18} />}
-                className="w-full"
-                required
-              />
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                icon={<Lock size={18} />}
-                className="w-full"
-                required
-              />
+        <ScrollReveal delay={300} animation="reveal-scale">
+          <TiltCard intensity={10} perspective={1200}>
+            <Card className="glass border-white/5 shadow-2xl overflow-hidden hover:border-primary/20 transition-colors duration-500">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary opacity-80" />
+              
+              <CardHeader className="pb-2">
+                <CardTitle className="text-2xl font-black font-display flex items-center gap-2">
+                  <ShieldCheck className="text-primary w-6 h-6" />
+                  Sign In
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <Input
+                    label="Email Address"
+                    type="email"
+                    placeholder="commander@storix.ai"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    icon={<Mail size={18} />}
+                    className="w-full bg-white/5"
+                    required
+                  />
+                  <Input
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    icon={<Lock size={18} />}
+                    className="w-full bg-white/5"
+                    required
+                  />
 
-              <div className="flex justify-end">
-                <Link href="/auth/forgot-password" title="Recover your password" className="text-[10px] font-black text-primary hover:text-primary-light transition-all uppercase tracking-widest">
-                  Forgot password?
-                </Link>
-              </div>
+                  <div className="flex justify-end">
+                    <Link href="/auth/forgot-password" title="Recover your password" className="text-[10px] font-black text-primary hover:text-primary-light transition-all uppercase tracking-widest">
+                      Forgot password?
+                    </Link>
+                  </div>
 
-              {error && (
-                <div className="p-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm animate-shake">
-                  {error}
+                  {error && (
+                    <div className="p-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-xs font-bold animate-shake">
+                      {error}
+                    </div>
+                  )}
+
+                  <Button type="submit" className="w-full py-7 group text-base font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all" loading={loading}>
+                    <span>Enter Dashboard</span>
+                    <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
+                  </Button>
+                </form>
+
+                <div className="relative my-10">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/5"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-black px-4 text-muted/30 font-black uppercase tracking-widest text-[9px]">Direct Auth Access</span>
+                  </div>
                 </div>
-              )}
 
-              <Button type="submit" className="w-full py-6 group" loading={loading}>
-                <span>Enter Dashboard</span>
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </form>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full py-7 bg-white/5 border-white/5 hover:bg-white/10 transition-all duration-300 font-bold"
+                  onClick={handleGoogleLogin}
+                  loading={googleLoading}
+                >
+                  <div className="mr-3">
+                    <GoogleIcon />
+                  </div>
+                  <span>Continue with Google</span>
+                </Button>
 
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border/50"></div>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-black px-4 text-muted/50 font-bold uppercase tracking-widest text-[10px]">Or continue with</span>
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-full py-6 bg-white/5 border-white/5 hover:bg-white/10 transition-all duration-300"
-              onClick={handleGoogleLogin}
-              loading={googleLoading}
-            >
-              <div className="mr-3">
-                <GoogleIcon />
-              </div>
-              <span>Continue with Google</span>
-            </Button>
-
-            <div className="mt-8 text-center text-sm">
-              <span className="text-muted/60">New to the fleet? </span>
-              <Link
-                href="/signup"
-                className="text-primary hover:text-primary-light font-bold transition-all hover:underline decoration-2 underline-offset-4"
-              >
-                Join Storix
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+                <div className="mt-10 text-center text-sm">
+                  <span className="text-muted/40 font-medium">New to the fleet? </span>
+                  <Link
+                    href="/signup"
+                    className="text-primary hover:text-primary-light font-black transition-all hover:underline decoration-2 underline-offset-4"
+                  >
+                    Join Storix
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </TiltCard>
+        </ScrollReveal>
       </div>
 
       <style jsx global>{`
