@@ -154,18 +154,18 @@ export default function EarningsPage() {
               <AreaChart data={mockData}>
                 <defs>
                   <linearGradient id="colorEarnings" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6C5CE7" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#6C5CE7" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff10" />
                 <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#1E1E2E", border: "1px solid #3D3D5C", borderRadius: "12px", color: "#F1F1F6" }}
-                  itemStyle={{ color: "#6C5CE7" }}
+                  contentStyle={{ backgroundColor: "#0A0A0A", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#F1F1F6" }}
+                  itemStyle={{ color: "var(--color-primary)" }}
                 />
-                <Area type="monotone" dataKey="earnings" stroke="#6C5CE7" strokeWidth={3} fillOpacity={1} fill="url(#colorEarnings)" />
+                <Area type="monotone" dataKey="earnings" stroke="var(--color-primary)" strokeWidth={3} fillOpacity={1} fill="url(#colorEarnings)" />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -186,10 +186,10 @@ export default function EarningsPage() {
                 <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip 
-                   contentStyle={{ backgroundColor: "#1E1E2E", border: "1px solid #3D3D5C", borderRadius: "12px", color: "#F1F1F6" }}
-                   itemStyle={{ color: "#00CEC9" }}
+                   contentStyle={{ backgroundColor: "#0A0A0A", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#F1F1F6" }}
+                   itemStyle={{ color: "var(--color-secondary)" }}
                 />
-                <Bar dataKey="clicks" fill="#00CEC9" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="clicks" fill="var(--color-secondary)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

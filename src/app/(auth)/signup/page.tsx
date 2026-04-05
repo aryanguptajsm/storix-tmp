@@ -172,7 +172,7 @@ export default function SignupPage() {
                 <div className="w-full border-t border-border/50"></div>
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[#1E1E2E] px-4 text-muted/50 font-medium">Or deploy with</span>
+                <span className="bg-black px-4 text-muted/50 font-medium font-bold uppercase tracking-widest text-[10px]">Or deploy with</span>
               </div>
             </div>
 

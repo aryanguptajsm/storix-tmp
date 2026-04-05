@@ -137,7 +137,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-border/50"></div>
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[#1E1E2E] px-4 text-muted/50 font-medium">Or continue with</span>
+                <span className="bg-black px-4 text-muted/50 font-bold uppercase tracking-widest text-[10px]">Or continue with</span>
               </div>
             </div>
 
