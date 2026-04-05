@@ -24,13 +24,19 @@ export async function signIn(email: string, password: string) {
 
 export async function signInWithGoogle(next?: string) {
   userPromise = null;
-  const url = new URL(`${window.location.origin}/auth/callback`);
+  // Use a more robust way to get the callback URL, ensuring it works in all environments
+  const origin = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_SITE_URL || '';
+  const url = new URL(`${origin}/auth/callback`);
   if (next) url.searchParams.set("next", next);
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
       redirectTo: url.toString(),
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
     },
   });
   if (error) throw error;
@@ -53,12 +59,15 @@ export async function getUser() {
     try {
       const { data: { user }, error } = await supabase.auth.getUser();
       if (error) {
-        console.error("getUser error (API):", error);
+        // Only log serious errors, not just "no session"
+        if (error.status !== 401 && error.status !== 403) {
+          console.error("getUser error (API):", error);
+        }
         return null;
       }
       return user;
     } catch (error) {
-       console.error("getUser fetch error:", error);
+       // Silent catch for network errors during initial load
        return null;
     } finally {
       // Clear the promise after a short delay to allow fresh checks later
