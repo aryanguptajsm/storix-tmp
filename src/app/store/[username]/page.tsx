@@ -116,7 +116,7 @@ export default async function PublicStorePage({ params }: Props) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-[#09090F] flex flex-col items-center justify-start py-12 md:py-20 p-6 text-center relative overflow-hidden">
+      <div className="min-h-screen bg-black flex flex-col items-center justify-start py-12 md:py-20 p-6 text-center relative overflow-hidden">
         {/* Sub-grid background for the error page */}
         <div className="absolute inset-0 grid-bg-subtle opacity-20 pointer-events-none" />
         
@@ -133,7 +133,7 @@ export default async function PublicStorePage({ params }: Props) {
           </h1>
           
           <p className="text-white/40 text-lg mb-10 leading-relaxed font-medium animate-fade-in-up animation-delay-100 px-4">
-            We couldn't find a storefront at <span className="text-primary font-bold">/{username}</span>.
+            We couldn&apos;t find a storefront at <span className="text-primary font-bold">/{username}</span>.
             {isPotentialOwner && " But it looks like this could be your new home."}
           </p>
 
