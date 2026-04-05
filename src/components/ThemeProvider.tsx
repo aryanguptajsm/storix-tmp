@@ -22,6 +22,7 @@ export function ThemeProvider({
 }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [appMode, setAppMode] = useState<"light" | "dark">("dark");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("storix-app-mode") as "light" | "dark";
@@ -30,13 +31,15 @@ export function ThemeProvider({
     } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
       setAppMode("light");
     }
+    setMounted(true);
   }, []);
 
   useEffect(() => {
+    if (!mounted) return;
     document.documentElement.setAttribute("data-theme", theme);
     document.documentElement.setAttribute("data-app-theme", appMode);
     localStorage.setItem("storix-app-mode", appMode);
-  }, [theme, appMode]);
+  }, [theme, appMode, mounted]);
 
   const toggleAppMode = () => {
     setAppMode(prev => prev === "light" ? "dark" : "light");

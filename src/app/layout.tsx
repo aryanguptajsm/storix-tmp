@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   keywords: ["affiliate", "store builder", "AI", "passive income", "storix"],
 };
 
+import { CursorFollower } from "@/components/ui/CursorFollower";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,15 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jakarta.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col noise-overlay">
+        <CursorFollower />
         <ThemeProvider>
           {children}
           <Toaster
             position="bottom-right"
             toastOptions={{
               style: {
-                background: "#1E1E2E",
-                border: "1px solid #3D3D5C",
+                background: "#0A0A0A",
+                border: "1px solid rgba(16, 185, 129, 0.2)",
                 color: "#F1F1F6",
               },
             }}
