@@ -18,6 +18,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CopyLinkButton } from "@/components/dashboard/CopyLinkButton";
 import Image from "next/image";
+import { DashboardEntrance } from "@/components/dashboard/DashboardEntrance";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -97,11 +98,16 @@ export default async function DashboardPage() {
   const recentProducts = recentRes.data || [];
 
   return (
-    <div className="space-y-8 pb-12 relative">
-      {/* Background decoration */}
+    <div className="space-y-8 pb-12 relative overflow-hidden min-h-screen">
+      {/* Background Decoration */}
       <div className="absolute inset-0 grid-bg-subtle opacity-30 pointer-events-none -z-10" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10 animate-float-slow" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-[100px] pointer-events-none -z-10 animate-float-delayed" />
       
-      {configError && (
+      <DashboardEntrance />
+
+      <div className="space-y-6 relative z-10">
+        {configError && (
         <div className="p-6 rounded-3xl border border-warning/30 bg-warning/5 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-6 animate-pulse-glow shadow-2xl shadow-warning/10">
           <div className="flex items-center gap-4 text-center md:text-left">
             <div className="w-12 h-12 rounded-2xl bg-warning/20 flex items-center justify-center text-warning flex-shrink-0">
@@ -155,22 +161,22 @@ export default async function DashboardPage() {
         </p>
       </div>
       
-      <div className="flex flex-wrap items-center gap-3 w-full md:w-auto animate-stagger-fade stagger-2">
-        <CopyLinkButton username={profile?.username || ""} />
-        <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 md:flex-initial">
-          <Button variant="secondary" className="w-full gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-11 px-4 text-xs md:text-sm font-bold">
-            <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-            <span className="hidden sm:inline">Live Store</span>
-            <span className="sm:hidden">View</span>
-          </Button>
-        </Link>
-        <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 md:flex-initial">
-          <Button className="w-full gap-2 shadow-lg shadow-primary/25 group h-11 px-6 text-xs md:text-sm font-black uppercase tracking-wider">
-            <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
-            Add Product
-          </Button>
-        </Link>
-      </div>
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto animate-stagger-fade stagger-2">
+          <CopyLinkButton username={profile?.username || ""} />
+          <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 md:flex-initial">
+            <Button variant="secondary" className="w-full gap-2 bg-white/5 border-white/5 hover:bg-white/10 group h-12 px-6 text-xs md:text-sm font-bold rounded-2xl hover:glow-primary transition-all">
+              <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+              <span className="hidden sm:inline">Live Storefront</span>
+              <span className="sm:hidden">View</span>
+            </Button>
+          </Link>
+          <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 md:flex-initial">
+            <Button className="w-full gap-2 shadow-xl shadow-primary/20 group h-12 px-8 text-xs md:text-sm font-black uppercase tracking-widest rounded-2xl hover-lift">
+              <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+              Launch Unit
+            </Button>
+          </Link>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-stagger-fade stagger-3">
         {/* Total Products Card */}
