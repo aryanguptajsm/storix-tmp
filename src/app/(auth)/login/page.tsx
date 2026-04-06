@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Mail, Lock, Globe, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
-import { TiltCard } from "@/components/ui/TiltCard";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -111,148 +111,147 @@ export default function LoginPage() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          <TiltCard intensity={5} perspective={1500}>
-            <Card className="glass border-white/5 shadow-2xl overflow-hidden hover:border-primary/20 transition-all duration-500 glass-premium-animated">
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary opacity-80" />
-              
-              <CardHeader className="pb-2">
-                <CardTitle className="text-2xl font-black font-display flex items-center gap-2">
-                  <ShieldCheck className="text-primary w-6 h-6" />
-                  Sign In
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent>
-                <form onSubmit={handleLogin} className="space-y-5">
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <Input
-                      label="Email Address"
-                      type="email"
-                      placeholder="commander@storix.ai"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      icon={<Mail size={18} />}
-                      className="w-full bg-white/5 border-white/5 focus:glow-primary transition-all"
-                      required
-                    />
-                  </motion.div>
+          <Card className="glass-premium border-white/5 shadow-2xl overflow-hidden hover:border-primary/20 transition-all duration-500 glass-premium-animated">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary opacity-80" />
+            
+            <CardHeader className="pb-2">
+              <CardTitle className="text-2xl font-black font-display flex items-center gap-2">
+                <ShieldCheck className="text-primary w-6 h-6" />
+                Sign In
+              </CardTitle>
+            </CardHeader>
+            
+            <CardContent>
+              <form onSubmit={handleLogin} className="space-y-5">
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <Input
+                    label="Email Address"
+                    type="email"
+                    placeholder="commander@storix.ai"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    icon={<Mail size={18} />}
+                    className="w-full bg-white/5 border-white/5 focus:glow-primary transition-all"
+                    required
+                  />
+                </motion.div>
 
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    <Input
-                      label="Password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      icon={<Lock size={18} />}
-                      className="w-full bg-white/5 border-white/5 focus:glow-primary transition-all"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                    className="flex justify-end"
-                  >
-                    <Link href="/auth/forgot-password" title="Recover your password" className="text-[10px] font-black text-primary hover:text-primary-light transition-all uppercase tracking-widest hover:underline decoration-2 underline-offset-4">
-                      Forgot password?
-                    </Link>
-                  </motion.div>
-
-                  <AnimatePresence mode="wait">
-                    {error && (
-                      <motion.div 
-                        initial={{ opacity: 0, height: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, height: "auto", scale: 1 }}
-                        exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                        className="p-4 rounded-2xl bg-danger/10 border border-danger/20 text-danger text-xs font-bold flex items-start gap-3"
-                      >
-                        <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                        <div className="space-y-1">
-                           <p className="uppercase tracking-wider text-[10px] opacity-70">Authorization Error</p>
-                           <p className="leading-relaxed">
-                             {error.includes("Provider not enabled") 
-                               ? "Google Authentication is not yet activated on this station. Please use your credentials or contact command."
-                               : error}
-                           </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
-                  >
-                    <Button type="submit" className="w-full py-7 group text-base font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover-lift" loading={loading}>
-                      <span>Enter Dashboard</span>
-                      <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
-                    </Button>
-                  </motion.div>
-                </form>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <Input
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    icon={<Lock size={18} />}
+                    className="w-full bg-white/5 border-white/5 focus:glow-primary transition-all"
+                    required
+                  />
+                </motion.div>
 
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9 }}
-                  className="relative my-10"
+                  transition={{ delay: 0.7 }}
+                  className="flex justify-end"
                 >
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-white/5"></div>
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-4 text-muted/30 font-black uppercase tracking-widest text-[9px]">Direct Auth Access</span>
-                  </div>
+                  <Link href="/auth/forgot-password" title="Recover your password" className="text-[10px] font-black text-primary hover:text-primary-light transition-all uppercase tracking-widest hover:underline decoration-2 underline-offset-4">
+                    Forgot password?
+                  </Link>
                 </motion.div>
+
+                <AnimatePresence mode="wait">
+                  {error && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, height: "auto", scale: 1 }}
+                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
+                      className="p-4 rounded-2xl bg-danger/10 border border-danger/20 text-danger text-xs font-bold flex items-start gap-3"
+                    >
+                      <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                         <p className="uppercase tracking-wider text-[10px] opacity-70">Authorization Error</p>
+                         <p className="leading-relaxed">
+                           {error.includes("Provider not enabled") 
+                             ? "Google Authentication is not yet activated on this station. Please use your credentials or contact command."
+                             : error}
+                         </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.0 }}
+                  transition={{ delay: 0.8 }}
                 >
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="w-full py-7 bg-white/5 border-white/5 hover:bg-white/10 transition-all duration-300 font-bold hover:glow-primary"
-                    onClick={handleGoogleLogin}
-                    loading={googleLoading}
-                  >
-                    <div className="mr-3">
-                      <GoogleIcon />
-                    </div>
-                    <span>Continue with Google</span>
+                  <Button type="submit" className="w-full py-7 group text-base font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover-lift" loading={loading}>
+                    <span>Enter Dashboard</span>
+                    <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
                   </Button>
                 </motion.div>
+              </form>
 
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.1 }}
-                  className="mt-10 text-center text-sm"
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+                className="relative my-10"
+              >
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/5"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-4 text-muted/30 font-black uppercase tracking-widest text-[9px]">Direct Auth Access</span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.0 }}
+              >
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full py-7 bg-white/5 border-white/5 hover:bg-white/10 transition-all duration-300 font-bold hover:glow-primary"
+                  onClick={handleGoogleLogin}
+                  loading={googleLoading}
                 >
-                  <span className="text-muted/40 font-medium">New to the fleet? </span>
-                  <Link
-                    href="/signup"
-                    className="text-primary hover:text-primary-light font-black transition-all hover:underline decoration-2 underline-offset-4"
-                  >
-                    Join Storix
-                  </Link>
-                </motion.div>
-              </CardContent>
-            </Card>
-          </TiltCard>
+                  <div className="mr-3">
+                    <GoogleIcon />
+                  </div>
+                  <span>Continue with Google</span>
+                </Button>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.1 }}
+                className="mt-10 text-center text-sm"
+              >
+                <span className="text-muted/40 font-medium">New to the fleet? </span>
+                <Link
+                  href="/signup"
+                  className="text-primary hover:text-primary-light font-black transition-all hover:underline decoration-2 underline-offset-4"
+                >
+                  Join Storix
+                </Link>
+              </motion.div>
+            </CardContent>
+          </Card>
         </motion.div>
+
       </motion.div>
 
       <style jsx global>{`
