@@ -301,7 +301,7 @@ export default function StoreManagementPage() {
                <p className="text-sm text-white/40 font-medium max-w-sm">Synchronize all changes with the production grid to finalize deployment.</p>
             </div>
             <Button 
-              type="Submit"
+              type="submit"
               onClick={handleUpdate}
               className="w-full md:w-auto h-16 px-12 rounded-2xl shadow-2xl shadow-primary/20 group text-sm font-black uppercase tracking-[0.3em] transition-all hover:scale-[1.02] active:scale-95" 
               loading={saving}
