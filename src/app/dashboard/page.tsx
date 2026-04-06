@@ -153,17 +153,17 @@ export default async function DashboardPage() {
           )}
 
           <AnimatedSection delay={0.2}>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight leading-tight italic">
-                    Welcome back, {profile?.store_name || "Store Owner"}!
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 flex-wrap">
+                  <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight italic">
+                    Welcome back, <span className="text-primary-light uppercase tracking-tighter not-italic">{profile?.store_name || "Agent"}</span>
                   </h1>
-                <div className="p-2 rounded-xl bg-primary/10 text-primary animate-bounce-subtle hidden sm:block border border-primary/20">
-                  <Sparkles size={24} />
+                <div className="p-2.5 rounded-2xl bg-primary/10 text-primary animate-float border border-primary/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                  <Sparkles size={26} />
                 </div>
               </div>
-              <p className="text-sm md:text-lg text-muted font-medium">
-                Your affiliate empire is growing. Here's the latest intel.
+              <p className="text-base md:text-xl text-white/40 font-medium max-w-2xl">
+                Your affiliate commerce grid is reaching peak efficiency. Analyzing latest nodes...
               </p>
             </div>
           </AnimatedSection>
@@ -266,36 +266,40 @@ export default async function DashboardPage() {
         </div>
 
         <AnimatedSection delay={0.7}>
-          <Card className="glass overflow-hidden border-primary/20 bg-primary/[0.02] shadow-2xl shadow-primary/5 relative group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-            <div className="p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-              <div className="flex items-center gap-6">
+          <Card className="glass overflow-hidden border-primary/30 bg-primary/[0.03] shadow-2xl shadow-primary/10 relative group hover:bg-primary/[0.05] transition-all duration-700">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            
+            <div className="p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-10 relative z-10">
+              <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="relative">
-                  <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 animate-float-slow transition-transform group-hover:scale-110 duration-500">
-                    <Globe size={40} />
+                  <div className="w-24 h-24 rounded-[2rem] bg-primary/20 flex items-center justify-center text-primary border border-primary/30 animate-float-slow transition-all group-hover:scale-110 group-hover:rotate-3 duration-700 shadow-2xl shadow-primary/20">
+                    <Globe size={48} />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-success border-4 border-[#09090F] animate-pulse" />
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-success border-4 border-[#09090F] shadow-[0_0_15px_#10B981] animate-pulse" />
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                     <h3 className="text-2xl font-black text-white italic">Live Station Status</h3>
-                     <span className="px-3 py-1 rounded-lg bg-success/20 text-success text-[10px] font-black uppercase tracking-[0.2em]">Online</span>
+                <div className="space-y-3 text-center md:text-left">
+                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                     <h3 className="text-3xl font-black text-white italic tracking-tight">Main Grid Active</h3>
+                     <div className="flex justify-center md:justify-start">
+                        <span className="px-4 py-1.5 rounded-full bg-success/20 text-success text-[11px] font-black uppercase tracking-[0.25em] border border-success/30 shadow-[0_0_10px_rgba(16,185,129,0.1)]">Sync Synchronized</span>
+                     </div>
                   </div>
-                  <p className="text-sm md:text-base text-muted/60 font-medium max-w-md">
-                     Your storefront is currently active at your coordinates. All systems functional.
+                  <p className="text-base text-white/40 font-medium max-w-md leading-relaxed">
+                     Your flagship storefront is broadcasting at maximum signal strength. All product nodes are healthy.
                   </p>
                 </div>
               </div>
               
-              <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-4">
-                <div className="w-full sm:w-auto p-4 px-6 rounded-2xl bg-black/40 border border-white/5 font-mono text-base text-primary-light flex items-center justify-between gap-6 shadow-inner">
-                   <span className="opacity-40">/store/</span>
+              <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-5">
+                <div className="w-full lg:w-auto p-5 px-8 rounded-2xl bg-black/60 border border-white/10 font-mono text-lg text-primary-light flex items-center justify-between gap-8 shadow-inner group-hover:border-primary/30 transition-colors">
+                   <span className="opacity-30">/store/</span>
                    <span className="font-black tracking-tight">{profile?.username || "loading..."}</span>
                 </div>
                 <Link href={`/store/${profile?.username}`} target="_blank" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto h-14 rounded-2xl bg-primary px-10 font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:bg-primary-light hover:scale-[1.02] active:scale-95 group">
+                  <Button className="w-full sm:w-auto h-20 rounded-[2rem] bg-primary px-12 font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 transition-all hover:bg-primary-light hover:scale-105 active:scale-95 group text-sm">
                      <span>Enter Station</span>
-                     <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                     <ArrowRight size={20} className="ml-3 group-hover:translate-x-2 transition-transform duration-500" />
                   </Button>
                 </Link>
               </div>

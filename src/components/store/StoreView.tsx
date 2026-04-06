@@ -147,7 +147,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
             <motion.div 
                initial={{ opacity: 0, scale: 0.9 }}
                animate={{ opacity: 1, scale: 1 }}
-               transition={{ duration: 0.8, cubicBezier: [0.16, 1, 0.3, 1], delay: 0.5 }}
+               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
                className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-12"
             >
               <Link href="#products">
