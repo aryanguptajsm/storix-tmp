@@ -28,6 +28,8 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedSection } from "@/components/dashboard/DashboardEntrance";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -190,286 +192,349 @@ export default function AddProductPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-24">
-      <div className="flex items-center justify-between">
-        <Link href="/dashboard/products" className="group">
-          <Button variant="ghost" size="sm" className="gap-2 text-muted hover:text-white transition-colors">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Inventory Control
-          </Button>
-        </Link>
-        <div className="flex items-center gap-3">
-           <Zap className="text-secondary animate-pulse-glow" size={20} />
-           <h1 className="text-3xl font-black tracking-tight">Launch Product</h1>
-        </div>
-      </div>
-
-      <Card className="glass relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-           <Globe size={120} />
-        </div>
-        <CardHeader className="p-8 pb-4">
-          <CardTitle className="text-xl font-bold flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-primary/10 text-primary">
-              <Globe className="w-6 h-6" />
-            </div>
-            Universal Importer
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-8 pt-0 space-y-6">
-          <p className="text-muted font-medium max-w-xl leading-relaxed">
-            Specify a target URL from any affiliate-enabled platform. Our AI will automatically extract high-fidelity assets and metadata.
-          </p>
-          <div className="flex flex-col md:flex-row gap-3">
-            <div className="relative flex-1 group/input">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/30 group-focus-within/input:text-primary transition-colors">
-                <Search size={18} />
-              </div>
-              <input
-                placeholder="Paste product link (Amazon, Etsy, Flipkart...)"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/5 text-foreground font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted/30"
-              />
-            </div>
-            <Button 
-              onClick={handleScrape} 
-              disabled={scraping || !url}
-              className="gap-3 px-8 h-auto py-3.5 shadow-xl shadow-primary/10 relative overflow-hidden group/btn min-w-[180px]"
-            >
-              {scraping ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <Sparkles size={18} className="group-hover/btn:rotate-12 transition-transform" />
-                  <span className="font-bold">Gather Intel</span>
-                </>
-              )}
+      <AnimatedSection delay={0.1}>
+        <div className="flex items-center justify-between">
+          <Link href="/dashboard/products" className="group">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted hover:text-white transition-all font-black uppercase tracking-widest">
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              Inventory Control
             </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {productData && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-slide-up">
-          <div className="lg:col-span-4 space-y-6">
-            <Card className="glass overflow-hidden border-white/10 group/preview">
-              <CardContent className="p-0">
-                <div className="relative aspect-square bg-white flex items-center justify-center p-8 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5" />
-                  {productData.image ? (
-                    <Image
-                      src={productData.image}
-                      alt="Intelligence preview"
-                      fill
-                      className="object-contain p-8 z-10"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center gap-4 text-muted/20">
-                      <Package className="w-20 h-20" />
-                      <span className="text-xs font-bold uppercase tracking-widest">No Asset Detected</span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/0 group-hover/preview:bg-black/40 transition-all flex items-center justify-center gap-2 opacity-0 group-hover/preview:opacity-100 z-20">
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      className="gap-2 rounded-xl"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploading}
-                    >
-                      {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
-                      Update Asset
-                    </Button>
-                    {productData.image && (
-                      <Button 
-                        variant="danger" 
-                        size="sm" 
-                        className="h-9 w-9 p-0 rounded-xl"
-                        onClick={handleImageReset}
-                      >
-                        <Trash2 size={14} />
-                      </Button>
-                    )}
-                  </div>
-                  <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    className="hidden" 
-                    accept="image/*" 
-                    onChange={handleFileUpload} 
-                  />
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-xl glass border-white/10 text-[10px] font-black text-foreground uppercase tracking-widest z-20 shadow-sm">
-                    {productData.platform}
-                  </div>
-                </div>
-                <div className="p-6 pt-0 space-y-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted/60">Unit Status</span>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-success bg-success/10 px-2 py-0.5 rounded-full">Detected</span>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-muted/60">Deal Price</span>
-                      <span className="text-2xl font-black text-[#FF4D67] tracking-tighter">{productData.price || "N/A"}</span>
-                    </div>
-                    {productData.originalPrice && (
-                      <div className="flex items-center justify-between opacity-60">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted/60">List Price</span>
-                        <span className="text-sm font-bold text-slate-400 line-through">{productData.originalPrice}</span>
-                      </div>
-                    )}
-                    {productData.discountPercentage && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted/60">Savings</span>
-                        <span className="text-xs font-black text-green-500 bg-green-500/10 px-2 py-1 rounded-lg">-{productData.discountPercentage}% OFF</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Link href={productData.originalUrl || url} target="_blank" className="block group/link">
-              <div className="flex items-center justify-center gap-2 p-4 rounded-2xl glass border-white/5 hover:border-primary/20 transition-all text-xs font-bold text-muted group-hover/link:text-foreground">
-                <ExternalLink size={14} className="group-hover/link:rotate-12 transition-transform" />
-                Verify Source Listing
-              </div>
-            </Link>
-          </div>
-
-          <div className="lg:col-span-8 space-y-6">
-            <Card className="glass overflow-hidden border-white/10">
-              <CardHeader className="p-6 pb-2 border-b border-white/5 bg-white/[0.01]">
-                <CardTitle className="text-lg font-bold flex items-center gap-3">
-                  <div className="p-1.5 rounded-lg bg-secondary/10 text-secondary">
-                    <Type className="w-5 h-5" />
-                  </div>
-                  Asset Optimization
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Display Title</label>
-                    <button
-                      onClick={handleGenerateTitle}
-                      disabled={generating}
-                      className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-secondary hover:text-secondary-light transition-colors group/ai"
-                    >
-                      {generating ? (
-                        <Loader2 size={12} className="animate-spin" />
-                      ) : (
-                        <Sparkles size={12} className="group-hover/ai:rotate-12 transition-transform" />
-                      )}
-                      AI Power-Up
-                    </button>
-                  </div>
-                  <Input
-                    value={productData.title}
-                    onChange={(e) => setProductData({ ...productData, title: e.target.value })}
-                    className="bg-white/5 border-white/5 focus:border-primary/30 font-bold"
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Asset Location (URL)</label>
-                    <div className="flex items-center gap-1 text-[8px] font-bold text-muted/40 uppercase">
-                      <LinkIcon size={10} />
-                      Direct Link
-                    </div>
-                  </div>
-                  <Input
-                    value={productData.image}
-                    onChange={(e) => setProductData({ ...productData, image: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
-                    className="bg-white/5 border-white/5 focus:border-primary/30 font-mono text-xs"
-                  />
-                  <p className="text-[9px] text-muted italic">Pro Tip: High-resolution PNGs with transparent backgrounds look best in the store.</p>
-                </div>
-
-                {aiSuggestions.length > 0 && (
-                  <div className="p-6 bg-secondary/5 rounded-3xl border border-secondary/10 space-y-4 animate-fade-in relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12 pointer-events-none">
-                       <Sparkles size={40} className="text-secondary" />
-                    </div>
-                    <div className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] flex items-center gap-2 relative z-10">
-                      AI Variant Generation
-                    </div>
-                    <div className="grid grid-cols-1 gap-2 relative z-10">
-                      {aiSuggestions.map((title, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            setProductData({ ...productData, title });
-                          }}
-                          className={`text-sm text-left p-4 rounded-xl border transition-all duration-300 flex items-center justify-between group/suggestion ${
-                            productData.title === title 
-                              ? "bg-secondary/20 border-secondary text-white shadow-lg shadow-secondary/10" 
-                              : "border-white/5 bg-white/[0.02] text-muted hover:border-secondary/40 hover:text-white"
-                          }`}
-                        >
-                          <span className="font-medium line-clamp-1">{title}</span>
-                          <div className={`p-1 rounded bg-secondary/20 opacity-0 group-hover/suggestion:opacity-100 transition-opacity ${productData.title === title ? 'opacity-100' : ''}`}>
-                             <Zap size={10} fill="currentColor" />
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Deal Price</label>
-                    <Input
-                      value={productData.price}
-                      onChange={(e) => setProductData({ ...productData, price: e.target.value })}
-                      className="bg-white/5 border-white/5 focus:border-primary/30 font-bold"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Original Price</label>
-                    <Input
-                      value={productData.originalPrice}
-                      onChange={(e) => setProductData({ ...productData, originalPrice: e.target.value })}
-                      className="bg-white/5 border-white/5 focus:border-primary/30 font-bold"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Landing Description</label>
-                  <textarea
-                    rows={4}
-                    value={productData.description}
-                    onChange={(e) => setProductData({ ...productData, description: e.target.value })}
-                    className="w-full rounded-2xl bg-white/5 border border-white/5 p-4 text-sm font-medium text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary/40 outline-none transition-all resize-none leading-relaxed"
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <Button 
-                    className="w-full gap-3 h-14 text-lg font-black uppercase tracking-widest shadow-2xl shadow-primary/25 group/save"
-                    onClick={handleSave}
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <Loader2 size={24} className="animate-spin" />
-                    ) : (
-                      <>
-                        <Save size={20} className="group-hover/save:translate-y-[-2px] transition-transform" />
-                        <span>Confirm Deployment</span>
-                        <ArrowRight size={20} className="group-hover/save:translate-x-2 transition-transform" />
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          </Link>
+          <div className="flex items-center gap-3">
+             <div className="p-2 rounded-xl bg-secondary/10 text-secondary animate-pulse-glow border border-secondary/20">
+                <Zap size={20} />
+             </div>
+             <h1 className="text-3xl font-black tracking-tight italic">Launch Unit</h1>
           </div>
         </div>
-      )}
+      </AnimatedSection>
+
+      <AnimatedSection delay={0.2}>
+        <Card className="glass relative overflow-hidden group hover:border-primary/20 transition-all duration-500 glass-premium-animated">
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+             <Globe size={160} />
+          </div>
+          <CardHeader className="p-10 pb-4">
+            <CardTitle className="text-2xl font-black flex items-center gap-4 italic uppercase tracking-tight">
+              <div className="p-3 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-lg shadow-primary/10">
+                <Globe className="w-8 h-8" />
+              </div>
+              Universal Importer
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-10 pt-0 space-y-8">
+            <p className="text-lg text-muted/80 font-medium max-w-2xl leading-relaxed">
+              Define target coordinates (URL) from any affiliate platform. Our AI will intercept high-fidelity metadata.
+            </p>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-1 group/input">
+                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-muted/30 group-focus-within/input:text-primary transition-all duration-300">
+                  <Search size={20} />
+                </div>
+                <input
+                  placeholder="Paste link (Amazon, Etsy, Flipkart...)"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="w-full pl-14 pr-6 py-4 rounded-2xl bg-white/5 border border-white/5 text-foreground font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted/20 text-lg shadow-inner"
+                />
+              </div>
+              <Button 
+                onClick={handleScrape} 
+                disabled={scraping || !url}
+                className="gap-3 px-10 h-auto py-4 shadow-2xl shadow-primary/20 relative overflow-hidden group/btn min-w-[200px] rounded-2xl hover-lift"
+              >
+                {scraping ? (
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                ) : (
+                  <>
+                    <Sparkles size={20} className="group-hover/btn:rotate-12 transition-transform" />
+                    <span className="font-black uppercase tracking-widest text-base font-display">Gather Intel</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </AnimatedSection>
+
+      <AnimatePresence mode="wait">
+        {productData && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.6, cubicBezier: [0.22, 1, 0.36, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-10"
+          >
+            <div className="lg:col-span-4 space-y-6">
+              <Card className="glass overflow-hidden border-white/10 group/preview hover:border-primary/30 transition-all glass-morphism-premium">
+                <CardContent className="p-0">
+                  <div className="relative aspect-square bg-white flex items-center justify-center p-12 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5" />
+                    {productData.image ? (
+                      <motion.div
+                        layoutId="productImage"
+                        className="w-full h-full relative z-10"
+                      >
+                        <Image
+                          src={productData.image}
+                          alt="Intelligence preview"
+                          fill
+                          className="object-contain p-4"
+                        />
+                      </motion.div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-6 text-muted/20">
+                        <Package className="w-24 h-24" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">No Asset Detected</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover/preview:bg-black/60 transition-all duration-300 flex flex-col items-center justify-center gap-3 opacity-0 group-hover/preview:opacity-100 z-20">
+                      <Button 
+                        variant="secondary" 
+                        size="sm" 
+                        className="gap-2 rounded-xl h-11 px-6 font-bold"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                      >
+                        {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
+                        Update Source Asset
+                      </Button>
+                      {productData.image && (
+                        <Button 
+                          variant="danger" 
+                          size="sm" 
+                          className="h-11 px-6 gap-2 rounded-xl font-bold"
+                          onClick={handleImageReset}
+                        >
+                          <Trash2 size={16} />
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={handleFileUpload} 
+                    />
+                    <div className="absolute top-6 left-6 px-4 py-1.5 rounded-xl glass border-white/10 text-[10px] font-black text-foreground uppercase tracking-widest z-20 shadow-2xl">
+                      {productData.platform}
+                    </div>
+                  </div>
+                  <div className="p-8 space-y-8">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Unit Status</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-success bg-success/10 px-3 py-1 rounded-full border border-success/20 animate-pulse">Detected & Ready</span>
+                    </div>
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Intercept Price</span>
+                        <span className="text-3xl font-black text-[#FF4D67] tracking-tighter text-shadow-glow">{productData.price || "N/A"}</span>
+                      </div>
+                      {productData.originalPrice && (
+                        <div className="flex items-center justify-between opacity-50">
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Baseline Price</span>
+                          <span className="text-base font-bold text-slate-400 line-through">{productData.originalPrice}</span>
+                        </div>
+                      )}
+                      {productData.discountPercentage && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Tactical Savings</span>
+                          <span className="text-xs font-black text-green-400 bg-green-500/10 px-3 py-1.5 rounded-xl border border-green-500/20">-{productData.discountPercentage}% OFF</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Link href={productData.originalUrl || url} target="_blank" className="block group/link">
+                <div className="flex items-center justify-center gap-3 p-5 rounded-3xl glass border-white/5 hover:border-primary/40 transition-all text-xs font-black uppercase tracking-widest text-muted group-hover/link:text-foreground hover:glow-primary">
+                  <ExternalLink size={16} className="group-hover/link:rotate-12 transition-transform" />
+                  Verify Encryption Source
+                </div>
+              </Link>
+            </div>
+  
+            <div className="lg:col-span-8 space-y-8">
+              <Card className="glass overflow-hidden border-white/10 glass-premium-animated">
+                <CardHeader className="p-8 pb-2 border-b border-white/5 bg-white/[0.02]">
+                  <CardTitle className="text-xl font-black flex items-center gap-4 italic uppercase tracking-tight">
+                    <div className="p-2 rounded-xl bg-secondary/10 text-secondary border border-secondary/20 shadow-lg shadow-secondary/10">
+                      <Zap className="w-6 h-6" />
+                    </div>
+                    Neural Expansion
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-10 space-y-10">
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="space-y-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Display Signal (Title)</label>
+                      <button
+                        onClick={handleGenerateTitle}
+                        disabled={generating}
+                        className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-secondary hover:text-secondary-light transition-all group/ai py-1 px-3 rounded-lg bg-secondary/10 hover:bg-secondary/20 border border-secondary/20"
+                      >
+                        {generating ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          <Sparkles size={12} className="group-hover/ai:rotate-12 transition-transform" />
+                        )}
+                        AI Signal Sync
+                      </button>
+                    </div>
+                    <Input
+                      value={productData.title}
+                      onChange={(e) => setProductData({ ...productData, title: e.target.value })}
+                      className="bg-white/5 border-white/5 focus:glow-primary transition-all font-black text-lg p-6 rounded-2xl"
+                    />
+                  </motion.div>
+  
+                  <motion.div 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="space-y-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Asset Origin (URL)</label>
+                      <div className="flex items-center gap-2 text-[10px] font-black text-muted/40 uppercase tracking-widest">
+                        <LinkIcon size={12} />
+                        Direct Link
+                      </div>
+                    </div>
+                    <Input
+                      value={productData.image}
+                      onChange={(e) => setProductData({ ...productData, image: e.target.value })}
+                      placeholder="https://example.com/image.jpg"
+                      className="bg-white/5 border-white/5 focus:glow-primary transition-all font-mono text-sm p-6 rounded-2xl"
+                    />
+                    <p className="text-[10px] text-muted/60 italic font-medium">Tactical Advice: PNG assets with transparency provide the highest conversion rates.</p>
+                  </motion.div>
+  
+                  <AnimatePresence>
+                    {aiSuggestions.length > 0 && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="p-8 bg-secondary/5 rounded-[2.5rem] border border-secondary/20 space-y-6 relative overflow-hidden shadow-inner"
+                      >
+                        <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 pointer-events-none">
+                           <Sparkles size={60} className="text-secondary" />
+                        </div>
+                        <div className="text-[10px] font-black text-secondary uppercase tracking-[0.3em] flex items-center gap-3 relative z-10">
+                          <Zap size={14} fill="currentColor" /> Neural Resonance Variants
+                        </div>
+                        <div className="grid grid-cols-1 gap-3 relative z-10">
+                          {aiSuggestions.map((title, i) => (
+                            <motion.button
+                              key={i}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: i * 0.1 }}
+                              onClick={() => {
+                                setProductData({ ...productData, title });
+                                toast.success("Signal updated.");
+                              }}
+                              className={`text-sm text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between group/suggestion ${
+                                productData.title === title 
+                                  ? "bg-secondary/20 border-secondary text-white shadow-xl shadow-secondary/20" 
+                                  : "border-white/5 bg-black/40 text-muted/60 hover:border-secondary/50 hover:text-white"
+                              }`}
+                            >
+                              <span className="font-black italic line-clamp-1">{title}</span>
+                              <div className={`p-1.5 rounded-lg bg-secondary/20 opacity-0 group-hover/suggestion:opacity-100 transition-all ${productData.title === title ? 'opacity-100' : ''}`}>
+                                 <Plus size={14} className="text-secondary" />
+                              </div>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="space-y-4"
+                    >
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Final Intercept Price</label>
+                      <Input
+                        value={productData.price}
+                        onChange={(e) => setProductData({ ...productData, price: e.target.value })}
+                        className="bg-white/5 border-white/5 focus:glow-primary transition-all font-black text-2xl p-6 rounded-2xl text-secondary-light"
+                      />
+                    </motion.div>
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="space-y-4"
+                    >
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Baseline Market Price</label>
+                      <Input
+                        value={productData.originalPrice}
+                        onChange={(e) => setProductData({ ...productData, originalPrice: e.target.value })}
+                        className="bg-white/5 border-white/5 focus:glow-primary transition-all font-black text-2xl p-6 rounded-2xl text-muted/40"
+                      />
+                    </motion.div>
+                  </div>
+  
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="space-y-4"
+                  >
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Operational Description</label>
+                    <textarea
+                      rows={5}
+                      value={productData.description}
+                      onChange={(e) => setProductData({ ...productData, description: e.target.value })}
+                      className="w-full rounded-[2rem] bg-white/5 border border-white/5 p-8 text-base font-medium text-foreground focus:ring-4 focus:ring-primary/10 focus:border-primary/40 outline-none transition-all resize-none leading-relaxed shadow-inner"
+                    />
+                  </motion.div>
+  
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="pt-6"
+                  >
+                    <Button 
+                      className="w-full gap-4 h-20 text-xl font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 group/save relative overflow-hidden rounded-[2.5rem] hover-lift"
+                      onClick={handleSave}
+                      disabled={saving}
+                    >
+                       <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary-light to-primary-dark opacity-0 group-hover/save:opacity-20 transition-opacity" />
+                       
+                      {saving ? (
+                        <Loader2 size={32} className="animate-spin" />
+                      ) : (
+                        <>
+                          <Save size={24} className="group-hover/save:scale-110 transition-transform" />
+                          <span>Initiate Deployment</span>
+                          <ArrowRight size={24} className="group-hover/save:translate-x-3 transition-transform" />
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
