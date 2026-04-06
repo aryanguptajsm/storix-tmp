@@ -2,11 +2,19 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
-  const error = searchParams.get("error");
-  const error_description = searchParams.get("error_description");
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get("code");
+  const next = requestUrl.searchParams.get("next") ?? "/dashboard";
+  const error = requestUrl.searchParams.get("error");
+  const error_description = requestUrl.searchParams.get("error_description");
+
+  // Determine the base origin for redirection
+  // Priority: X-Forwarded-Host > requestUrl.origin > NEXT_PUBLIC_SITE_URL
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const origin = forwardedHost 
+    ? `${forwardedProto}://${forwardedHost}` 
+    : requestUrl.origin || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
   // Handle common OAuth/Supabase errors early
   if (error) {
@@ -19,17 +27,7 @@ export async function GET(request: Request) {
     const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
     
     if (!exchangeError) {
-      // Use X-Forwarded-Host/Proto if available to handle proxies correctly
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-      
-      let redirectUrl: string;
-      if (forwardedHost) {
-        redirectUrl = `${forwardedProto}://${forwardedHost}${next.startsWith("/") ? next : "/" + next}`;
-      } else {
-        redirectUrl = next.startsWith("/") ? `${origin}${next}` : next;
-      }
-      
+      const redirectUrl = next.startsWith("/") ? `${origin}${next}` : next;
       console.log("Auth Callback Success. Redirecting to:", redirectUrl);
       return NextResponse.redirect(redirectUrl);
     }

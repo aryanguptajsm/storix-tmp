@@ -25,9 +25,21 @@ export async function signIn(email: string, password: string) {
 export async function signInWithGoogle(next?: string) {
   userPromise = null;
   // Use a more robust way to get the callback URL, ensuring it works in all environments
-  const origin = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_SITE_URL || '';
-  const url = new URL(`${origin}/auth/callback`);
+  let origin = '';
+  if (typeof window !== 'undefined') {
+    origin = window.location.origin;
+  } else {
+    origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  }
+  
+  // Ensure origin doesn't have trailing slash for consistency
+  origin = origin.replace(/\/$/, '');
+  
+  const callbackUrl = `${origin}/auth/callback`;
+  const url = new URL(callbackUrl);
   if (next) url.searchParams.set("next", next);
+
+  console.log("Initiating Google OAuth with redirectTo:", url.toString());
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
