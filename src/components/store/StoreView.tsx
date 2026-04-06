@@ -71,57 +71,69 @@ export function StoreView({ profile, products }: StoreViewProps) {
       <StoreHeader storeName={profile.store_name} storeLogo={profile.store_logo} />
 
       {/* ─── Hero Section ─── */}
-      <section className="relative pt-28 md:pt-36 pb-16 md:pb-24 px-4 sm:px-6 overflow-hidden bg-[var(--store-card)]">
-        {/* Background effects */}
-        {profile.theme !== 'amazon' && profile.theme !== 'flipkart' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[var(--store-primary)]/[0.03] to-transparent" />
-            <div className="absolute -top-32 -left-32 w-96 h-96 bg-[var(--store-primary)]/[0.06] rounded-full blur-[120px] animate-morph" />
-            <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[var(--store-primary)]/[0.04] rounded-full blur-[120px] animate-float" />
-            <div className="absolute inset-0 grid-bg-subtle opacity-20" />
-            <div className="absolute inset-0 dot-grid opacity-30" />
-            
-            {/* 3D Floating Icons */}
-            <div className="absolute top-1/4 left-[10%] opacity-20 animate-float-slow hidden md:block">
-              <ShoppingBag className="w-16 h-16 text-[var(--store-primary)] rotate-12" />
-            </div>
-            <div className="absolute bottom-1/4 right-[10%] opacity-20 animate-float-delayed hidden md:block">
-              <Sparkles className="w-20 h-20 text-[var(--store-primary)] -rotate-12" />
-            </div>
-          </div>
-        )}
+      <section className="relative pt-32 md:pt-44 pb-20 md:pb-32 px-4 sm:px-6 overflow-hidden bg-[var(--store-background)]">
+        {/* Advanced Background Architecture */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 mesh-layered" />
+          <div className="absolute inset-0 dot-grid opacity-20" />
+          <div className="absolute inset-0 grid-bg-subtle opacity-10" />
+          <div className="scan-line" />
+          
+          {/* Ambient Glows */}
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[var(--store-primary)]/10 rounded-full blur-[120px] animate-pulse-breathing" />
+          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/5 rounded-full blur-[120px] animate-float-delayed" />
+        </div>
 
         <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-morphism-premium mb-6 md:mb-8 animate-fade-in shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-[var(--store-primary)]" />
-            <span className="text-[10px] md:text-xs font-bold text-[var(--store-foreground)]/60 tracking-widest uppercase">Curated Collection</span>
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass-premium-animated mb-8 md:mb-12 animate-fade-in shadow-2xl border border-white/5">
+            <div className="relative">
+              <Sparkles className="w-4 h-4 text-[var(--store-primary)] animate-glow-pulse" />
+              <div className="absolute inset-0 blur-sm bg-[var(--store-primary)]/50 animate-pulse" />
+            </div>
+            <span className="text-[10px] md:text-xs font-black text-white/90 tracking-[0.3em] uppercase">Intelligence Sync Active</span>
           </div>
 
-          <h1 className="text-[clamp(2rem,6vw,5rem)] font-black tracking-tight mb-5 md:mb-7 leading-[1.1] animate-slide-up perspective-1000">
-            <span className="block text-[var(--store-foreground)] hover-tilt inline-block preserve-3d">{profile.store_name}</span>
-            <span className="text-gradient block text-shadow-glow">Affiliate Hub</span>
+          <h1 className="flex flex-col items-center gap-2 mb-8 md:mb-12 animate-slide-up">
+            <span className="text-[clamp(2.5rem,8vw,6rem)] font-black tracking-tighter leading-[0.95] text-white text-shadow-glow">
+              {profile.store_name}
+            </span>
+            <span className="text-[clamp(1.5rem,4vw,3rem)] font-black tracking-[0.2em] uppercase italic text-gradient-premium">
+              Affiliate Core
+            </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-base md:text-lg text-[var(--store-foreground)]/40 mb-8 md:mb-12 animate-fade-in leading-relaxed px-4 font-medium">
-            {profile.store_description || "Welcome to my hand-picked collection of premium products. Browse through the best deals curated just for you."}
+          <p className="max-w-2xl mx-auto text-base md:text-xl text-white/40 mb-10 md:mb-16 animate-fade-in leading-relaxed px-6 font-medium">
+            {profile.store_description || "Synchronizing with high-fidelity affiliate signals. Accessing curated product intelligence across the universal grid."}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-slide-up">
             <Link href="#products">
-              <Button className="h-14 px-8 md:px-10 rounded-2xl bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-xl shadow-[var(--store-primary)]/25 font-bold text-xs uppercase tracking-[0.15em] gap-2.5 group hover-shine">
-                Start Shopping
-                <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
+              <Button className="h-16 px-12 md:px-14 rounded-[2rem] bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-[0_0_40px_rgba(var(--store-primary-rgb),0.3)] font-black text-xs uppercase tracking-[0.25em] gap-3 group relative overflow-hidden">
+                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                <span className="relative z-10">Enter Inventory</span>
+                <ArrowRight size={20} className="relative z-10 group-hover:translate-x-2 transition-transform" />
               </Button>
             </Link>
-            <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-[var(--store-foreground)]/30">
-              <div className="flex -space-x-2.5">
-                {[1,2,3].map(i => (
-                  <div key={i} className="w-8 h-8 md:w-9 md:h-9 rounded-full border-[3px] border-[var(--store-card)] bg-gradient-to-br from-slate-200 to-slate-100 shadow-sm" />
+            <div className="flex items-center gap-4 py-2 px-6 rounded-2xl glass-morphism border-white/5">
+              <div className="flex -space-x-3">
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-[var(--store-background)] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md shadow-inner" />
                 ))}
               </div>
-              <span className="text-[10px] md:text-xs">Trusted by 5k+ shoppers</span>
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-black text-white uppercase tracking-widest">Active Nodes</span>
+                <span className="text-[10px] font-bold text-white/40">5,820+ Global Users</span>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Ambient Decorative Icons */}
+        <div className="absolute top-1/3 left-[5%] opacity-10 animate-float-slow hidden lg:block">
+          <ShoppingBag size={120} className="text-white" />
+        </div>
+        <div className="absolute bottom-1/4 right-[5%] opacity-10 animate-float-delayed hidden lg:block">
+          <Sparkles size={160} className="text-white" />
         </div>
       </section>
 
