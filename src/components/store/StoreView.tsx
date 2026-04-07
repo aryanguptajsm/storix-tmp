@@ -121,17 +121,17 @@ export function StoreView({ profile, products }: StoreViewProps) {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="flex flex-col items-center gap-4 mb-10 md:mb-14"
+              className="flex flex-col items-center gap-4 mb-8 md:mb-14 px-4"
             >
-              <span className="text-[clamp(3rem,10vw,7.5rem)] font-black tracking-[-0.05em] leading-[0.85] text-white text-shadow-glow">
+              <span className="text-[clamp(2.5rem,12vw,7.5rem)] font-black tracking-[-0.07em] leading-[0.85] text-white text-shadow-glow break-words max-w-full">
                 {profile.store_name}
               </span>
-              <div className="flex items-center gap-4">
-                <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-[var(--store-primary)]/40" />
-                <span className="text-[clamp(1rem,3vw,1.75rem)] font-black tracking-[0.35em] uppercase text-gradient-premium whitespace-nowrap">
+              <div className="flex items-center gap-4 overflow-hidden w-full justify-center">
+                <div className="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent to-[var(--store-primary)]/40" />
+                <span className="text-[clamp(0.75rem,2.5vw,1.5rem)] font-black tracking-[0.3em] uppercase text-gradient-premium whitespace-nowrap px-2">
                   Elite Collection
                 </span>
-                <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-[var(--store-primary)]/40" />
+                <div className="h-px flex-1 max-w-[80px] bg-gradient-to-l from-transparent to-[var(--store-primary)]/40" />
               </div>
             </motion.h1>
 
@@ -139,19 +139,19 @@ export function StoreView({ profile, products }: StoreViewProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-              className="max-w-3xl mx-auto text-lg md:text-2xl text-white/50 mb-12 md:mb-20 leading-relaxed px-8 font-medium balance"
+              className="max-w-2xl mx-auto text-base md:text-2xl text-white/50 mb-10 md:mb-20 leading-relaxed px-6 font-medium balance"
             >
-              {profile.store_description || "Precision-curated inventory. Accessed via high-fidelity affiliate signals. Distributed through the universal Storix grid."}
+              {profile.store_description || "Precision-curated inventory. Accessed via high-fidelity affiliate signals."}
             </motion.p>
 
             <motion.div 
                initial={{ opacity: 0, scale: 0.9 }}
                animate={{ opacity: 1, scale: 1 }}
                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-               className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-12"
+               className="flex flex-col items-center justify-center gap-6 md:gap-12 px-4"
             >
-              <Link href="#products">
-                <Button className="h-20 px-14 md:px-20 rounded-full bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-[0_20px_50px_rgba(var(--store-primary-rgb),0.4)] font-black text-sm uppercase tracking-[0.3em] gap-4 group relative overflow-hidden transition-all duration-500 hover:scale-105 active:scale-95">
+              <Link href="#products" className="w-full sm:w-auto">
+                <Button className="h-16 md:h-20 w-full sm:w-auto px-10 md:px-20 rounded-2xl md:rounded-full bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-[0_20px_50px_rgba(var(--store-primary-rgb),0.4)] font-black text-xs md:text-sm uppercase tracking-[0.3em] gap-4 group relative overflow-hidden transition-all duration-500">
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1]" />
                   <span className="relative z-10 flex items-center gap-4">
                     Initialize Access
