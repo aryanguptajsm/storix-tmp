@@ -407,16 +407,16 @@ export default function LandingPage() {
              <div className="space-y-6">
                 <h6 className="text-[11px] font-black text-white uppercase tracking-[0.4em]">Protocol</h6>
                 <div className="flex flex-col gap-4 text-sm text-white/20 font-bold uppercase tracking-widest">
-                   <Link href="#" className="hover:text-primary">Signals</Link>
-                   <Link href="#" className="hover:text-primary">Deployments</Link>
-                   <Link href="#" className="hover:text-primary">Intelligence</Link>
+                   <Link href="#features" className="hover:text-primary">Signals</Link>
+                   <Link href="#how-it-works" className="hover:text-primary">Deployments</Link>
+                   <Link href="/dashboard" className="hover:text-primary">Intelligence</Link>
                 </div>
              </div>
              <div className="space-y-6">
                 <h6 className="text-[11px] font-black text-white uppercase tracking-[0.4em]">Manifest</h6>
                 <div className="flex flex-col gap-4 text-sm text-white/20 font-bold uppercase tracking-widest">
-                   <Link href="#" className="hover:text-primary">Privacy</Link>
-                   <Link href="#" className="hover:text-primary">Archival</Link>
+                   <Link href="/privacy" className="hover:text-primary">Privacy</Link>
+                   <Link href="/terms" className="hover:text-primary">Terms</Link>
                    <Link href="#" className="hover:text-primary">Licensing</Link>
                 </div>
              </div>
