@@ -23,7 +23,8 @@ import {
   Upload,
   Image as ImageIcon,
   Trash2,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Plus
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -42,10 +43,45 @@ export default function AddProductPage() {
   const [productData, setProductData] = useState<any>(null);
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [productCount, setProductCount] = useState(0);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    async function loadStats() {
+      const user = await getUser();
+      if (!user) return;
+      const supabase = createClient();
+      
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      
+      const { count } = await supabase
+        .from("products")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      
+      setProfile(profile);
+      setProductCount(count || 0);
+    }
+    loadStats();
+  }, []);
 
   async function handleScrape() {
     if (!url) return;
+    
+    // Plan Guard for Scraping
+    const limit = profile?.plan === "pro" ? 100 : profile?.plan === "business" ? 1000 : 10;
+    if (productCount >= limit) {
+      toast.error(`Operational Capacity Reached (${productCount}/${limit})`, {
+        description: "Upgrade your signature to a higher tier for more deployments.",
+        duration: 5000,
+      });
+      return;
+    }
     
     setScraping(true);
     setProductData(null);
@@ -263,7 +299,7 @@ export default function AddProductPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.6, cubicBezier: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="grid grid-cols-1 lg:grid-cols-12 gap-10"
           >
             <div className="lg:col-span-4 space-y-6">
