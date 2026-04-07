@@ -37,11 +37,26 @@ const mockData = [
   { name: "Sun", clicks: 280, earnings: 98 },
 ];
 
+import { AnalyticsSkeleton } from "@/components/ui/AnalyticsSkeleton";
+
 export default function EarningsPage() {
   const [timeRange, setTimeRange] = useState("Last 7 Days");
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    // Simulate data loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <AnalyticsSkeleton />;
+  }
 
   return (
-    <div className="space-y-8 animate-fade-in pb-12">
+    <div className="space-y-10 animate-fade-in pb-12">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
