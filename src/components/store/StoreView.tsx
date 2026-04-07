@@ -69,7 +69,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
   const finalTheme = !isPro && isPremiumTheme(profile.theme) ? "default" : profile.theme;
 
   return (
-    <ThemeProvider initialTheme={finalTheme}>
+    <ThemeProvider initialTheme={finalTheme as any}>
       <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
         
         <StoreHeader storeName={profile.store_name} storeLogo={profile.store_logo} />

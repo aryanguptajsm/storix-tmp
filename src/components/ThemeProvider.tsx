@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "default" | "midnight" | "minimalist" | "neon" | "amazon" | "flipkart";
+export type Theme = "default" | "midnight" | "minimalist" | "neon" | "amazon" | "flipkart";
 
 interface ThemeContextType {
   theme: Theme;
