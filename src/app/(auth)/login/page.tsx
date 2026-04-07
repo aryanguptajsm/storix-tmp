@@ -194,7 +194,7 @@ export default function LoginPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
                 >
-                  <Button type="submit" className="w-full py-7 group text-base font-black shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover-lift" loading={loading}>
+                  <Button type="submit" className="w-full h-16 group text-base font-black shadow-2xl shadow-primary/20" loading={loading}>
                     <span>Enter Dashboard</span>
                     <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
                   </Button>
@@ -223,7 +223,7 @@ export default function LoginPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  className="w-full py-7 bg-white/5 border-white/5 hover:bg-white/10 transition-all duration-300 font-bold hover:glow-primary"
+                  className="w-full h-16"
                   onClick={handleGoogleLogin}
                   loading={googleLoading}
                 >

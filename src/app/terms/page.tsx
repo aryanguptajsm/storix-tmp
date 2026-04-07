@@ -2,92 +2,138 @@
 
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Scale, ArrowLeft, FileCheck, Globe, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ScrollReveal, StaggerReveal } from "@/components/ui/ScrollReveal";
+import { 
+  FileText, 
+  ArrowLeft,
+  ShoppingBag,
+  Zap,
+  Scale,
+  Activity,
+  Terminal,
+  ShieldCheck
+} from "lucide-react";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30 overflow-x-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 grid-bg-low-vis opacity-20 pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none" />
-
+    <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30 overflow-x-hidden relative">
+      {/* Background Layers */}
+      <div className="fixed inset-0 grid-bg-low-vis opacity-30 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
+      
+      {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-all">
-                <ArrowLeft size={18} className="text-white/40 group-hover:text-white transition-colors" />
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <ShoppingBag className="w-5 h-5 text-white" />
             </div>
-            <span className="text-sm font-black uppercase tracking-[0.3em] text-white/60">Return to Command</span>
+            <span className="text-xl font-black tracking-tighter font-display uppercase italic">Storix Core</span>
           </Link>
-          <div className="flex items-center gap-2">
-             <Scale className="text-blue-500 w-5 h-5" />
-             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Legal Protocol</span>
-          </div>
+          <Link href="/">
+            <Button variant="ghost" className="gap-2 text-white/50 hover:text-white">
+              <ArrowLeft size={16} />
+              Back to Operations
+            </Button>
+          </Link>
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto pt-40 pb-32 px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="flex items-center gap-4 mb-8">
-             <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                <FileCheck className="text-blue-500 w-7 h-7" />
-             </div>
-             <div>
-                <h1 className="text-5xl font-black tracking-tighter">Terms of Service</h1>
-                <p className="text-white/40 text-sm font-bold uppercase tracking-widest mt-1">Registry Version 1.0.4</p>
-             </div>
+      <main className="max-w-4xl mx-auto pt-40 pb-32 px-6 relative z-10">
+        <ScrollReveal>
+          <div className="space-y-6 mb-20 text-center md:text-left">
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-white/[0.02] border border-white/10 mb-4 backdrop-blur-xl">
+               <Scale size={16} className="text-emerald-400" />
+               <span className="text-[10px] font-black text-white/50 uppercase tracking-[0.4em]">Grid Deployment Rules</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic leading-[0.9]">
+              Deployment <span className="text-emerald-500 not-italic">Protocols</span>
+            </h1>
+            <p className="text-white/40 text-xl font-medium max-w-2xl leading-relaxed">
+              Accepting these protocols is mandatory for all operatives utilizing the Storix supply chain network. These rules ensure grid stability and equitable resource distribution.
+            </p>
           </div>
+        </ScrollReveal>
 
-          <div className="prose prose-invert max-w-none space-y-12">
-            <section className="space-y-4">
-              <div className="flex items-center gap-3 text-blue-400">
-                 <Zap size={18} />
-                 <h2 className="text-xl font-black uppercase tracking-widest m-0">Station Usage</h2>
+        <StaggerReveal stagger={0.15} className="space-y-12">
+          <section className="p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl hover:border-emerald-500/20 transition-all group">
+            <div className="flex items-center gap-6 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform shadow-xl shadow-emerald-500/5">
+                <Terminal size={28} />
               </div>
-              <p className="text-white/60 leading-relaxed text-lg">
-                By accessing a Storix station, you agree to comply with the universal commerce code. Users are responsible for maintaining the confidentiality of their secret keys and for all activities that occur under their command ID.
+              <h2 className="text-3xl font-black italic tracking-tight">License Agreement</h2>
+            </div>
+            <div className="space-y-6 text-white/40 text-lg leading-relaxed font-medium">
+              <p>
+                Storix grants a non-exclusive, non-transferable tactical license to deploy affiliate store nodes according to your registered plan status.
               </p>
-            </section>
-
-            <section className="space-y-4">
-              <div className="flex items-center gap-3 text-blue-400">
-                 <Globe size={18} />
-                 <h2 className="text-xl font-black uppercase tracking-widest m-0">Protocol Limits</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                 {[
+                   { label: "Free Operative", value: "10 Store Nodes" },
+                   { label: "Pro Commander", value: "100 Store Nodes" },
+                   { label: "Business Elite", value: "Unlimited Grid" }
+                 ].map((tier, i) => (
+                   <div key={i} className="p-4 rounded-xl bg-white/[0.03] border border-white/5 border-beam">
+                      <p className="text-[10px] font-black uppercase text-emerald-500 mb-1">{tier.label}</p>
+                      <p className="text-white text-sm font-bold italic">{tier.value}</p>
+                   </div>
+                 ))}
               </div>
-              <p className="text-white/60 leading-relaxed text-lg">
-                You may not utilize Storix AI for the distribution of prohibited supply chains or illegal contraband as defined in international commerce law. Automated scraping of the Storix registry itself is strictly forbidden.
+            </div>
+          </section>
+
+          <section className="p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl hover:border-amber-500/20 transition-all group">
+            <div className="flex items-center gap-6 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform shadow-xl shadow-amber-500/5">
+                <Activity size={28} />
+              </div>
+              <h2 className="text-3xl font-black italic tracking-tight">Operational Conduct</h2>
+            </div>
+            <div className="space-y-6 text-white/40 text-lg leading-relaxed font-medium">
+              <p>
+                Operatives are prohibited from utilizing automated scrapers or malicious bot networks to spoof store clicks. Violation of click-through integrity results in immediate terminal blacklisting and asset forfeiture.
               </p>
-            </section>
+            </div>
+          </section>
 
-            <section className="space-y-4">
-               <div className="flex items-center gap-3 text-blue-400">
-                  <Shield size={18} />
-                  <h2 className="text-xl font-black uppercase tracking-widest m-0">Liability Core</h2>
-               </div>
-               <p className="text-white/60 leading-relaxed text-lg">
-                  Storix Core Registry provides these services &quot;as-is&quot;. We do not guarantee 100% uptime of the affiliate network nodes and are not liable for transmission errors or supply chain failures.
-               </p>
-            </section>
+          <section className="p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl hover:border-cyan-500/20 transition-all group">
+            <div className="flex items-center gap-6 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform shadow-xl shadow-cyan-500/5">
+                <ShieldCheck size={28} />
+              </div>
+              <h2 className="text-3xl font-black italic tracking-tight">Liability Limitation</h2>
+            </div>
+            <div className="space-y-6 text-white/40 text-lg leading-relaxed font-medium">
+              <p>
+                Storix acts as an integration layer between supply nodes and storefronts. We are not liable for external marketplace pricing variances, commission disputes, or regional trade restrictions.
+              </p>
+            </div>
+          </section>
+        </StaggerReveal>
 
-            <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4">
-               <h3 className="text-white font-black uppercase tracking-widest text-sm">Dispute Protocol</h3>
-               <p className="text-white/40 text-sm italic">
-                  Legal disputes are governed by the laws of the Storix Digital Registry Jurisdiction. All arbitration will occur via remote terminal connection.
-               </p>
-               <p className="text-blue-500 font-black tracking-widest">LEGAL@STORIX.AI</p>
+        <ScrollReveal delay={0.8}>
+          <div className="mt-32 p-12 rounded-[3.5rem] bg-gradient-to-br from-white/[0.05] via-transparent to-transparent border border-white/10 text-center relative overflow-hidden group">
+            <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <h3 className="text-3xl font-black mb-4 italic italic tracking-tight">Acknowledge Protocol Update?</h3>
+            <p className="text-white/30 text-lg mb-10 max-w-md mx-auto font-medium">By continuing deployment, you certify total compliance with current-grid-version 2.4.0.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+               <Link href="/signup">
+                 <Button className="h-16 px-16 rounded-[1.5rem] shadow-2xl shadow-emerald-500/20 font-black italic">I AGREE</Button>
+               </Link>
+               <Link href="/">
+                 <Button variant="secondary" className="h-16 px-12 rounded-[1.5rem] border-white/10 font-black">REJECT</Button>
+               </Link>
             </div>
           </div>
-        </motion.div>
+        </ScrollReveal>
       </main>
 
-      <footer className="py-12 border-t border-white/5 text-center">
-         <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.5em]">© 2026 Storix Core Registry. Unit-01 Verification Active.</p>
+      {/* Footer Copy */}
+      <footer className="py-20 border-t border-white/5 text-center">
+        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/10 italic">
+          STORIX CORE REGISTRY // VERIFICATION: SUCCESS
+        </p>
       </footer>
     </div>
   );

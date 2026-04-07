@@ -160,7 +160,8 @@ export default function SignupPage() {
         </div>
 
         <div className="relative">
-          <Card size="medium" variant="glass" className="overflow-hidden border-white/5 shadow-3xl glass-premium-animated">
+          <ScrollReveal variant="zoom-in" delay={0.4}>
+            <Card size="medium" variant="glass" className="overflow-hidden border-white/5 shadow-3xl glass-premium-animated">
             <CardContent className="space-y-6 pt-10">
               <form onSubmit={handleSignup} className="space-y-6">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -248,9 +249,9 @@ export default function SignupPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 }}
                 >
-                  <Button type="submit" className="w-full h-16 group text-xs font-black uppercase tracking-[0.3em] shadow-[0_20px_50px_rgba(16,185,129,0.2)] hover:shadow-primary/40 transition-all rounded-2xl" loading={loading}>
+                  <Button type="submit" className="w-full h-16 shadow-2xl shadow-emerald-500/10" loading={loading}>
                     <span>Initialize Interface</span>
-                    <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+                    <Sparkles size={18} className="translate-x-1" />
                   </Button>
                 </motion.div>
               </form>
@@ -272,12 +273,12 @@ export default function SignupPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  className="w-full h-16 bg-white/[0.03] border-white/5 hover:bg-white/[0.06] transition-all duration-300 font-bold group rounded-2xl"
+                  className="w-full h-16"
                   onClick={handleGoogleLogin}
                   loading={googleLoading}
                 >
                   <GoogleIcon />
-                  <span className="ml-3 text-xs uppercase tracking-widest font-black">Google Handshake</span>
+                  <span className="ml-3">Google Handshake</span>
                 </Button>
               </motion.div>
 
@@ -288,6 +289,7 @@ export default function SignupPage() {
               </div>
             </CardContent>
           </Card>
+          </ScrollReveal>
         </div>
       </motion.div>
     </div>
