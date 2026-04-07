@@ -107,8 +107,10 @@ export default function AddProductPage() {
     }
   }
 
-  async function handleGenerateTitle() {
+  async function handleNeuralForge() {
     if (!productData) return;
+    
+    const isPro = profile?.plan && profile?.plan !== "free";
     
     setGenerating(true);
     try {
@@ -126,7 +128,19 @@ export default function AddProductPage() {
       
       if (data.titles && data.titles.length > 0) {
         setAiSuggestions(data.titles);
-        toast.success("AI variants generated!");
+        
+        // Pro Perk: Auto-update description
+        if (isPro && data.description) {
+          setProductData((prev: any) => ({ ...prev, description: data.description }));
+          toast.success("AI variants generated & description forged!");
+        } else {
+          toast.success("AI variants generated!");
+          if (!isPro) {
+            toast.info("Pro Perk: Upgrade to auto-forge descriptions.", {
+              icon: <Sparkles className="text-secondary" />
+            });
+          }
+        }
       }
     } catch (err: any) {
       console.error("AI error:", err);
