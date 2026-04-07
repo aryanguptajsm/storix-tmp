@@ -63,8 +63,11 @@ export function StoreView({ profile, products }: StoreViewProps) {
     }).catch(() => {});
   };
 
+  const isPro = profile.plan && profile.plan !== "free";
+  const finalTheme = !isPro && isPremiumTheme(profile.theme) ? "default" : profile.theme;
+
   return (
-    <ThemeProvider initialTheme={profile.theme}>
+    <ThemeProvider initialTheme={finalTheme}>
       <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
         
         <StoreHeader storeName={profile.store_name} storeLogo={profile.store_logo} />
@@ -330,7 +333,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
           <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--store-primary)]/5 rounded-full blur-[120px]" />
 
           <div className="max-w-7xl mx-auto px-8 flex flex-col items-center gap-16 relative z-10">
-            <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-6 text-center">
               <div className="p-5 bg-white/[0.03] rounded-3xl border border-white/10 hover:border-[var(--store-primary)]/30 transition-all group cursor-pointer shadow-2xl shadow-primary/5">
                 <ShoppingBag className="w-10 h-10 text-[var(--store-primary)] group-hover:scale-110 transition-transform" />
               </div>
@@ -338,6 +341,19 @@ export function StoreView({ profile, products }: StoreViewProps) {
               <p className="text-white/30 text-sm max-w-sm text-center font-medium leading-loose">
                 An autonomous storefront deployment powered by the Storix Intelligence Core.
               </p>
+              
+              {/* Pro Feature: Branding Gating */}
+              {!isPro && (
+                <div className="flex flex-col items-center gap-3 py-6 px-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 mt-4">
+                   <div className="flex items-center gap-2">
+                      <Sparkles className="text-primary w-4 h-4" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/30">Powered by Storix</span>
+                   </div>
+                   <Link href="/">
+                      <Button variant="ghost" size="sm" className="h-8 px-4 rounded-full text-[9px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5">Launch your own station</Button>
+                   </Link>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
