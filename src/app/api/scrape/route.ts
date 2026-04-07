@@ -18,6 +18,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
+    // ─── Plan Limit Enforcement ───
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("plan")
+      .eq("id", user.id)
+      .single();
+    
+    const { count } = await supabase
+      .from("products")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
+    
+    const plan = profile?.plan || "free";
+    const limit = plan === "pro" ? 100 : plan === "business" ? 1000 : 10;
+    
+    if ((count || 0) >= limit) {
+      return NextResponse.json({ 
+        error: `Deployment quota reached (${count}/${limit}). Please upgrade your signature to expand your fleet.` 
+      }, { status: 403 });
+    }
+
     // Use the new robust ProductScraper Agent
     const scraper = new ProductScraper();
     const result = await scraper.scrape(url);

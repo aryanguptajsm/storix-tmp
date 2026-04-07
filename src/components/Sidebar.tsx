@@ -74,19 +74,32 @@ export function Sidebar() {
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname.startsWith(item.href));
+          
+          const isLocked = item.tier === "business" && profile?.plan !== "business";
+          const isPro = profile?.plan && profile?.plan !== "free";
+
+          if (item.tier === "business" && !isPro) return null; // Hide completely for Free users
+
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={isLocked ? "/dashboard/billing" : item.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 group perspective-1000 ${
+              className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 group perspective-1000 ${
                 isActive
                   ? "bg-primary/10 text-primary-light border border-primary/20 shadow-lg shadow-primary/10"
                   : "text-muted hover:text-foreground hover:bg-white/5 border border-transparent hover-tilt preserve-3d"
               }`}
             >
-              <item.icon className={`w-5 h-5 transition-transform duration-500 group-hover:scale-110 ${isActive ? "text-primary-light" : "text-muted group-hover:text-primary-light"}`} />
-              {item.label}
+              <div className="flex items-center gap-3">
+                <item.icon className={`w-5 h-5 transition-transform duration-500 group-hover:scale-110 ${isActive ? "text-primary-light" : "text-muted group-hover:text-primary-light"}`} />
+                {item.label}
+              </div>
+              {isLocked && (
+                <div className="p-1 rounded-md bg-secondary/10 text-secondary border border-secondary/20">
+                  <X className="w-3 h-3" />
+                </div>
+              )}
             </Link>
           );
         })}
