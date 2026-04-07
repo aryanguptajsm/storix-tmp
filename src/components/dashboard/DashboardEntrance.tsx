@@ -9,12 +9,13 @@ export function DashboardEntrance() {
 export function AnimatedSection({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ 
-        duration: 0.5, 
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
         delay,
-        ease: [0.21, 0.47, 0.32, 0.98] 
       }}
     >
       {children}
