@@ -110,10 +110,10 @@ export default function LandingPage() {
             ))}
             <div className="w-px h-6 bg-white/10 mx-2" />
             <Link href="/login">
-              <Button variant="ghost" className="text-white/60 hover:text-white font-bold uppercase tracking-widest text-[10px]">Sign In</Button>
+              <Button variant="ghost" className="text-white/60 hover:text-white">Sign In</Button>
             </Link>
             <Link href="/signup">
-              <Button className="ml-1 rounded-2xl px-6 shadow-xl shadow-emerald-500/20 bg-emerald-500 hover:bg-emerald-600 h-11 font-black uppercase tracking-widest text-[11px]">Get Started</Button>
+              <Button className="ml-1 px-8 shadow-2xl shadow-emerald-500/20">Get Started</Button>
             </Link>
           </div>
 
@@ -136,8 +136,10 @@ export default function LandingPage() {
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)]" />
           
           <div className="absolute inset-0 -z-10">
-            <div className="absolute inset-0 grid-bg-low-vis opacity-40" />
-            <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-white/5 via-transparent to-transparent opacity-20" />
+            <div className="absolute inset-0 grid-bg-low-vis opacity-50" />
+            <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-white/10 via-transparent to-transparent opacity-10" />
+            
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.1),transparent_60%)]" />
             
             {/* Morphing Orbs with Enhanced Blending */}
             <motion.div 
@@ -178,13 +180,13 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                className="text-[clamp(2.5rem,12vw,9rem)] font-black tracking-[-0.08em] leading-[0.80] flex flex-col items-center"
+                className="text-[clamp(2.5rem,12vw,8.5rem)] font-black tracking-[-0.08em] leading-[0.80] flex flex-col items-center"
               >
-                <span className="text-white/20 tracking-tighter block mb-3 lowercase italic font-medium">unleash your</span>
-                <span className="metallic-text-premium uppercase tracking-[-0.05em] whitespace-nowrap block drop-shadow-[0_20px_50px_rgba(255,255,255,0.15)] pb-4">
+                <span className="text-white/20 tracking-tighter block mb-4 lowercase italic font-medium">unleash your agency</span>
+                <span className="metallic-text-premium uppercase tracking-[-0.05em] whitespace-nowrap block drop-shadow-[0_20px_50px_rgba(255,255,255,0.15)] pb-6 hover:scale-105 transition-transform duration-1000 cursor-default px-10">
                   Affiliate
                 </span>
-                <span className="text-white uppercase tracking-[-0.05em] whitespace-nowrap block">
+                <span className="text-white uppercase tracking-[-0.05em] whitespace-nowrap block drop-shadow-2xl">
                    Dominance
                 </span>
               </motion.h1>
@@ -207,29 +209,28 @@ export default function LandingPage() {
             </motion.p>
 
             {/* High-Impact Actions */}
-            <motion.div 
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-               className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-16 mb-24 md:mb-40"
-            >
-              <Link href="/signup">
-                <Button className="h-20 px-16 md:px-24 rounded-[2rem] bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_20px_60px_rgba(16,185,129,0.35)] font-black text-sm uppercase tracking-[0.4em] group relative overflow-hidden transition-all duration-700 hover:scale-105 active:scale-95">
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1]" />
-                  <span className="relative z-10 flex items-center gap-5">
-                    Initialize Depot
-                    <ArrowRight size={22} className="group-hover:translate-x-3 transition-transform duration-500" />
-                  </span>
-                </Button>
-              </Link>
+             <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-10 md:gap-14 mb-24 md:mb-40"
+             >
+               <Link href="/signup">
+                 <Button className="h-20 px-16 md:px-24 rounded-[2rem] shadow-[0_20px_60px_rgba(16,185,129,0.3)]">
+                   <span className="flex items-center gap-5">
+                     Initialize Depot
+                     <ArrowRight size={22} />
+                   </span>
+                 </Button>
+               </Link>
 
-              <Link href="/store/demo">
-                <Button variant="secondary" className="h-20 px-12 md:px-16 rounded-[2rem] bg-white/[0.04] border border-white/10 hover:border-white/20 text-white font-black text-xs uppercase tracking-[0.4em] transition-all duration-500 hover:bg-white/[0.08] group backdrop-blur-xl">
-                  Analyze Prototype
-                  <ArrowUpRight size={18} className="ml-3 opacity-30 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
-                </Button>
-              </Link>
-            </motion.div>
+               <Link href="/store/demo">
+                 <Button variant="secondary" className="h-20 px-12 md:px-16 rounded-[2rem] bg-white/[0.04] border-white/10">
+                   Analyze Prototype
+                   <ArrowUpRight size={18} className="ml-3 opacity-30" />
+                 </Button>
+               </Link>
+             </motion.div>
 
             {/* ═══════ 3D BROWSER & FLOATING NODES ═══════ */}
             <div className="relative max-w-6xl mx-auto mt-20">
@@ -371,16 +372,18 @@ export default function LandingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-              <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+              <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               {steps.map((step, i) => (
-                <div key={i} className="text-center group">
-                   <div className="w-24 h-24 rounded-[2rem] bg-white/[0.02] border border-white/5 mx-auto mb-10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all duration-700 shadow-2xl relative">
-                      <div className="absolute -top-2 -right-2 w-8 h-8 rounded-xl bg-black border border-white/10 text-[11px] font-black text-white/40 flex items-center justify-center">{step.num}</div>
-                      <step.icon size={36} />
-                   </div>
-                   <h4 className="text-2xl font-black text-white mb-4">{step.title}</h4>
-                   <p className="text-white/30 font-medium leading-relaxed">{step.desc}</p>
-                </div>
+                <ScrollReveal key={i} delay={i * 200}>
+                  <div className="text-center group">
+                     <div className="w-24 h-24 rounded-[2rem] bg-white/[0.02] border border-white/5 mx-auto mb-10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.1)] transition-all duration-700 shadow-2xl relative">
+                        <div className="absolute -top-2 -right-2 w-8 h-8 rounded-xl bg-black border border-white/10 text-[11px] font-black text-white/40 flex items-center justify-center group-hover:text-emerald-500 transition-colors">{step.num}</div>
+                        <step.icon size={36} className="group-hover:rotate-12 transition-transform duration-700" />
+                     </div>
+                     <h4 className="text-2xl font-black text-white mb-4 italic tracking-tight">{step.title}</h4>
+                     <p className="text-white/30 font-medium leading-relaxed">{step.desc}</p>
+                  </div>
+                </ScrollReveal>
               ))}
             </div>
           </div>
