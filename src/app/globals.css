@@ -8,6 +8,10 @@
   --surface-lighter: #1A1A1A;
   --border: rgba(255, 255, 255, 0.08);
   --muted: #8B8BA7;
+  
+  /* Responsive Spacing & Padding */
+  --space-unit: clamp(0.5rem, 1vw, 1rem);
+  --screen-padding: clamp(1rem, 5vw, 2.5rem);
 }
 
 [data-app-theme="light"] {
@@ -48,10 +52,12 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
   scroll-behavior: smooth;
+  height: -webkit-fill-available;
 }
 
 body {
@@ -62,13 +68,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-feature-settings: "cv02", "cv05", "cv11";
+  min-height: 100vh;
+  min-height: 100dvh;
 }
+
+h1 { font-size: clamp(2rem, 8vw, 4rem); line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 6vw, 3rem); line-height: 1.2; }
+h3 { font-size: clamp(1.25rem, 4vw, 2rem); line-height: 1.2; }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-outfit, 'Outfit', sans-serif);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
+
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 5px; }

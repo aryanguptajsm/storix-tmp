@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signUp, updateProfile, signInWithGoogle } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Mail, Lock, User, Layout, ArrowRight, Sparkles, Rocket, ShieldCheck, AlertCircle } from "lucide-react";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
-
+import { Card, CardContent } from "@/components/ui/Card";
+import { Mail, Lock, User, Layout, Sparkles, Rocket, ShieldCheck, AlertCircle } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -292,20 +292,4 @@ export default function SignupPage() {
       </motion.div>
     </div>
   );
-}
-
-      </motion.div>
-
-      <style jsx global>{`
-        @keyframes bounce-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-subtle {
-          animation: bounce-subtle 4s ease-in-out infinite;
-        }
-      `}</style>
-    </div>
-  );
-
 }
