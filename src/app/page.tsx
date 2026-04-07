@@ -130,85 +130,80 @@ export default function LandingPage() {
 
       <main className="flex-1">
 
-        {/* ═══════ HERO REDESIGN (IMPERIAL) ═══════ */}
+        {/* ═══════ HERO REDESIGN (IMPERIAL METALLIC) ═══════ */}
         <section className="relative pt-36 md:pt-52 pb-24 md:pb-44 px-4 sm:px-6 overflow-hidden">
-          {/* Base Background: Deep Imperial Ambient Layer */}
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.12),transparent_70%)]" />
+          {/* Base Background: Universal Grid & Ambient Layer */}
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)]" />
           
           <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent opacity-40" />
-            <div className="absolute inset-0 grid-bg-subtle opacity-[0.12]" />
-            <div className="scan-line opacity-[0.08]" />
+            <div className="absolute inset-0 grid-bg-low-vis opacity-40" />
+            <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-white/5 via-transparent to-transparent opacity-20" />
             
-            {/* Morphing Orbs Layered */}
+            {/* Morphing Orbs with Enhanced Blending */}
             <motion.div 
                animate={{ 
-                 scale: [1, 1.2, 1],
-                 opacity: [0.08, 0.15, 0.08],
-                 x: [0, 60, 0],
-                 y: [0, -40, 0]
+                 scale: [1, 1.15, 1],
+                 opacity: [0.05, 0.1, 0.05],
+                 x: [0, 40, 0],
+                 y: [0, -20, 0]
                }}
-               transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px]" 
-            />
-            <motion.div 
-               animate={{ 
-                 scale: [1, 1.1, 1],
-                 opacity: [0.05, 0.12, 0.05],
-                 x: [0, -50, 0],
-               }}
-               transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: 3 }}
-               className="absolute bottom-1/4 -right-20 w-[700px] h-[700px] bg-cyan-600/5 rounded-full blur-[160px]" 
             />
           </div>
 
           <div className="max-w-7xl mx-auto text-center relative z-10">
-            {/* Sophisticated Imperial Badge */}
+            {/* Imperial Status Badge */}
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-4 px-6 py-2.5 rounded-2xl bg-white/[0.02] border border-white/10 mb-12 shadow-2xl backdrop-blur-3xl group"
+              className="inline-flex items-center gap-4 px-5 py-2 rounded-2xl bg-white/[0.03] border border-white/10 mb-12 shadow-2xl backdrop-blur-2xl group animate-light-sweep"
             >
               <div className="relative flex items-center justify-center">
-                 <div className="absolute inset-0 blur-lg bg-emerald-500/60 animate-pulse" />
-                 <Activity className="w-4 h-4 text-emerald-400 relative z-10" />
+                 <div className="absolute inset-0 blur-md bg-white/20 animate-pulse" />
+                 <Activity className="w-3.5 h-3.5 text-white relative z-10" />
               </div>
-              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/60">Automated Supply Grid Alpha-4</span>
-              <div className="w-px h-4 bg-white/10" />
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">Commerce Grid Node: Alpha-V</span>
+              <div className="w-px h-3 bg-white/10" />
               <div className="flex items-center gap-2">
-                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                 <span className="text-[10px] font-black tracking-[0.2em] uppercase text-primary">Live Status</span>
+                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
+                 <span className="text-[10px] font-black tracking-[0.2em] uppercase text-emerald-500/80">Active</span>
               </div>
             </motion.div>
 
-            {/* Headline Section with Imperial Typography */}
-            <div className="max-w-6xl mx-auto mb-12 md:mb-16">
+            {/* Headline Section: Metallic Chrome Aesthetic */}
+            <div className="max-w-5xl mx-auto mb-10 md:mb-14">
               <motion.h1 
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                className="text-[clamp(3rem,11vw,8.5rem)] font-black tracking-[-0.07em] leading-[0.80] text-white flex flex-col items-center"
+                className="text-[clamp(2.5rem,12vw,9rem)] font-black tracking-[-0.08em] leading-[0.80] flex flex-col items-center"
               >
-                <span className="opacity-40 tracking-tighter block mb-2">Architecting Your</span>
-                <span className="text-gradient-premium uppercase tracking-[-0.04em] whitespace-nowrap block drop-shadow-2xl">
-                   Affiliate Command
+                <span className="text-white/20 tracking-tighter block mb-3 lowercase italic font-medium">unleash your</span>
+                <span className="metallic-text-premium uppercase tracking-[-0.05em] whitespace-nowrap block drop-shadow-[0_20px_50px_rgba(255,255,255,0.15)] pb-4">
+                  Affiliate
                 </span>
-                <div className="flex items-center gap-6 mt-4">
-                  <div className="h-px w-20 md:w-40 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
-                  <span className="text-[ clamp(0.7rem, 2vw, 1.2rem) ] font-black tracking-[0.6em] uppercase text-white/50 text-glow">Unit-01 Ready</span>
-                  <div className="h-px w-20 md:w-40 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
-                </div>
+                <span className="text-white uppercase tracking-[-0.05em] whitespace-nowrap block">
+                   Dominance
+                </span>
               </motion.h1>
+              
+              <motion.div 
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ duration: 1.5, delay: 0.8, ease: "circOut" }}
+                className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mt-6" 
+              />
             </div>
 
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
-              className="max-w-3xl mx-auto text-lg md:text-2xl text-white/40 mb-16 md:mb-24 leading-relaxed px-8 font-medium balance"
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
+              className="max-w-2xl mx-auto text-base md:text-xl text-white/30 mb-14 md:mb-20 leading-relaxed px-6 font-medium balance"
             >
-              Paste affiliate links. Let Storix AI extract supply chains and deploy high-fidelity storefronts optimized for the universal commerce grid.
+              Connect affiliate supply chains through Storix AI. Deploy high-fidelity storefronts optimized for the universal commerce grid in seconds.
             </motion.p>
 
             {/* High-Impact Actions */}

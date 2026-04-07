@@ -640,6 +640,72 @@ h1, h2, h3, h4, h5, h6 {
   animation: glow-pulse 4s ease-in-out infinite;
 }
 
+/* ─── Metallic & Low-Vis Utilities ─── */
+.metallic-text-premium {
+  background: linear-gradient(
+    165deg,
+    #94a3b8 0%,
+    #f8fafc 25%,
+    #475569 45%,
+    #f8fafc 55%,
+    #64748b 75%,
+    #f8fafc 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.25));
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+}
+
+.text-gradient-imperial {
+  background: linear-gradient(
+    135deg,
+    #cfcfcf 0%,
+    #ffffff 50%,
+    #71717a 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grid-bg-low-vis {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px);
+  background-size: clamp(24px, 5vw, 48px) clamp(24px, 5vw, 48px);
+  mask-image: radial-gradient(circle at 50% 30%, black 10%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 30%, black 10%, transparent 80%);
+}
+
+.animate-light-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-light-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: light-sweep 4s ease-in-out infinite;
+}
+
+@keyframes light-sweep {
+  0% { left: -200%; }
+  100% { left: 200%; }
+}
+
 /* ─── Premium Glass Layer ─── */
 .glass-premium {
   background: rgba(10, 10, 10, 0.4);
