@@ -27,6 +27,9 @@ CREATE TABLE IF NOT EXISTS public.products (
     original_url TEXT NOT NULL,
     affiliate_url TEXT,
     category TEXT,
+    ai_content TEXT,
+    article_type TEXT DEFAULT 'review',
+    content_status TEXT DEFAULT 'pending', -- 'pending', 'generated', 'failed'
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

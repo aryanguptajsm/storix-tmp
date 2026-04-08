@@ -25,6 +25,9 @@ export interface Product {
   original_url: string;
   affiliate_url?: string;
   category?: string;
+  ai_content?: string;
+  article_type?: string;
+  content_status?: 'pending' | 'generated' | 'failed';
   created_at: string;
 }
 
