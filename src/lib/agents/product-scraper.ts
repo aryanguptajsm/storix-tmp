@@ -128,6 +128,7 @@ export class ProductScraper {
 
       } catch (error: any) {
         attempt++;
+        const errorMessage = error instanceof Error ? error.message : String(error);
         if (attempt > retryCount) {
           return {
             product_title: "Error",
@@ -135,7 +136,7 @@ export class ProductScraper {
             image_url: null,
             image_status: "error",
             http_code: error.response?.status || 0,
-            error_reason: error.message,
+            error_reason: errorMessage,
             scraped_at: scrapedAt,
           };
         }
@@ -331,26 +332,29 @@ export class ProductScraper {
     return null;
   }
 
-  private async scrapeWithPlaywright(url: string): Promise<Partial<ProductScrapeResult>> {
+  private async scrapeWithPlaywright(targetUrl: string): Promise<Partial<ProductScrapeResult>> {
     const browser = await this.initBrowser();
     const context = await browser.newContext({ userAgent: this.getRandomUA() });
     const page = await context.newPage();
     
     try {
-      await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
+      if (!targetUrl) throw new Error("Scrape Target URL is undefined");
+      
+      await page.goto(targetUrl, { waitUntil: "networkidle", timeout: 30000 });
       
       // Wait for image selectors if specific platforms
-      if (/amazon/i.test(url)) await page.waitForSelector("#landingImage", { timeout: 5000 }).catch(() => {});
+      if (/amazon/i.test(targetUrl)) await page.waitForSelector("#landingImage", { timeout: 5000 }).catch(() => {});
 
       const content = await page.content();
       const $ = cheerio.load(content);
-      const extracted = this.extractDataFromCheerio($, url);
+      const extracted = this.extractDataFromCheerio($, targetUrl);
       
       await context.close();
       return extracted;
     } catch (e: any) {
       await context.close();
-      return { error_reason: `Playwright error: ${e.message}` };
+      const msg = e instanceof Error ? e.message : String(e);
+      return { error_reason: `Playwright error: ${msg}` };
     }
   }
 }
