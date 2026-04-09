@@ -1,5 +1,5 @@
-import { ProductScraper } from "./src/lib/agents/product-scraper";
-import { ContentAgent } from "./src/lib/agents/content-agent";
+import { ProductScraper } from "../lib/agents/product-scraper";
+import { ContentAgent } from "../lib/agents/content-agent";
 import * as dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
