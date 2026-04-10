@@ -337,7 +337,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                       <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/30">Powered by Storix</span>
                    </div>
                    <Link href="/">
-                      <Button variant="ghost" size="sm" className="h-8 px-4 rounded-full text-[9px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5">Launch your own station</Button>
+                      <Button variant="ghost" size="sm" className="h-8 px-4 rounded-full text-[9px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5">Create your own store</Button>
                    </Link>
                 </div>
               )}
