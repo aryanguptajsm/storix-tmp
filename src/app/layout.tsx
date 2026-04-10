@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import { Toaster } from "sonner";
-import dynamic from "next/dynamic";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ClientChatWidget } from "@/components/ui/ClientChatWidget";
 import "./globals.css";
-
-const ChatWidget = dynamic(() => import("@/components/ui/ChatWidget").then(m => ({ default: m.ChatWidget })), {
-  ssr: false,
-});
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -48,7 +44,7 @@ export default function RootLayout({
               },
             }}
           />
-          <ChatWidget />
+          <ClientChatWidget />
         </ThemeProvider>
       </body>
     </html>
