@@ -150,15 +150,15 @@ export default async function PublicStorePage({ params }: Props) {
           </div>
           
           <h1 className="text-4xl md:text-5xl font-black text-white mb-5 tracking-tighter leading-none animate-fade-in-up">
-            Coordinates Lost
+            Store Not Found
           </h1>
           
           <p className="text-white/40 text-lg mb-10 leading-relaxed font-medium animate-fade-in-up animation-delay-100 px-4">
             We couldn&apos;t find a storefront at <span className="text-primary font-bold">/{username}</span>.
             {isPotentialOwner ? (
-               <span className="block mt-2 text-white/60">But it looks like this could be your new home.</span>
+               <span className="block mt-2 text-white/60">This could be your store URL.</span>
             ) : (
-               <span className="block mt-2">Check the URL or explore some of our top fleets below.</span>
+               <span className="block mt-2">Check the URL or explore some popular stores below.</span>
             )}
           </p>
 
@@ -172,14 +172,14 @@ export default async function PublicStorePage({ params }: Props) {
             {isPotentialOwner ? (
               <Link href="/dashboard/store" className="w-full">
                 <Button size="lg" className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/30 text-base font-black uppercase tracking-widest gap-3 hover-shine transition-all">
-                  Claim This URL Now
+                  Set Up My Store
                   <Sparkles size={18} className="animate-pulse" />
                 </Button>
               </Link>
             ) : (
               <Link href="/" className="w-full">
                 <Button size="lg" className="w-full h-16 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white shadow-xl text-base font-bold transition-all">
-                  Back to Home Base
+                  Go Home
                 </Button>
               </Link>
             )}
@@ -190,7 +190,7 @@ export default async function PublicStorePage({ params }: Props) {
             <div className="animate-fade-in-up animation-delay-300">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px flex-1 bg-white/5" />
-                <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">Explore Top Fleets</span>
+                <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">Popular Stores</span>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
               
@@ -216,7 +216,7 @@ export default async function PublicStorePage({ params }: Props) {
           
           <div className="mt-10 pt-10 border-t border-white/5">
              <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.4em]">
-              Verified by Storix Fleet Command
+              Powered by Storix
             </p>
           </div>
         </div>

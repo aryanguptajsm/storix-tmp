@@ -118,7 +118,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   <Sparkles className="w-4 h-4 text-[var(--store-primary)] animate-glow-pulse" />
                   <div className="absolute inset-0 blur-md bg-[var(--store-primary)]/60 animate-pulse" />
                 </div>
-                <span className="text-[10px] md:text-xs font-black text-white/80 tracking-[0.4em] uppercase">Intelligence Node Online</span>
+                <span className="text-[10px] md:text-xs font-black text-white/80 tracking-[0.4em] uppercase">Curated Collection</span>
               </div>
             </motion.div>
 
@@ -134,7 +134,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
               <div className="flex items-center gap-4 overflow-hidden w-full justify-center">
                 <div className="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent to-[var(--store-primary)]/40" />
                 <span className="text-[clamp(0.75rem,2.5vw,1.5rem)] font-black tracking-[0.3em] uppercase text-gradient-premium whitespace-nowrap px-2">
-                  Elite Collection
+                  Featured Products
                 </span>
                 <div className="h-px flex-1 max-w-[80px] bg-gradient-to-l from-transparent to-[var(--store-primary)]/40" />
               </div>
@@ -146,7 +146,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
               className="max-w-2xl mx-auto text-base md:text-2xl text-white/50 mb-10 md:mb-20 leading-relaxed px-6 font-medium balance"
             >
-              {profile.store_description || "Precision-curated inventory. Accessed via high-fidelity affiliate signals."}
+              {profile.store_description || "Discover great products at the best prices."}
             </motion.p>
 
             <motion.div 
@@ -159,30 +159,15 @@ export function StoreView({ profile, products }: StoreViewProps) {
                 <Button className="h-16 md:h-20 w-full sm:w-auto px-10 md:px-20 rounded-2xl md:rounded-full bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-[0_20px_50px_rgba(var(--store-primary-rgb),0.4)] font-black text-xs md:text-sm uppercase tracking-[0.3em] gap-4 group relative overflow-hidden transition-all duration-500">
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1]" />
                   <span className="relative z-10 flex items-center gap-4">
-                    Initialize Access
+                    Browse Products
                     <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500" />
                   </span>
                 </Button>
               </Link>
 
-              <div className="flex items-center gap-6 py-3 px-8 rounded-3xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
-                <div className="flex -space-x-4">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div 
-                      key={i} 
-                      className="w-12 h-12 rounded-full border-2 border-[var(--store-background)] bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center text-[10px] font-black text-white/40 shadow-xl"
-                    >
-                      {String.fromCharCode(64 + i)}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-left">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10B981]" />
-                    <span className="text-[11px] font-black text-white tracking-[0.1em] uppercase">Active Fleets</span>
-                  </div>
-                  <span className="text-[11px] font-bold text-white/30 uppercase tracking-widest whitespace-nowrap">Integrated across 140+ Nodes</span>
-                </div>
+              <div className="flex items-center gap-4 py-3 px-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10B981]" />
+                <span className="text-[11px] font-bold text-white/40 uppercase tracking-wider">{products.length} products available</span>
               </div>
             </motion.div>
           </div>
@@ -210,7 +195,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   className="flex items-center gap-3"
                 >
                   <div className="h-1 w-12 bg-gradient-to-r from-[var(--store-primary)] to-transparent rounded-full" />
-                  <span className="text-[var(--store-primary)] font-black text-[11px] uppercase tracking-[0.4em]">Core Inventory</span>
+                  <span className="text-[var(--store-primary)] font-black text-[11px] uppercase tracking-[0.4em]">Products</span>
                 </motion.div>
                 <motion.h2 
                   initial={{ opacity: 0, y: 20 }}
@@ -218,7 +203,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   viewport={{ once: true }}
                   className="text-4xl md:text-6xl font-black text-white tracking-tighter"
                 >
-                  Signal Strength: <span className="text-white/30">100%</span>
+                  All Products
                 </motion.h2>
               </div>
               <motion.p 
@@ -227,7 +212,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                 viewport={{ once: true }}
                 className="text-white/40 text-lg max-w-sm md:text-right font-medium leading-relaxed"
               >
-                High-fidelity products sourced through deep-link intelligence and verified by Storix systems.
+                Hand-picked products with verified affiliate links.
               </motion.p>
             </div>
 
@@ -238,7 +223,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
               viewport={{ once: true }}
               className="flex items-center gap-6 md:gap-10 pb-4 border-b border-white/5 mb-16 overflow-x-auto no-scrollbar whitespace-nowrap"
             >
-              {['All Items', 'Top Tier', 'Recent Deployments'].map((tab) => (
+              {['All Items', 'Best Sellers', 'New Arrivals'].map((tab) => (
                 <button 
                   key={tab} 
                   onClick={() => setActiveTab(tab)}
@@ -270,13 +255,13 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   <div className="w-24 h-24 bg-white/[0.02] rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 border border-white/5 group-hover:scale-110 group-hover:border-[var(--store-primary)]/20 transition-all duration-700">
                     <Package className="w-12 h-12 text-white/20 group-hover:text-[var(--store-primary)]/40 transition-colors" />
                   </div>
-                  <h3 className="text-3xl md:text-4xl font-black mb-6 tracking-tight">Deployment Pending</h3>
+                  <h3 className="text-3xl md:text-4xl font-black mb-6 tracking-tight">Coming Soon</h3>
                   <p className="text-white/30 text-lg max-w-md mx-auto font-medium px-8 leading-relaxed">
-                    Fleet command is currently verifying new supply chains. Return soon for the latest drops.
+                    Products are being added to this store. Check back soon!
                   </p>
                   <div className="mt-12 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.03] border border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-white/40">
                     <Search size={14} className="animate-pulse" />
-                    Scanning Universal Grid...
+                    Loading products...
                   </div>
                 </motion.div>
               ) : (
@@ -341,7 +326,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
               </div>
               <h4 className="text-3xl font-black tracking-tighter text-white">{profile.store_name}</h4>
               <p className="text-white/30 text-sm max-w-sm text-center font-medium leading-loose">
-                An autonomous storefront deployment powered by the Storix Intelligence Core.
+                A storefront powered by Storix.
               </p>
               
               {/* Pro Feature: Branding Gating */}
@@ -361,22 +346,22 @@ export function StoreView({ profile, products }: StoreViewProps) {
             <div className="flex flex-wrap justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
               <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
                 <ShieldCheck size={14} className="text-emerald-500/50" />
-                Signal Verified
+                Verified Links
               </div>
               <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
                 <Zap size={14} className="text-amber-500/50" />
-                Instant Sync
+                Fast Updates
               </div>
               <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
                 <Sparkles size={14} className="text-primary/50" />
-                Elite Deployment
+                Quality Products
               </div>
             </div>
 
             <Link href="/" className="group">
               <div className="relative inline-flex items-center gap-4 px-8 py-4 rounded-3xl bg-white/[0.03] border border-white/10 group-hover:border-[var(--store-primary)]/40 transition-all text-xs font-black text-white group-hover:bg-[var(--store-primary)]/5">
                 <Sparkles size={18} className="text-[var(--store-primary)]" />
-                Launch your own Fleet Command
+                Create your own store
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
