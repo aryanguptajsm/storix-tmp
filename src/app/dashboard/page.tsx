@@ -160,25 +160,18 @@ export default async function DashboardPage() {
             </ScrollReveal>
           )}
 
-          <ScrollReveal delay={0.2}>
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/5">
-                    Terminal Active
-                  </div>
-                  <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_10px_#10B981] animate-pulse" />
-                </div>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 animate-fade-in">
+              <div className="space-y-3">
                 <div className="space-y-1">
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tighter leading-[0.9] italic">
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tighter leading-[0.9]">
                     Welcome back, <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light via-white to-secondary-light uppercase not-italic tracking-tighter block mt-2 animate-mesh-flow">
-                       {profile?.store_name || "Agent"}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light via-white to-secondary-light tracking-tighter block mt-2">
+                       {profile?.store_name || "there"}
                     </span>
                   </h1>
                 </div>
                 <p className="text-sm md:text-base text-white/30 font-medium max-w-xl leading-relaxed">
-                  Your affiliate commerce network is operating at <span className="text-primary-light/80 shadow-primary/20">peak efficiency</span>. Analyzing global intercept nodes...
+                  Here&apos;s an overview of your affiliate store performance.
                 </p>
               </div>
 
@@ -187,21 +180,20 @@ export default async function DashboardPage() {
                 <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 lg:flex-initial">
                   <Button variant="secondary" className="w-full bg-white/[0.03] border-white/5 h-12 px-6">
                     <ExternalLink className="w-4 h-4" />
-                    Live Store
+                    View Store
                   </Button>
                 </Link>
                 <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 lg:flex-initial">
                   <Button className="w-full h-12 px-8 shadow-2xl shadow-primary/20">
                     <Plus className="w-4 h-4" />
-                    New Unit
+                    Add Product
                   </Button>
                 </Link>
               </div>
             </div>
-          </ScrollReveal>
         </div>
 
-        <StaggerReveal stagger={0.1} delay={0.4} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="perspective-1000 group">
             <Card size="medium" variant="glass" className="relative overflow-hidden group hover:glow-primary transition-all duration-700 h-full animate-glow-border border-beam">
               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -210,7 +202,7 @@ export default async function DashboardPage() {
               <div className="absolute top-[-40px] right-[-40px] w-60 h-60 icon-glow-primary rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
               <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/5">
                 <CardTitle className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-muted/50 font-display">
-                  Fleet Capacity
+                  Products
                 </CardTitle>
                 <div className="p-2.5 rounded-xl bg-primary/10 text-primary shadow-xl shadow-primary/10 border border-primary/20 group-hover:scale-110 transition-transform duration-500">
                   <Package className="w-4 h-4" />
@@ -238,7 +230,7 @@ export default async function DashboardPage() {
               <div className="absolute top-[-40px] right-[-40px] w-60 h-60 icon-glow-secondary rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
               <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/5">
                 <CardTitle className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-muted/50 font-display">
-                  Engagement Intel
+                  Total Clicks
                 </CardTitle>
                 <div className="p-2.5 rounded-xl bg-secondary/10 text-secondary shadow-xl shadow-secondary/10 border border-secondary/20 group-hover:scale-110 transition-transform duration-500">
                   <MousePointerClick className="w-4 h-4" />
@@ -266,7 +258,7 @@ export default async function DashboardPage() {
               <div className="absolute top-[-40px] right-[-40px] w-60 h-60 icon-glow-accent rounded-full blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
               <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/5">
                 <CardTitle className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-muted/50 font-display">
-                  Revenue Stream
+                  Estimated Revenue
                 </CardTitle>
                 <div className="p-2.5 rounded-xl bg-accent/10 text-accent shadow-xl shadow-accent/10 border border-accent/20 group-hover:scale-110 transition-transform duration-500">
                   <TrendingUp className="w-4 h-4" />
@@ -285,9 +277,8 @@ export default async function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-        </StaggerReveal>
+        </div>
 
-        <ScrollReveal variant="zoom-in" delay={0.7}>
           <Card size="medium" variant="premium" className="shadow-[0_0_50px_rgba(0,0,0,0.5)] relative group transition-all duration-1000 overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -295,20 +286,20 @@ export default async function DashboardPage() {
             <div className="flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
               <div className="flex flex-col md:flex-row items-center gap-10">
                 <div className="relative">
-                  <div className="w-24 h-24 rounded-2xl bg-black/40 flex items-center justify-center text-primary border border-primary/20 shadow-2xl transition-all group-hover:scale-110 group-hover:rotate-6 duration-700 relative overflow-hidden animate-glow-pulse">
+                  <div className="w-24 h-24 rounded-2xl bg-black/40 flex items-center justify-center text-primary border border-primary/20 shadow-2xl transition-all group-hover:scale-110 duration-700 relative overflow-hidden">
                      <div className="absolute inset-0 grid-bg-dots opacity-30" />
                      <Globe size={40} className="relative z-10" />
                   </div>
                 </div>
                 <div className="space-y-3 text-center md:text-left">
                   <div className="flex flex-col md:flex-row md:items-center gap-4">
-                      <h3 className="text-3xl md:text-4xl font-extrabold text-white italic tracking-tighter">Main Grid Active</h3>
+                      <h3 className="text-3xl md:text-4xl font-extrabold text-white tracking-tighter">Your Store</h3>
                       <div className="flex justify-center md:justify-start">
-                         <span className="px-4 py-1.5 rounded-full bg-success/10 text-success text-[10px] font-black uppercase tracking-[0.2em] border border-success/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">Sync Healthy</span>
+                         <span className="px-4 py-1.5 rounded-full bg-success/10 text-success text-[10px] font-black uppercase tracking-[0.2em] border border-success/20">Live</span>
                       </div>
                   </div>
                   <p className="text-base text-white/50 font-medium max-w-lg leading-relaxed">
-                     Your flagship storefront is broadcasting at maximum signal strength. All product nodes are verified and operational.
+                     Your storefront is live and ready for visitors. Share the link to start earning.
                   </p>
                 </div>
               </div>
@@ -320,20 +311,18 @@ export default async function DashboardPage() {
                 </div>
                 <Link href={`/store/${profile?.username}`} target="_blank" className="w-full sm:w-auto">
                   <Button className="w-full sm:w-auto h-16 rounded-2xl px-10">
-                     <span>Enter Station</span>
+                     <span>Visit Store</span>
                      <ArrowRight size={18} className="ml-3 group-hover:translate-x-2 transition-transform duration-700" />
                   </Button>
                 </Link>
               </div>
             </div>
           </Card>
-        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <ScrollReveal delay={0.8}>
             <Card size="medium" variant="glass" className="hover:border-white/10 transition-all duration-700 overflow-hidden group h-full">
               <CardHeader className="border-b border-white/5 flex flex-row items-center justify-between p-8">
-                <CardTitle className="text-xl font-extrabold italic tracking-tight">Recent Inventory Hangar</CardTitle>
+                <CardTitle className="text-xl font-extrabold tracking-tight">Recent Products</CardTitle>
                 <Link href="/dashboard/products">
                   <Button variant="ghost" size="sm" className="text-[9px] text-primary-light hover:text-primary font-black uppercase tracking-[0.2em] border border-white/5 rounded-xl px-4">View All</Button>
                 </Link>
@@ -341,10 +330,10 @@ export default async function DashboardPage() {
               <CardContent className="p-0">
                 {recentProducts.length === 0 ? (
                   <div className="text-sm text-muted text-center py-28 flex flex-col items-center gap-6">
-                    <div className="w-20 h-20 rounded-[2rem] bg-surface-light flex items-center justify-center opacity-50 border border-white/5 animate-float">
-                      <Zap className="w-10 h-10" />
+                    <div className="w-20 h-20 rounded-[2rem] bg-surface-light flex items-center justify-center opacity-50 border border-white/5">
+                      <Package className="w-10 h-10" />
                     </div>
-                    <p className="max-w-[280px] font-medium text-white/30 text-lg italic tracking-tight uppercase">No tactical data payload detected.</p>
+                    <p className="max-w-[280px] font-medium text-white/30 text-base">No products yet. Add your first product to get started.</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-white/5">
@@ -361,14 +350,14 @@ export default async function DashboardPage() {
                           </div>
                           <div className="flex flex-col gap-1">
                             <span className="text-lg font-black text-foreground line-clamp-1 group-hover/item:text-primary transition-colors tracking-tight">{product.title}</span>
-                            <span className="text-[10px] text-muted uppercase font-black tracking-[0.2em] flex items-center gap-2">
+                            <span className="text-[10px] text-muted uppercase font-bold tracking-wider flex items-center gap-2">
                                <Globe size={12} className="text-secondary" /> {product.platform}
                             </span>
                           </div>
                         </div>
                         <div className="text-right relative z-10">
-                          <div className="text-2xl font-black text-secondary-light tracking-tighter italic">{product.price || "N/A"}</div>
-                          <div className="text-[9px] text-muted font-black uppercase tracking-widest">{new Date(product.created_at).toLocaleDateString()}</div>
+                          <div className="text-2xl font-black text-secondary-light tracking-tighter">{product.price || "N/A"}</div>
+                          <div className="text-[9px] text-muted font-bold uppercase tracking-widest">{new Date(product.created_at).toLocaleDateString()}</div>
                         </div>
                       </div>
                     ))}
@@ -376,45 +365,36 @@ export default async function DashboardPage() {
                 )}
               </CardContent>
             </Card>
-          </ScrollReveal>
 
-          <ScrollReveal delay={0.9}>
             <Card size="medium" variant="glass" className="hover:border-white/10 transition-all duration-700 h-full group">
               <CardHeader className="border-b border-white/5 p-8">
-                <CardTitle className="text-xl font-extrabold italic tracking-tight">Strategic Intelligence</CardTitle>
+                <CardTitle className="text-xl font-extrabold tracking-tight">Quick Tips</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6 pt-8 p-8">
                 <div className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-start gap-6 hover:border-primary/30 transition-all group/tip cursor-default hover:bg-primary/[0.03] animate-glow-border relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 opacity-[0.02] group-hover/tip:opacity-[0.05]">
-                    <Plus size={80} />
-                  </div>
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary group-hover/tip:rotate-12 transition-transform border border-primary/20 shadow-xl shadow-primary/10">
                     <Plus className="w-7 h-7" />
                   </div>
                   <div className="relative z-10">
-                    <h4 className="font-black text-xl text-foreground mb-2 italic">Scale Inventory Nodes</h4>
+                    <h4 className="font-black text-xl text-foreground mb-2">Add More Products</h4>
                     <p className="text-base text-muted/60 leading-relaxed font-medium">
-                      Stations with <span className="text-primary-light font-bold">12+ active units</span> maintain a 300% higher intercept priority.
+                      Stores with <span className="text-primary-light font-bold">12+ products</span> get significantly more clicks and engagement.
                     </p>
                   </div>
                 </div>
                 <div className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-start gap-6 hover:border-secondary/30 transition-all group/tip cursor-default hover:bg-secondary/[0.03] animate-glow-border relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 opacity-[0.02] group-hover/tip:opacity-[0.05]">
-                    <Sparkles size={80} />
-                  </div>
                   <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0 text-secondary group-hover/tip:rotate-12 transition-transform border border-secondary/20 shadow-xl shadow-secondary/10">
                     <Sparkles className="w-7 h-7" />
                   </div>
                   <div className="relative z-10">
-                    <h4 className="font-black text-xl text-foreground mb-2 italic">Refine Intercept Signals</h4>
+                    <h4 className="font-black text-xl text-foreground mb-2">Optimize Your Titles</h4>
                     <p className="text-base text-muted/60 leading-relaxed font-medium">
-                      Optimize your <span className="text-secondary-light font-bold">AI broadcast signals</span> with tactical keywords for maximum reach.
+                      Use the <span className="text-secondary-light font-bold">AI title generator</span> to write SEO-friendly titles that convert better.
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </ScrollReveal>
         </div>
       </div>
     </div>
