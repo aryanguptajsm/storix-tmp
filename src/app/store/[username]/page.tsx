@@ -1,5 +1,6 @@
 import React from "react";
 import { createClient } from "@/lib/supabase-server";
+import { cookies } from "next/headers";
 import { StoreView } from "@/components/store/StoreView";
 import { Button } from "@/components/ui/Button";
 import { ShoppingBag, Sparkles, Search } from "lucide-react";
@@ -31,7 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!profile) {
     // If not found, check if it's a potential owner (metadata fallback)
-    const { data: { user } } = await supabase.auth.getUser();
+    const cookieStore = await cookies();
+    const hasSession = cookieStore.getAll().some(c => c.name.includes('auth-token') || c.name.startsWith('sb-'));
+    
+    const { data: { user } } = hasSession ? await supabase.auth.getUser() : { data: { user: null } };
     if (user && user.email?.split('@')[0].toLowerCase() === normalizedUsername) {
       const { data: ownProfile } = await supabase
         .from("profiles")
@@ -71,7 +75,9 @@ export default async function PublicStorePage({ params }: Props) {
     .single();
 
   // Check if current visitor is logged in
-  const { data: { user } } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const hasSession = cookieStore.getAll().some(c => c.name.includes('auth-token') || c.name.startsWith('sb-'));
+  const { data: { user } } = hasSession ? await supabase.auth.getUser() : { data: { user: null } };
 
   // GREEDY FALLBACK 1: If not found, check if it's the owner's email prefix
   let isPotentialOwner = false;

@@ -32,11 +32,19 @@ export async function updateSession(request: NextRequest) {
   );
 
   let user = null;
-  try {
-    const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-    user = supabaseUser;
-  } catch (error) {
-    console.error("Middleware Auth Error (likely fetch failure):", error);
+  
+  // Optimization: Only call getUser if we have a session cookie
+  // This prevents noisy 'Auth session missing!' errors in the console
+  const hasSession = request.cookies.getAll().some(cookie => cookie.name.includes('auth-token') || cookie.name.startsWith('sb-'));
+  
+  if (hasSession) {
+    try {
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      user = supabaseUser;
+    } catch (error) {
+      // We don't want to log this on every request unless it's a real failure
+      console.error("Middleware Auth Error:", error);
+    }
   }
 
   // Redirect to login if user is not authenticated and trying to access dashboard

@@ -14,8 +14,26 @@ export async function middleware(request: NextRequest) {
       ? hostname.replace(`.storix.in`, "") // Production domain
       : hostname.replace(`.localhost:3000`, ""); // Local dev domain
 
+  // List of paths that should NOT be rewritten to a subdomain store
+  const reservedPaths = [
+    "/dashboard",
+    "/login",
+    "/signup",
+    "/pricing",
+    "/terms",
+    "/privacy",
+    "/storix",
+    "/auth",
+    "/api"
+  ];
+
+  const isReservedPath = reservedPaths.some(path => 
+    url.pathname === path || url.pathname.startsWith(`${path}/`)
+  );
+
   // If there's a valid subdomain (not the root domain or www)
   if (
+    !isReservedPath &&
     currentHost !== "storix.in" &&
     currentHost !== "localhost:3000" &&
     currentHost !== "www.storix.in" &&
