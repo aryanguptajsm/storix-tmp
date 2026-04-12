@@ -121,9 +121,19 @@ export async function updateProfile(
   userId: string,
   updates: Partial<UserProfile>
 ) {
+  // Strip columns that are not present in the live Supabase schema to prevent 400 Bad Request
+  const validUpdates = { ...updates };
+  const missingColumns: (keyof UserProfile)[] = ['theme', 'store_logo', 'avatar_url', 'plan'];
+  
+  missingColumns.forEach(col => {
+    if (col in validUpdates) {
+      delete validUpdates[col];
+    }
+  });
+
   const { data, error } = await supabase
     .from("profiles")
-    .update(updates)
+    .update(validUpdates)
     .eq("id", userId)
     .select()
     .single();
