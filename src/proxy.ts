@@ -23,6 +23,7 @@ export async function proxy(request: NextRequest) {
     "/terms",
     "/privacy",
     "/storix",
+    "/store",
     "/auth",
     "/api"
   ];

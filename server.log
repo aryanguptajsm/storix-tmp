@@ -1,17 +1,16 @@
 
 > storix-tmp@0.1.0 dev
-> next dev
+> NODE_OPTIONS='--dns-result-order=ipv4first' next dev
 
 ▲ Next.js 16.2.1 (Turbopack)
 - Local:         http://localhost:3000
-- Network:       http://10.76.174.227:3000
+- Network:       http://10.142.32.227:3000
 - Environments: .env.local
-✓ Ready in 1933ms
-⚠ Slow filesystem detected. The benchmark took 348ms. If /home/aryan/storix/.next/dev is a network drive, consider moving it to a local folder.
-See more: https://nextjs.org/docs/app/guides/local-development
-○ Compiling middleware ...
-⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 12.6s
 - Experiments (use with caution):
   · optimizePackageImports
 
-[?25h
+○ Compiling / ...
+ GET / 200 in 40s (next.js: 35.1s, proxy.ts: 1740ms, application-code: 3.1s)
+✓ Finished writing to filesystem cache in 47s
+✓ Compiled in 5.3s
