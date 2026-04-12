@@ -23,10 +23,10 @@ import { isPremiumTheme } from "@/lib/plans";
 
 interface Profile {
   store_name: string;
-  store_description: string;
+  store_description?: string | null;
   username: string;
   id: string;
-  theme: string;
+  theme?: string | null;
   store_logo?: string | null;
   plan?: string | null;
 }
