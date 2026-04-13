@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/auth-middleware";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // First, verify auth sessions
   const res = await updateSession(request);
 
