@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts"],
   },
+  output: "standalone",
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        poll: false,
+        ignored: ['**/node_modules', '**/.git', '**/.next'],
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
