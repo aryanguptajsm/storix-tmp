@@ -191,177 +191,156 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <div className="perspective-1000 group h-full">
-            <TiltCard intensity={5} className="h-full">
-            <Card variant="glass" className="relative overflow-hidden group hover:glow-primary transition-all duration-300 h-full">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <Package size={50} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Card variant="glass" className="relative overflow-hidden group hover:glow-primary transition-all duration-300 h-full border-white/[0.05]">
+            <div className="absolute top-[-30px] right-[-30px] w-32 h-32 icon-glow-primary rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/[0.02] px-5 pt-5">
+              <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted/60">
+                Products
+              </CardTitle>
+              <div className="p-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 group-hover:scale-105 transition-transform duration-300">
+                <Package className="w-3.5 h-3.5" />
               </div>
-              <div className="absolute top-[-30px] right-[-30px] w-40 h-40 icon-glow-primary rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-white/5 px-6 pt-6">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted/70">
-                  Products
-                </CardTitle>
-                <div className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20 group-hover:scale-105 transition-transform duration-300">
-                  <Package className="w-4 h-4" />
+            </CardHeader>
+            <CardContent className="px-5 pb-5 pt-3 relative z-10">
+              <div className="text-3xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
+                {stats.totalProducts}
+              </div>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-primary w-[70%] animate-shimmer" />
                 </div>
-              </CardHeader>
-              <CardContent className="px-6 pb-6 pt-4 relative z-10">
-                <div className="text-4xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
-                  {stats.totalProducts}
-                </div>
-                <div className="flex items-center gap-3 mt-3">
-                  <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-primary w-[70%] animate-shimmer" />
-                  </div>
-                  <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Active</span>
-                </div>
-              </CardContent>
-            </Card>
-            </TiltCard>
-          </div>
+                <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Active</span>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="perspective-1000 group h-full">
-            <TiltCard intensity={5} className="h-full">
-            <Card variant="glass" className="relative overflow-hidden group hover:glow-secondary transition-all duration-300 h-full">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <MousePointerClick size={50} />
+          <Card variant="glass" className="relative overflow-hidden group hover:glow-secondary transition-all duration-300 h-full border-white/[0.05]">
+            <div className="absolute top-[-30px] right-[-30px] w-32 h-32 icon-glow-secondary rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/[0.02] px-5 pt-5">
+              <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted/60">
+                Total Clicks
+              </CardTitle>
+              <div className="p-1.5 rounded-lg bg-secondary/10 text-secondary border border-secondary/20 group-hover:scale-105 transition-transform duration-300">
+                <MousePointerClick className="w-3.5 h-3.5" />
               </div>
-              <div className="absolute top-[-30px] right-[-30px] w-40 h-40 icon-glow-secondary rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-white/5 px-6 pt-6">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted/70">
-                  Total Clicks
-                </CardTitle>
-                <div className="p-2 rounded-lg bg-secondary/10 text-secondary border border-secondary/20 group-hover:scale-105 transition-transform duration-300">
-                  <MousePointerClick className="w-4 h-4" />
+            </CardHeader>
+            <CardContent className="px-5 pb-5 pt-3 relative z-10">
+              <div className="text-3xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
+                {stats.totalClicks}
+              </div>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary w-[45%] animate-shimmer" />
                 </div>
-              </CardHeader>
-              <CardContent className="px-6 pb-6 pt-4 relative z-10">
-                <div className="text-4xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
-                  {stats.totalClicks}
-                </div>
-                <div className="flex items-center gap-3 mt-3">
-                  <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-secondary w-[45%] animate-shimmer" />
-                  </div>
-                  <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Tracked</span>
-                </div>
-              </CardContent>
-            </Card>
-            </TiltCard>
-          </div>
+                <span className="text-[9px] font-bold text-secondary uppercase tracking-widest">Tracked</span>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="perspective-1000 group h-full">
-            <TiltCard intensity={5} className="h-full">
-            <Card variant="glass" className="relative overflow-hidden group hover:glow-accent transition-all duration-300 h-full">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <TrendingUp size={50} />
+          <Card variant="glass" className="relative overflow-hidden group hover:glow-accent transition-all duration-300 h-full border-white/[0.05]">
+            <div className="absolute top-[-30px] right-[-30px] w-32 h-32 icon-glow-accent rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/[0.02] px-5 pt-5">
+              <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted/60">
+                Est. Revenue
+              </CardTitle>
+              <div className="p-1.5 rounded-lg bg-accent/10 text-accent border border-accent/20 group-hover:scale-105 transition-transform duration-300">
+                <TrendingUp className="w-3.5 h-3.5" />
               </div>
-              <div className="absolute top-[-30px] right-[-30px] w-40 h-40 icon-glow-accent rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <CardHeader className="flex flex-row items-center justify-between pb-3 border-b border-white/5 px-6 pt-6">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-muted/70">
-                  Est. Revenue
-                </CardTitle>
-                <div className="p-2 rounded-lg bg-accent/10 text-accent border border-accent/20 group-hover:scale-105 transition-transform duration-300">
-                  <TrendingUp className="w-4 h-4" />
+            </CardHeader>
+            <CardContent className="px-5 pb-5 pt-3 relative z-10">
+              <div className="text-3xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
+                $0.00
+              </div>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-accent w-[20%] animate-shimmer" />
                 </div>
-              </CardHeader>
-              <CardContent className="px-6 pb-6 pt-4 relative z-10">
-                <div className="text-4xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
-                  $0.00
-                </div>
-                <div className="flex items-center gap-3 mt-3">
-                  <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-accent w-[20%] animate-shimmer" />
-                  </div>
-                  <span className="text-[10px] font-bold text-accent uppercase tracking-widest">Soon</span>
-                </div>
-              </CardContent>
-            </Card>
-            </TiltCard>
-          </div>
+                <span className="text-[9px] font-bold text-accent uppercase tracking-widest">Soon</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <Card variant="premium" className="shadow-lg relative group transition-all duration-500 overflow-hidden border-white/10">
-          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
+        <Card variant="premium" className="shadow-lg relative group transition-all duration-500 overflow-hidden border-white/[0.05] p-5 md:p-6 rounded-2xl">
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-50" />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10 p-6 md:p-8">
-            <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-5">
               <div className="relative">
-                <div className="w-16 h-16 rounded-2xl bg-black/40 flex items-center justify-center text-primary border border-primary/20 shadow-md transition-all group-hover:scale-105 duration-500 relative overflow-hidden">
+                <div className="w-12 h-12 rounded-xl bg-black/40 flex items-center justify-center text-primary border border-primary/20 shadow-md transition-all group-hover:scale-105 duration-500 relative overflow-hidden">
                    <div className="absolute inset-0 grid-bg-dots opacity-30" />
-                   <Globe size={28} className="relative z-10" />
+                   <Globe size={20} className="relative z-10" />
                 </div>
               </div>
-              <div className="space-y-2 text-center md:text-left">
-                <div className="flex flex-col md:flex-row md:items-center gap-3">
-                    <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Your Store</h3>
+              <div className="space-y-1 text-center md:text-left">
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Your Store</h3>
                     <div className="flex justify-center md:justify-start">
-                       <span className="px-3 py-1 rounded-full bg-success/10 text-success text-[10px] font-bold uppercase tracking-widest border border-success/20">Live</span>
+                       <span className="px-2 py-0.5 rounded-[4px] bg-success/10 text-success text-[9px] font-bold uppercase tracking-widest border border-success/20">Live</span>
                     </div>
                 </div>
-                <p className="text-sm text-white/50 font-medium max-w-lg leading-relaxed">
-                   Your storefront is live and ready for visitors. Share the link to start earning.
+                <p className="text-xs text-white/50 font-medium max-w-lg leading-relaxed">
+                   Your storefront is live. Share the link to start earning.
                 </p>
               </div>
             </div>
             
-            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-4">
-              <div className="w-full lg:w-auto py-3 px-6 rounded-xl bg-black/40 border border-white/10 font-mono text-sm text-primary-light flex items-center justify-between gap-6 shadow-inner hover:border-primary/30 transition-all duration-300">
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-3">
+              <div className="w-full lg:w-auto py-2.5 px-4 rounded-lg bg-black/40 border border-white/10 font-mono text-xs text-primary-light flex items-center justify-between gap-4 shadow-inner hover:border-primary/30 transition-all duration-300">
                  <span className="opacity-40">/store/</span>
                  <span className="font-bold tracking-tight">{profile?.username || "..."}</span>
               </div>
               <Link href={`/store/${profile?.username}`} target="_blank" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-12 rounded-xl px-8 text-sm gap-2">
+                <Button className="w-full sm:w-auto h-10 rounded-lg px-6 text-xs gap-2">
                    <span>Visit Store</span>
-                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </div>
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card variant="glass" className="hover:border-white/10 transition-all duration-500 overflow-hidden group h-full">
-            <CardHeader className="border-b border-white/5 flex flex-row items-center justify-between p-6">
-              <CardTitle className="text-lg font-bold tracking-tight">Recent Products</CardTitle>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card variant="glass" className="hover:border-white/10 transition-all duration-500 overflow-hidden group h-full rounded-2xl border-white/[0.05]">
+            <CardHeader className="border-b border-white/[0.02] flex flex-row items-center justify-between pb-3 pt-4 px-5">
+              <CardTitle className="text-[13px] font-bold tracking-tight uppercase text-muted/80">Recent Products</CardTitle>
               <Link href="/dashboard/products">
-                <Button variant="ghost" size="sm" className="text-[10px] text-primary-light hover:text-primary font-bold uppercase tracking-widest border border-transparent hover:border-white/5 rounded-lg px-3">View All</Button>
+                <Button variant="ghost" size="sm" className="text-[9px] text-primary-light hover:text-primary font-bold uppercase tracking-widest border border-transparent hover:border-white/5 rounded-lg px-2 h-7 py-0 mt-[-4px]">View All</Button>
               </Link>
             </CardHeader>
             <CardContent className="p-0">
               {recentProducts.length === 0 ? (
-                <div className="text-sm text-muted text-center py-16 flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-surface-light flex items-center justify-center opacity-50 border border-white/5">
-                    <Package className="w-8 h-8" />
+                <div className="text-xs text-muted text-center py-10 flex flex-col items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-surface-light flex items-center justify-center opacity-50 border border-white/5">
+                    <Package className="w-6 h-6" />
                   </div>
-                  <p className="max-w-[250px] font-medium text-white/40 text-sm">No products yet. Add your first product to get started.</p>
+                  <p className="max-w-[200px] font-medium text-white/40 text-[11px]">No products yet. Add your first product.</p>
                 </div>
               ) : (
                 <div className="divide-y divide-white/5">
                   {recentProducts.map((product) => (
-                    <div key={product.id} className="p-5 flex items-center justify-between group/item hover:bg-white/[0.03] transition-all cursor-pointer relative overflow-hidden">
+                    <div key={product.id} className="p-4 flex items-center justify-between group/item hover:bg-white/[0.03] transition-all cursor-pointer relative overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity" />
-                      <div className="flex items-center gap-5 relative z-10">
-                        <div className="w-12 h-12 rounded-xl bg-white overflow-hidden flex-shrink-0 relative border border-white/10 group-hover/item:scale-105 transition-transform duration-300 shadow-sm">
+                      <div className="flex items-center gap-4 relative z-10">
+                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 relative border border-white/10 group-hover/item:scale-105 transition-transform duration-300 shadow-sm p-1">
                           {product.image_url ? (
-                            <Image src={product.image_url} alt="" fill className="object-contain p-2" sizes="48px" />
+                            <Image src={product.image_url} alt="" fill className="object-contain p-1" sizes="40px" />
                           ) : (
-                            <Package className="w-full h-full p-3 text-muted/20" />
+                            <Package className="w-full h-full p-2 text-muted/20" />
                           )}
                         </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-base font-bold text-foreground line-clamp-1 group-hover/item:text-primary transition-colors tracking-tight">{product.title}</span>
-                          <span className="text-[10px] text-muted uppercase font-bold tracking-wider flex items-center gap-1.5">
-                             <Globe size={10} className="text-secondary" /> {product.platform}
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-foreground line-clamp-1 group-hover/item:text-primary transition-colors tracking-tight">{product.title}</span>
+                          <span className="text-[9px] text-muted uppercase font-bold tracking-wider flex items-center gap-1 mt-0.5">
+                             <Globe size={8} className="text-secondary" /> {product.platform}
                           </span>
                         </div>
                       </div>
-                      <div className="text-right relative z-10 pl-4">
-                        <div className="text-lg font-bold text-secondary-light tracking-tight">{product.price || "N/A"}</div>
-                        <div className="text-[10px] text-muted font-bold uppercase tracking-widest mt-0.5">{new Date(product.created_at).toLocaleDateString()}</div>
+                      <div className="text-right relative z-10 pl-3">
+                        <div className="text-sm font-bold text-secondary-light tracking-tight">{product.price || "N/A"}</div>
+                        <div className="text-[9px] text-muted font-bold uppercase tracking-widest mt-0.5">{new Date(product.created_at).toLocaleDateString()}</div>
                       </div>
                     </div>
                   ))}
@@ -370,30 +349,30 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="hover:border-white/10 transition-all duration-500 h-full group">
-            <CardHeader className="border-b border-white/5 p-6">
-              <CardTitle className="text-lg font-bold tracking-tight">Quick Tips</CardTitle>
+          <Card variant="glass" className="hover:border-white/10 transition-all duration-500 h-full group rounded-2xl border-white/[0.05]">
+            <CardHeader className="border-b border-white/[0.02] pb-3 pt-4 px-5">
+              <CardTitle className="text-[13px] font-bold tracking-tight uppercase text-muted/80">Quick Tips</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 p-6">
-              <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start gap-5 hover:border-primary/20 transition-all group/tip cursor-default hover:bg-primary/[0.02] relative overflow-hidden">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary group-hover/tip:rotate-6 transition-transform border border-primary/20 shadow-sm">
-                  <Plus className="w-6 h-6" />
+            <CardContent className="space-y-3 p-4">
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-4 hover:border-primary/20 transition-all group/tip cursor-default hover:bg-primary/[0.02] relative overflow-hidden">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary group-hover/tip:rotate-6 transition-transform border border-primary/20 shadow-sm">
+                  <Plus className="w-5 h-5" />
                 </div>
-                <div className="relative z-10 pt-0.5">
-                  <h4 className="font-bold text-base text-foreground mb-1">Add More Products</h4>
-                  <p className="text-sm text-muted/70 leading-relaxed font-medium">
-                    Stores with <span className="text-primary-light font-bold">12+ products</span> get significantly more clicks and engagement.
+                <div className="relative z-10">
+                  <h4 className="font-bold text-[13px] text-foreground mb-0.5">Add More Products</h4>
+                  <p className="text-[11px] text-muted/70 leading-relaxed font-medium">
+                    Stores with <span className="text-primary-light font-bold">12+ products</span> get significantly more clicks.
                   </p>
                 </div>
               </div>
-              <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start gap-5 hover:border-secondary/20 transition-all group/tip cursor-default hover:bg-secondary/[0.02] relative overflow-hidden">
-                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0 text-secondary group-hover/tip:rotate-6 transition-transform border border-secondary/20 shadow-sm">
-                  <Sparkles className="w-6 h-6" />
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-4 hover:border-secondary/20 transition-all group/tip cursor-default hover:bg-secondary/[0.02] relative overflow-hidden">
+                <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 text-secondary group-hover/tip:rotate-6 transition-transform border border-secondary/20 shadow-sm">
+                  <Sparkles className="w-5 h-5" />
                 </div>
-                <div className="relative z-10 pt-0.5">
-                  <h4 className="font-bold text-base text-foreground mb-1">Optimize Your Titles</h4>
-                  <p className="text-sm text-muted/70 leading-relaxed font-medium">
-                    Use the <span className="text-secondary-light font-bold">AI generator</span> to write SEO-friendly titles that convert better.
+                <div className="relative z-10">
+                  <h4 className="font-bold text-[13px] text-foreground mb-0.5">Optimize Your Titles</h4>
+                  <p className="text-[11px] text-muted/70 leading-relaxed font-medium">
+                    Use the <span className="text-secondary-light font-bold">AI generator</span> to write SEO-friendly titles.
                   </p>
                 </div>
               </div>
