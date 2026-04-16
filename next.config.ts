@@ -41,6 +41,7 @@ const nextConfig: NextConfig = {
       "sonner",
     ],
     turbopackFileSystemCacheForDev: true,
+    memoryBasedWorkersCount: true,
   },
   output: "standalone",
 };

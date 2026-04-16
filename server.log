@@ -15,3 +15,4 @@ watch error (["/home/aryan/storix/node_modules/@opentelemetry"]): Io(Os { code: 
 - Experiments (use with caution):
   · optimizePackageImports
 
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
