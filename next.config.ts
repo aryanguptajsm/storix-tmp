@@ -21,9 +21,17 @@ const nextConfig: NextConfig = {
     ],
   },
   devIndicators: false,
-  turbopack: {},
+  turbopack: {
+    ignoreIssue: [
+      { path: "**/node_modules/@opentelemetry/**" },
+      { path: "**/node_modules/@emotion/**" },
+      { path: "**/node_modules/@swc/**" },
+      { path: "**/.next-internal/**" },
+      { path: "**/.config/**" },
+    ],
+  },
   watchOptions: {
-    pollIntervalMs: 1000,
+    pollIntervalMs: 2000,
   },
   experimental: {
   },
