@@ -2,18 +2,16 @@
 > storix-tmp@0.1.0 dev
 > NODE_OPTIONS='--dns-result-order=ipv4first' next dev
 
-⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
 ▲ Next.js 16.2.1 (Turbopack)
-- Local:         http://localhost:3001
-- Network:       http://10.104.167.227:3001
+- Local:         http://localhost:3000
+- Network:       http://10.104.167.227:3000
 - Environments: .env.local
-✓ Ready in 934ms
-⨯ Another next dev server is already running.
+✓ Ready in 3.2s
+⚠ Slow filesystem detected. The benchmark took 244ms. If /home/aryan/storix/.next/dev is a network drive, consider moving it to a local folder.
+See more: https://nextjs.org/docs/app/guides/local-development
+watch error (["/home/aryan/storix/node_modules/next/node_modules/@opentelemetry"]): Io(Os { code: 2, kind: NotFound, message: "No such file or directory" }) 
+watch error (["/home/aryan/storix/node_modules/@opentelemetry"]): Io(Os { code: 2, kind: NotFound, message: "No such file or directory" }) 
+○ Compiling proxy ...
+- Experiments (use with caution):
+  · optimizePackageImports
 
-- Local:        http://localhost:3000
-- PID:          19041
-- Dir:          /home/aryan/storix
-- Log:          .next/dev/logs/next-development.log
-
-Run kill 19041 to stop it.
-[?25h
