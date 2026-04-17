@@ -22,12 +22,16 @@ const nextConfig: NextConfig = {
   },
   devIndicators: false,
   turbopack: {
+    root: ".",
     ignoreIssue: [
       { path: "**/node_modules/@opentelemetry/**" },
       { path: "**/node_modules/@emotion/**" },
       { path: "**/node_modules/@swc/**" },
       { path: "node_modules/@opentelemetry" },
       { path: ".next-internal/**" },
+      { path: "**/.next-internal/**" },
+      { path: ".next/**" },
+      { path: "**/.next/**" },
       { path: ".config/**" },
     ],
   },
