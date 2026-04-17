@@ -48,6 +48,14 @@
   --color-focus-ring: var(--primary);
   --font-sans: var(--font-jakarta);
   --font-display: var(--font-outfit);
+  
+  /* Extreme Sharpness & Premium Density */
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 6px;
+  --radius-3xl: 8px;
 }
 
 * {
@@ -168,24 +176,33 @@ h1, h2, h3, h4, h5, h6 {
   0% { transform: translateX(-100%) skewX(-20deg); }
   100% { transform: translateX(200%) skewX(-20deg); }
 }
-@keyframes drift-slow {
-  0%, 100% { transform: translate(0, 0); }
-  33% { transform: translate(15px, -10px); }
-  66% { transform: translate(-10px, 15px); }
+@keyframes mesh-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10%, -10%) scale(1.1); }
+  66% { transform: translate(-5%, 15%) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
 }
-@keyframes mesh-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+
+@keyframes mesh-drift-slow {
+  0% { transform: translate(0, 0) scale(1.1); }
+  50% { transform: translate(-8%, 12%) scale(1.2); }
+  100% { transform: translate(0, 0) scale(1.1); }
 }
-@keyframes scan {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(100%); }
+
+.animate-mesh-drift { animation: mesh-drift 30s ease-in-out infinite; }
+.animate-mesh-drift-slow { animation: mesh-drift-slow 45s ease-in-out infinite; }
+
+.mesh-blob {
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: -1;
 }
-@keyframes glow-pulse {
-  0%, 100% { filter: drop-shadow(0 0 10px var(--store-primary)); opacity: 0.8; }
-  50% { filter: drop-shadow(0 0 25px var(--store-primary)); opacity: 1; }
-}
+
 
 /* ─── Animation Utilities ─── */
 .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
