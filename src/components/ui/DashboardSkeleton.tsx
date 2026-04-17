@@ -1,3 +1,5 @@
+"use client";
+
 import { Skeleton } from "./Skeleton";
 import DotField from "./DotField";
 
