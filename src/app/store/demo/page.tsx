@@ -20,10 +20,10 @@ export default function DemoStorePage() {
 
   const demoProducts = [
     {
-      id: "prod-1",
+      id: "550e8400-e29b-41d4-a716-446655440001",
       user_id: "demo-id-123",
       title: "Logitech MX Master 3S - Advanced Wireless Mouse",
-      image_url: "https://images.unsplash.com/photo-1615663245857-ac93bb7c229s?q=80&w=400&auto=format&fit=crop", // placeholder
+      image_url: "https://images.unsplash.com/photo-1615663245857-ac93bb7c229?q=80&w=400&auto=format&fit=crop", // placeholder
       platform: "Amazon",
       price: "$99.99",
       original_price: null,
@@ -32,7 +32,7 @@ export default function DemoStorePage() {
       created_at: new Date().toISOString()
     },
     {
-      id: "prod-2",
+      id: "550e8400-e29b-41d4-a716-446655440002",
       user_id: "demo-id-123",
       title: "Keychron Q1 Pro Custom Mechanical Keyboard",
       image_url: "https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=400&auto=format&fit=crop",
@@ -44,7 +44,7 @@ export default function DemoStorePage() {
       created_at: new Date(Date.now() - 86400000).toISOString()
     },
     {
-      id: "prod-3",
+      id: "550e8400-e29b-41d4-a716-446655440003",
       user_id: "demo-id-123",
       title: "Sony WH-1000XM5 Noise Canceling Headphones",
       image_url: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=400&auto=format&fit=crop",
@@ -56,7 +56,7 @@ export default function DemoStorePage() {
       created_at: new Date(Date.now() - 86400000 * 2).toISOString()
     },
     {
-      id: "prod-4",
+      id: "550e8400-e29b-41d4-a716-446655440004",
       user_id: "demo-id-123",
       title: "LG 34\" Curved UltraWide QHD Monitor",
       image_url: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop",

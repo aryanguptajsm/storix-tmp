@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   compress: true,
   images: {
-    minimumCacheTTL: 86400, // Cache optimized images for 24 hours
+    minimumCacheTTL: 60, // Optimized per user request
     remotePatterns: [
       { protocol: "https", hostname: "**.amazon.com" },
       { protocol: "https", hostname: "**.media-amazon.com" },
@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion", "sonner"],
     turbopackFileSystemCacheForDev: true,
     memoryBasedWorkersCount: true,
+    fetchCacheKeyPrefix: 'storix-fetch',
   },
   output: "standalone",
 };
