@@ -1,27 +1,10 @@
-import React, { Suspense } from "react";
-import dynamic from "next/dynamic";
-import { createClient } from "@/lib/supabase-server";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { 
-  Plus, 
-  MousePointerClick, 
-  Package, 
-  TrendingUp,
-  ExternalLink,
-  Sparkles,
-  Zap,
-  ArrowRight,
-  Settings,
-  Globe,
-} from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { CopyLinkButton } from "@/components/dashboard/CopyLinkButton";
-
-const TiltCard = dynamic(() => import("@/components/ui/TiltCard").then(mod => mod.TiltCard), { ssr: true });
-import { DashboardEntrance, ScrollReveal, StaggerReveal } from "@/components/dashboard/DashboardClientWrapper";
 import Image from "next/image";
+import { 
+  DashboardEntrance, 
+  ScrollReveal, 
+  StaggerReveal, 
+  TiltCard 
+} from "@/components/dashboard/DashboardClientWrapper";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
