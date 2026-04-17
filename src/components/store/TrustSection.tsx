@@ -61,9 +61,9 @@ export function TrustSection() {
           {items.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col items-center text-center gap-4 md:gap-5 p-5 md:p-7 rounded-2xl md:rounded-3xl bg-[var(--store-background)] border border-[var(--store-border)] hover:border-[var(--store-primary)]/20 transition-all duration-500 group hover-lift"
+              className="flex flex-col items-center text-center gap-4 md:gap-5 p-5 md:p-7 rounded-md bg-[var(--store-background)] border border-[var(--store-border)] hover:border-[var(--store-primary)]/20 transition-all duration-300 group"
             >
-              <div className={`w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg ${item.shadow}`}>
+              <div className={`w-14 h-14 md:w-16 md:h-16 rounded-md bg-gradient-to-br ${item.gradient} flex items-center justify-center transition-all duration-500 group-hover:scale-110 shadow-lg ${item.shadow}`}>
                 <item.icon size={24} strokeWidth={2.5} className="text-white md:w-7 md:h-7" />
               </div>
               <div className="space-y-1.5">

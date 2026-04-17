@@ -39,6 +39,7 @@ interface StoreViewProps {
 export function StoreView({ profile, products }: StoreViewProps) {
   const [showBackToTop, setShowBackToTop] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("All Items");
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -68,236 +69,160 @@ export function StoreView({ profile, products }: StoreViewProps) {
   const isPro = profile.plan && profile.plan !== "free";
   const finalTheme = !isPro && isPremiumTheme(profile.theme || "default") ? "default" : (profile.theme || "default");
 
+  // Filtering Logic
+  const filteredProducts = products.filter(p => {
+    const searchMatch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const tabMatch = activeTab === "All Items" || 
+                    (activeTab === "Best Sellers" && p.discount_percentage) || 
+                    (activeTab === "New Arrivals");
+    return searchMatch && tabMatch;
+  });
+
   return (
     <ThemeProvider initialTheme={finalTheme as any}>
       <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
         
-        <StoreHeader storeName={profile.store_name} storeLogo={profile.store_logo} />
+        <StoreHeader 
+          storeName={profile.store_name} 
+          storeLogo={profile.store_logo} 
+          searchValue={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
 
-        {/* ─── Hero Section ─── */}
-        <section className="relative pt-32 md:pt-48 pb-20 md:pb-36 px-4 md:px-8 overflow-hidden">
-          {/* Advanced Background Engineering */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 mesh-layered opacity-20" />
-            <div className="absolute inset-0 dot-grid opacity-[0.15]" />
-            <div className="scan-line opacity-10" />
-            
-            {/* Dynamic Ambient Orbs */}
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-                x: [0, 50, 0],
-                y: [0, -30, 0]
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-[var(--store-primary)]/15 rounded-full blur-[140px]" 
-            />
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.3, 1],
-                opacity: [0.05, 0.15, 0.05],
-                x: [0, -40, 0],
-                y: [0, 60, 0]
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-              className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[150px]" 
-            />
-          </div>
-
-          <div className="max-w-7xl mx-auto text-center relative z-10">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/10 mb-10 shadow-2xl relative group overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[var(--store-primary)]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative flex items-center gap-3">
-                <div className="relative">
-                  <Sparkles className="w-4 h-4 text-[var(--store-primary)] animate-glow-pulse" />
-                  <div className="absolute inset-0 blur-md bg-[var(--store-primary)]/60 animate-pulse" />
-                </div>
-                <span className="text-[10px] md:text-xs font-black text-white/80 tracking-[0.4em] uppercase">Curated Collection</span>
-              </div>
-            </motion.div>
-
-            <motion.h1 
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="flex flex-col items-center gap-4 mb-8 md:mb-14 px-4"
-            >
-              <span className="text-[clamp(2.5rem,12vw,7.5rem)] font-black tracking-[-0.07em] leading-[0.85] text-white text-shadow-glow break-words max-w-full">
-                {profile.store_name}
-              </span>
-              <div className="flex items-center gap-4 overflow-hidden w-full justify-center">
-                <div className="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent to-[var(--store-primary)]/40" />
-                <span className="text-[clamp(0.75rem,2.5vw,1.5rem)] font-black tracking-[0.3em] uppercase text-gradient-premium whitespace-nowrap px-2">
-                  Featured Products
-                </span>
-                <div className="h-px flex-1 max-w-[80px] bg-gradient-to-l from-transparent to-[var(--store-primary)]/40" />
-              </div>
-            </motion.h1>
-
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-              className="max-w-2xl mx-auto text-base md:text-2xl text-white/50 mb-10 md:mb-20 leading-relaxed px-6 font-medium balance"
-            >
-              {profile.store_description || "Discover great products at the best prices."}
-            </motion.p>
-
-            <motion.div 
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-               className="flex flex-col items-center justify-center gap-6 md:gap-12 px-4"
-            >
-              <Link href="#products" className="w-full sm:w-auto">
-                <Button className="h-16 md:h-20 w-full sm:w-auto px-10 md:px-20 rounded-2xl md:rounded-full bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-[0_20px_50px_rgba(var(--store-primary-rgb),0.4)] font-black text-xs md:text-sm uppercase tracking-[0.3em] gap-4 group relative overflow-hidden transition-all duration-500">
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1]" />
-                  <span className="relative z-10 flex items-center gap-4">
-                    Browse Products
-                    <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-500" />
-                  </span>
-                </Button>
-              </Link>
-
-              <div className="flex items-center gap-4 py-3 px-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10B981]" />
-                <span className="text-[11px] font-bold text-white/40 uppercase tracking-wider">{products.length} products available</span>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Trust Section with Reveal */}
-        <motion.div
-           initial={{ opacity: 0 }}
-           whileInView={{ opacity: 1 }}
-           viewport={{ once: true }}
-           transition={{ duration: 1 }}
-        >
-          <TrustSection />
-        </motion.div>
-
-        {/* ─── Product Grid Section ─── */}
-        <section id="products" className="py-24 md:py-40 px-6 sm:px-12 relative bg-[var(--store-background)]">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-24">
-              <div className="space-y-4">
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="h-1 w-12 bg-gradient-to-r from-[var(--store-primary)] to-transparent rounded-full" />
-                  <span className="text-[var(--store-primary)] font-black text-[11px] uppercase tracking-[0.4em]">Products</span>
-                </motion.div>
-                <motion.h2 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="text-4xl md:text-6xl font-black text-white tracking-tighter"
-                >
-                  All Products
-                </motion.h2>
-              </div>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 0.4 }}
-                viewport={{ once: true }}
-                className="text-white/40 text-lg max-w-sm md:text-right font-medium leading-relaxed"
-              >
-                Hand-picked products with verified affiliate links.
-              </motion.p>
-            </div>
-
-            {/* Category Filter Tabs */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-6 md:gap-10 pb-4 border-b border-white/5 mb-16 overflow-x-auto no-scrollbar whitespace-nowrap"
-            >
-              {['All Items', 'Best Sellers', 'New Arrivals'].map((tab) => (
-                <button 
-                  key={tab} 
-                  onClick={() => setActiveTab(tab)}
-                  className={`text-[11px] font-black uppercase tracking-[0.25em] transition-all relative py-2 ${
-                    activeTab === tab ? 'text-[var(--store-primary)]' : 'text-white/20 hover:text-white/50'
-                  }`}
-                >
-                  {tab}
-                  {activeTab === tab && (
+        <main className="pt-28 md:pt-36">
+          {/* ─── Retail Banner Section ─── */}
+          <section className="px-4 md:px-8 mb-8 md:mb-12">
+            <div className="max-w-[1400px] mx-auto">
+               <div className="relative h-[200px] md:h-[400px] rounded-lg overflow-hidden bg-[#0A0A0E] border border-white/10 group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent z-10" />
+                  <div className="absolute inset-0 mesh-layered opacity-30" />
+                  
+                  {/* Banner Content */}
+                  <div className="relative z-20 h-full flex flex-col justify-center px-8 md:px-16 max-w-2xl">
                     <motion.div 
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 w-full h-[3px] bg-[var(--store-primary)] rounded-full shadow-[0_0_15px_rgba(var(--store-primary-rgb),0.5)]" 
-                    />
-                  )}
-                </button>
-              ))}
-            </motion.div>
-
-            <AnimatePresence mode="wait">
-              {products.length === 0 ? (
-                <motion.div 
-                  key="empty"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="text-center py-32 md:py-48 bg-white/[0.01] rounded-[4rem] border-2 border-dashed border-white/5 relative overflow-hidden group"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-[var(--store-primary)]/[0.03] to-transparent pointer-events-none" />
-                  <div className="w-24 h-24 bg-white/[0.02] rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 border border-white/5 group-hover:scale-110 group-hover:border-[var(--store-primary)]/20 transition-all duration-700">
-                    <Package className="w-12 h-12 text-white/20 group-hover:text-[var(--store-primary)]/40 transition-colors" />
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-black mb-6 tracking-tight">Coming Soon</h3>
-                  <p className="text-white/30 text-lg max-w-md mx-auto font-medium px-8 leading-relaxed">
-                    Products are being added to this store. Check back soon!
-                  </p>
-                  <div className="mt-12 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.03] border border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-white/40">
-                    <Search size={14} className="animate-pulse" />
-                    Loading products...
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div 
-                  key="grid"
-                  initial="hidden"
-                  animate="visible"
-                  variants={{
-                    hidden: { opacity: 0 },
-                    visible: {
-                      opacity: 1,
-                      transition: { staggerChildren: 0.1 }
-                    }
-                  }}
-                  className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10"
-                >
-                  {products.map((product, index) => (
-                    <motion.div 
-                      key={product.id}
-                      variants={{
-                        hidden: { opacity: 0, y: 30 },
-                        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
-                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="bg-[var(--store-primary)] text-white text-[10px] md:text-xs font-black uppercase tracking-[0.3em] px-3 py-1 rounded-sm w-fit mb-4"
                     >
+                      Featured Collection
+                    </motion.div>
+                    <motion.h1 
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="text-3xl md:text-6xl font-black text-white tracking-tighter mb-4 md:mb-6"
+                    >
+                      Seasonal <br />Selection.
+                    </motion.h1>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.5 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-xs md:text-lg text-white mb-6 md:mb-10 font-medium"
+                    >
+                      {profile.store_description || "Premium products curated for quality and price."}
+                    </motion.p>
+                    <Link href="#products">
+                      <Button className="h-10 md:h-12 px-8 rounded-sm bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-white/90">
+                        Shop Now
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Visual Element */}
+                  <div className="absolute top-0 right-0 w-1/2 h-full hidden md:block">
+                     <div className="absolute inset-0 bg-gradient-to-l from-black to-transparent z-10" />
+                     <div className="absolute bottom-0 right-10 w-64 h-64 bg-[var(--store-primary)]/20 rounded-full blur-[100px]" />
+                     <ShoppingBag size={300} className="absolute top-1/2 right-10 -translate-y-1/2 text-white/[0.03] rotate-12" />
+                  </div>
+               </div>
+            </div>
+          </section>
+
+          {/* ─── Main Content Grid ─── */}
+          <section id="products" className="px-4 md:px-8 pb-32">
+            <div className="max-w-[1400px] mx-auto flex flex-col lg:grid lg:grid-cols-[240px_1fr] gap-8">
+              
+              {/* Sidebar Filters */}
+              <aside className="hidden lg:flex flex-col gap-8 sticky top-36 h-fit">
+                <div>
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Categories</h4>
+                  <div className="flex flex-col gap-4">
+                    {['All Items', 'Best Sellers', 'New Arrivals'].map((tab) => (
+                      <button 
+                        key={tab} 
+                        onClick={() => setActiveTab(tab)}
+                        className={`text-xs font-bold text-left transition-colors ${
+                          activeTab === tab ? 'text-[var(--store-primary)]' : 'text-white/40 hover:text-white'
+                        }`}
+                      >
+                        {tab}
+                        {activeTab === tab && <div className="h-0.5 w-4 bg-[var(--store-primary)] mt-1 rounded-full" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-white/5">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Platforms</h4>
+                  <div className="flex flex-col gap-4">
+                    {['Amazon', 'Flipkart', 'AliExpress'].map((plat) => (
+                      <label key={plat} className="flex items-center gap-3 cursor-pointer group">
+                        <div className="w-4 h-4 rounded-sm border border-white/10 group-hover:border-[var(--store-primary)]/40 transition-colors" />
+                        <span className="text-xs font-bold text-white/40 group-hover:text-white transition-colors">{plat}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-8 p-6 rounded-lg bg-[var(--store-primary)]/5 border border-[var(--store-primary)]/10">
+                   <ShieldCheck className="text-[var(--store-primary)] mb-3" size={20} />
+                   <h5 className="text-[10px] font-black text-white uppercase tracking-widest mb-1.5">Secure Shop</h5>
+                   <p className="text-[9px] text-white/40 leading-relaxed font-medium">All links are verified and scanned for safety protocols.</p>
+                </div>
+              </aside>
+
+              {/* Product Grid Area */}
+              <div className="flex-1">
+                {/* Mobile Tab Scroller */}
+                <div className="flex lg:hidden items-center gap-6 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5">
+                  {['All Items', 'Best Sellers', 'New Arrivals'].map((tab) => (
+                    <button 
+                      key={tab} 
+                      onClick={() => setActiveTab(tab)}
+                      className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap px-4 py-2 rounded-full border ${
+                        activeTab === tab 
+                          ? 'bg-[var(--store-primary)] border-[var(--store-primary)] text-white shadow-lg shadow-primary/20' 
+                          : 'bg-white/5 border-white/5 text-white/40'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                {filteredProducts.length === 0 ? (
+                  <div className="text-center py-32 rounded-lg border-2 border-dashed border-white/5">
+                    <Package className="w-12 h-12 text-white/10 mx-auto mb-6" />
+                    <h3 className="text-2xl font-black mb-2 tracking-tight">No match found</h3>
+                    <p className="text-white/30 text-sm font-medium">Try adjusting your search or filters.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
+                    {filteredProducts.map((product, index) => (
                       <ProductCard
+                        key={product.id}
                         product={product}
                         onBuyNow={handleBuyNow}
-                        priority={index < 4}
+                        priority={index < 8}
                       />
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </section>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        </main>
 
         {/* Back to Top Feature */}
         <AnimatePresence>
@@ -307,72 +232,52 @@ export function StoreView({ profile, products }: StoreViewProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.8 }}
               onClick={scrollToTop}
-              className="fixed bottom-10 right-10 z-[100] w-16 h-16 rounded-[2rem] bg-white text-black shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-2 active:scale-95 group"
+              className="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-md bg-white text-black shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-105"
             >
-              <ArrowUp className="w-7 h-7 group-hover:scale-110 transition-transform" />
+              <ArrowUp className="w-5 h-5" />
             </motion.button>
           )}
         </AnimatePresence>
 
-        {/* ─── Advanced Footer ─── */}
-        <footer className="bg-black border-t border-white/5 pt-24 pb-12 md:pt-32 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--store-primary)]/20 to-transparent" />
-          <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--store-primary)]/5 rounded-full blur-[120px]" />
-
-          <div className="max-w-7xl mx-auto px-8 flex flex-col items-center gap-16 relative z-10">
-            <div className="flex flex-col items-center gap-6 text-center">
-              <div className="p-5 bg-white/[0.03] rounded-3xl border border-white/10 hover:border-[var(--store-primary)]/30 transition-all group cursor-pointer shadow-2xl shadow-primary/5">
-                <ShoppingBag className="w-10 h-10 text-[var(--store-primary)] group-hover:scale-110 transition-transform" />
-              </div>
-              <h4 className="text-3xl font-black tracking-tighter text-white">{profile.store_name}</h4>
-              <p className="text-white/30 text-sm max-w-sm text-center font-medium leading-loose">
-                A storefront powered by Storix.
-              </p>
-              
-              {/* Pro Feature: Branding Gating */}
-              {!isPro && (
-                <div className="flex flex-col items-center gap-3 py-6 px-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 mt-4">
-                   <div className="flex items-center gap-2">
-                      <Sparkles className="text-primary w-4 h-4" />
-                      <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/30">Powered by Storix</span>
-                   </div>
-                   <Link href="/">
-                      <Button variant="ghost" size="sm" className="h-8 px-4 rounded-full text-[9px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-primary/5">Create your own store</Button>
-                   </Link>
+        {/* ─── Compact Retail Footer ─── */}
+        <footer className="bg-black border-t border-white/5 py-16 md:py-24">
+          <div className="max-w-[1400px] mx-auto px-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-16">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="w-6 h-6 text-[var(--store-primary)]" />
+                  <span className="text-xl font-black tracking-tighter text-white">{profile.store_name}</span>
                 </div>
-              )}
+                <p className="text-white/30 text-xs leading-relaxed font-medium">
+                  Professional affiliate storefront powered by Storix AI protocols.
+                </p>
+              </div>
+              <div>
+                <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Store</h6>
+                <div className="flex flex-col gap-4 text-xs font-bold text-white/40">
+                   <Link href="#products" className="hover:text-white transition-colors">All Products</Link>
+                   <Link href="#products" className="hover:text-white transition-colors">Daily Deals</Link>
+                   <Link href="#products" className="hover:text-white transition-colors">Platform Specials</Link>
+                </div>
+              </div>
+              <div>
+                <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Security</h6>
+                <div className="flex flex-col gap-4 text-xs font-bold text-white/40">
+                   <span className="flex items-center gap-2"><ShieldCheck size={12} className="text-emerald-500" /> Link Protocol</span>
+                   <span className="flex items-center gap-2"><Zap size={12} className="text-amber-500" /> Fast Sync</span>
+                </div>
+              </div>
+              <div className="p-6 rounded-lg bg-white/[0.02] border border-white/5">
+                <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-3">Join Storix</h6>
+                <Link href="/">
+                   <Button size="sm" className="w-full h-9 rounded-sm bg-white text-black font-black text-[9px] uppercase tracking-widest">Create Store</Button>
+                </Link>
+              </div>
             </div>
-
-            <div className="flex flex-wrap justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <ShieldCheck size={14} className="text-emerald-500/50" />
-                Verified Links
-              </div>
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <Zap size={14} className="text-amber-500/50" />
-                Fast Updates
-              </div>
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                <Sparkles size={14} className="text-primary/50" />
-                Quality Products
-              </div>
-            </div>
-
-            <Link href="/" className="group">
-              <div className="relative inline-flex items-center gap-4 px-8 py-4 rounded-3xl bg-white/[0.03] border border-white/10 group-hover:border-[var(--store-primary)]/40 transition-all text-xs font-black text-white group-hover:bg-[var(--store-primary)]/5">
-                <Sparkles size={18} className="text-[var(--store-primary)]" />
-                Create your own store
-                <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-
-            <div className="w-full pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[10px] font-bold text-white/15 uppercase tracking-[0.4em]">
-              <span>© 2026 {profile.store_name} Core</span>
-              <div className="flex items-center gap-10">
-                <a href="#" className="hover:text-primary transition-colors">Protocol</a>
-                <a href="#" className="hover:text-primary transition-colors">Manifest</a>
-                <a href="#" className="hover:text-primary transition-colors">Uplink</a>
-              </div>
+            
+            <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold text-white/10 uppercase tracking-[0.4em]">
+              <p>© 2026 {profile.store_name} Node</p>
+              <p className="hover:text-white transition-colors cursor-pointer">Powered by Gemini AI</p>
             </div>
           </div>
         </footer>
