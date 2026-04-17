@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
     pollIntervalMs: 2000,
   },
   experimental: {
-    optimizePackageImports: ["framer-motion", "sonner"],
+    optimizePackageImports: ["framer-motion", "sonner", "lucide-react"],
     turbopackFileSystemCacheForDev: true,
     memoryBasedWorkersCount: true,
     fetchCacheKeyPrefix: 'storix-fetch',
