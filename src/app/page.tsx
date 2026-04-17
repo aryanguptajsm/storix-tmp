@@ -20,7 +20,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function LandingPage() {
   const features = [

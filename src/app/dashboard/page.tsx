@@ -22,7 +22,6 @@ import {
   DashboardEntrance, 
   ScrollReveal, 
   StaggerReveal, 
-  TiltCard 
 } from "@/components/dashboard/DashboardClientWrapper";
 
 export default async function DashboardPage() {
@@ -104,14 +103,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6 pb-20 relative min-h-screen">
-      {/* Background Layering */}
-      <div className="fixed inset-0 pointer-events-none -z-20 bg-[#020205]" />
-      <div className="fixed inset-0 noise-subtle opacity-70 pointer-events-none -z-10" />
-      
-      {/* Ambient Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-breathing" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-drift-slow" />
-      <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] bg-accent/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="fixed inset-0 pointer-events-none -z-20 bg-black/60" />
       
       <DashboardEntrance />
 
@@ -194,111 +186,84 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card variant="glass" className="relative overflow-hidden group hover:glow-primary transition-all duration-300 h-full border-white/[0.05]">
-            <div className="absolute top-[-30px] right-[-30px] w-32 h-32 icon-glow-primary rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/[0.02] px-5 pt-5">
-              <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted/60">
-                Products
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <Card variant="glass" className="relative overflow-hidden group hover:glow-primary transition-all duration-300 h-full border-white/[0.05] rounded-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-1 px-4 pt-4">
+              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted/50">
+                Inventory
               </CardTitle>
-              <div className="p-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 group-hover:scale-105 transition-transform duration-300">
-                <Package className="w-3.5 h-3.5" />
-              </div>
+              <Package className="w-3.5 h-3.5 text-primary/40" />
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-3 relative z-10">
-              <div className="text-3xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
+            <CardContent className="px-4 pb-4 pt-1 relative z-10">
+              <div className="text-2xl font-black text-white tracking-tight">
                 {stats.totalProducts}
               </div>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary w-[70%] animate-shimmer" />
-                </div>
-                <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Active</span>
-              </div>
+              <div className="text-[9px] font-bold text-primary/40 uppercase tracking-widest mt-1">Products Active</div>
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="relative overflow-hidden group hover:glow-secondary transition-all duration-300 h-full border-white/[0.05]">
-            <div className="absolute top-[-30px] right-[-30px] w-32 h-32 icon-glow-secondary rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/[0.02] px-5 pt-5">
-              <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted/60">
-                Total Clicks
+          <Card variant="glass" className="relative overflow-hidden group hover:glow-secondary transition-all duration-300 h-full border-white/[0.05] rounded-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-1 px-4 pt-4">
+              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted/50">
+                Engagement
               </CardTitle>
-              <div className="p-1.5 rounded-lg bg-secondary/10 text-secondary border border-secondary/20 group-hover:scale-105 transition-transform duration-300">
-                <MousePointerClick className="w-3.5 h-3.5" />
-              </div>
+              <MousePointerClick className="w-3.5 h-3.5 text-secondary/40" />
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-3 relative z-10">
-              <div className="text-3xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
+            <CardContent className="px-4 pb-4 pt-1 relative z-10">
+              <div className="text-2xl font-black text-white tracking-tight">
                 {stats.totalClicks}
               </div>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-secondary w-[45%] animate-shimmer" />
-                </div>
-                <span className="text-[9px] font-bold text-secondary uppercase tracking-widest">Tracked</span>
-              </div>
+              <div className="text-[9px] font-bold text-secondary/40 uppercase tracking-widest mt-1">Total Clicks</div>
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="relative overflow-hidden group hover:glow-accent transition-all duration-300 h-full border-white/[0.05]">
-            <div className="absolute top-[-30px] right-[-30px] w-32 h-32 icon-glow-accent rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/[0.02] px-5 pt-5">
-              <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted/60">
-                Est. Revenue
+          <Card variant="glass" className="relative overflow-hidden group hover:glow-accent transition-all duration-300 h-full border-white/[0.05] rounded-md">
+            <CardHeader className="flex flex-row items-center justify-between pb-1 px-4 pt-4">
+              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted/50">
+                Performance
               </CardTitle>
-              <div className="p-1.5 rounded-lg bg-accent/10 text-accent border border-accent/20 group-hover:scale-105 transition-transform duration-300">
-                <TrendingUp className="w-3.5 h-3.5" />
-              </div>
+              <TrendingUp className="w-3.5 h-3.5 text-accent/40" />
             </CardHeader>
-            <CardContent className="px-5 pb-5 pt-3 relative z-10">
-              <div className="text-3xl font-extrabold text-white tracking-tight group-hover:scale-105 transition-transform duration-500 origin-left">
+            <CardContent className="px-4 pb-4 pt-1 relative z-10">
+              <div className="text-2xl font-black text-white tracking-tight">
                 $0.00
               </div>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="h-0.5 flex-1 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-accent w-[20%] animate-shimmer" />
-                </div>
-                <span className="text-[9px] font-bold text-accent uppercase tracking-widest">Soon</span>
-              </div>
+              <div className="text-[9px] font-bold text-accent/40 uppercase tracking-widest mt-1">Est. Revenue</div>
             </CardContent>
           </Card>
         </div>
 
-        <Card variant="premium" className="shadow-lg relative group transition-all duration-500 overflow-hidden border-white/[0.05] p-5 md:p-6 rounded-2xl">
+        <Card variant="premium" className="shadow-lg relative group transition-all duration-500 overflow-hidden border-white/[0.05] p-5 md:p-6 rounded-md">
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
             <div className="flex flex-col md:flex-row items-center gap-5">
               <div className="relative">
-                <div className="w-12 h-12 rounded-xl bg-black/40 flex items-center justify-center text-primary border border-primary/20 shadow-md transition-all group-hover:scale-105 duration-500 relative overflow-hidden">
-                   <div className="absolute inset-0 grid-bg-dots opacity-30" />
-                   <Globe size={20} className="relative z-10" />
+                <div className="w-10 h-10 rounded-md bg-black/40 flex items-center justify-center text-primary border border-primary/20 shadow-md transition-all group-hover:scale-105 duration-500 relative overflow-hidden">
+                   <Globe size={18} className="relative z-10" />
                 </div>
               </div>
-              <div className="space-y-1 text-center md:text-left">
+              <div className="space-y-0.5 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-2">
-                    <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">Your Store</h3>
+                    <h3 className="text-xl font-black text-white tracking-tight">Merchant Storefront</h3>
                     <div className="flex justify-center md:justify-start">
-                       <span className="px-2 py-0.5 rounded-[4px] bg-success/10 text-success text-[9px] font-bold uppercase tracking-widest border border-success/20">Live</span>
+                       <span className="px-1.5 py-0.5 rounded-[2px] bg-emerald-500 text-black text-[8px] font-black uppercase tracking-widest">System Active</span>
                     </div>
                 </div>
-                <p className="text-xs text-white/50 font-medium max-w-lg leading-relaxed">
-                   Your storefront is live. Share the link to start earning.
+                <p className="text-[10px] text-white/40 font-medium">
+                   Point your traffic to the merchant grid to track conversions.
                 </p>
               </div>
             </div>
             
-            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-3">
-              <div className="w-full lg:w-auto py-2.5 px-4 rounded-lg bg-black/40 border border-white/10 font-mono text-xs text-primary-light flex items-center justify-between gap-4 shadow-inner hover:border-primary/30 transition-all duration-300">
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-2">
+              <div className="w-full lg:w-auto py-2 px-3 rounded-sm bg-black border border-white/10 font-mono text-[10px] text-emerald-400 flex items-center justify-between gap-4">
                  <span className="opacity-40">/store/</span>
-                 <span className="font-bold tracking-tight">{profile?.username || "..."}</span>
+                 <span className="font-bold">{profile?.username || "..."}</span>
               </div>
               <Link href={`/store/${profile?.username}`} target="_blank" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-10 rounded-lg px-6 text-xs gap-2">
-                   <span>Visit Store</span>
-                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                <Button className="w-full sm:w-auto h-9 rounded-sm px-4 text-[10px] uppercase tracking-widest font-black">
+                   Visit Store
                 </Button>
               </Link>
             </div>
