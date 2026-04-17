@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   },
   devIndicators: false,
   turbopack: {
-    root: "/home/aryan/storix",
+    root: ".",
     ignoreIssue: [
       { path: "**/node_modules/@opentelemetry/**" },
       { path: "node_modules/next/node_modules/@opentelemetry" },
@@ -41,7 +41,6 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["framer-motion", "sonner", "lucide-react"],
-    turbopackFileSystemCacheForDev: false,
     memoryBasedWorkersCount: true,
   },
   output: "standalone",
