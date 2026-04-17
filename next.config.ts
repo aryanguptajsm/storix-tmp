@@ -31,6 +31,9 @@ const nextConfig: NextConfig = {
       { path: ".config/**" },
     ],
   },
+  watchOptions: {
+    pollIntervalMs: 2000,
+  },
   experimental: {
     optimizePackageImports: ["framer-motion", "sonner"],
     turbopackFileSystemCacheForDev: true,
