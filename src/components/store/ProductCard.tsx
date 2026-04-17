@@ -117,5 +117,3 @@ export function ProductCard({ product, onBuyNow, priority = false }: ProductCard
     </div>
   );
 }
-  );
-}
