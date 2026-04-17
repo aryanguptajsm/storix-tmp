@@ -8,9 +8,11 @@ import Link from "next/link";
 interface StoreHeaderProps {
   storeName: string;
   storeLogo?: string | null;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
 }
 
-export function StoreHeader({ storeName, storeLogo }: StoreHeaderProps) {
+export function StoreHeader({ storeName, storeLogo, searchValue, onSearchChange }: StoreHeaderProps) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
@@ -20,81 +22,81 @@ export function StoreHeader({ storeName, storeLogo }: StoreHeaderProps) {
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href);
-      // We assume sonner is available since it's in package.json
       import("sonner").then(({ toast }) => toast.success("Store link copied to clipboard!"));
     }
   };
 
   return (
-    <nav className="fixed top-0 z-[60] w-full bg-[var(--store-card)]/40 border-b border-[var(--store-border)] backdrop-blur-3xl transition-all duration-500 hover:bg-[var(--store-card)]/60">
-      {/* Glow effect under header */}
-      <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-1/2 h-24 bg-[var(--store-primary)]/5 blur-[80px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 md:h-22 flex items-center justify-between relative z-10">
+    <nav className="fixed top-0 z-[60] w-full bg-[var(--store-card)] border-b border-[var(--store-border)] shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 md:h-18 flex items-center justify-between gap-4 md:gap-8">
         {/* Left: Logo & Brand */}
-        <Link href="/" className="flex items-center gap-3 md:gap-4 group cursor-pointer">
-          <div className="relative">
-            <div className="w-10 h-10 md:w-13 md:h-13 bg-gradient-to-br from-[var(--store-primary)] to-[var(--store-primary)]/40 rounded-2xl flex items-center justify-center shadow-2xl shadow-[var(--store-primary)]/20 group-hover:scale-105 transition-transform duration-500 overflow-hidden border border-white/10">
-              {storeLogo ? (
-                <img src={storeLogo} alt={storeName} className="w-full h-full object-cover" />
-              ) : (
-                <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 text-white" />
-              )}
-            </div>
-            <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-white border-2 border-[var(--store-primary)] flex items-center justify-center animate-pulse">
-               <Sparkles className="w-2.5 h-2.5 text-[var(--store-primary)] fill-[var(--store-primary)]" />
-            </div>
+        <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-[var(--store-primary)] to-[var(--store-primary)]/80 rounded-md flex items-center justify-center shadow-md group-hover:scale-105 transition-all overflow-hidden border border-white/5">
+            {storeLogo ? (
+              <img src={storeLogo} alt={storeName} className="w-full h-full object-cover" />
+            ) : (
+              <ShoppingBag className="w-4 h-4 md:w-5 md:h-5 text-white" />
+            )}
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-black tracking-tighter leading-none text-[var(--store-foreground)] group-hover:text-[var(--store-primary)] transition-colors duration-300">
-              {storeName}
-            </span>
-            <div className="flex items-center gap-1.5 mt-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] md:text-[10px] font-bold text-muted uppercase tracking-[0.2em] opacity-50">Fleet Verified</span>
-            </div>
-          </div>
+          <span className="hidden sm:block text-lg md:text-xl font-black tracking-tighter text-[var(--store-foreground)] group-hover:text-[var(--store-primary)] transition-colors">
+            {storeName}
+          </span>
         </Link>
         
+        {/* Center: Search Bar (Amazon/Flipkart Style) */}
+        <div className="flex-1 max-w-2xl relative group">
+          <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none text-muted/40 group-focus-within:text-[var(--store-primary)] transition-colors">
+            <Search size={16} />
+          </div>
+          <input
+            type="text"
+            value={searchValue}
+            onChange={(e) => onSearchChange?.(e.target.value)}
+            placeholder={`Search in ${storeName}...`}
+            className="w-full h-10 md:h-11 bg-white/[0.03] border border-white/5 rounded-md pl-10 md:pl-12 pr-4 text-sm font-medium text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[var(--store-primary)]/20 focus:border-[var(--store-primary)] transition-all"
+          />
+        </div>
+
         {/* Right: Actions */}
-        <div className="flex items-center gap-2 md:gap-6">
-          <div className="hidden lg:flex items-center gap-4 mr-4 px-4 py-2 rounded-2xl bg-white/[0.03] border border-white/5">
-            <div className="flex -space-x-2.5">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="w-7 h-7 rounded-full border-2 border-[var(--store-card)] bg-gradient-to-br from-slate-200 to-slate-50 overflow-hidden shadow-sm ring-1 ring-white/10" />
-              ))}
-            </div>
-            <div className="text-[10px] font-bold text-muted uppercase tracking-widest whitespace-nowrap">
-              <span className="text-[var(--store-foreground)]">12k+</span> shoppers
-            </div>
-          </div>
+        <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handleShare}
+            className="w-10 h-10 rounded-md text-white/40 hover:text-[var(--store-primary)] hover:bg-[var(--store-primary)]/10 transition-all border border-transparent hover:border-[var(--store-primary)]/20"
+          >
+            <Share2 size={16} />
+          </Button>
 
-          <div className="flex items-center gap-2 md:gap-3">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handleShare}
-              className="w-10 h-10 md:w-12 md:h-12 rounded-2xl text-[var(--store-foreground)]/60 hover:bg-[var(--store-primary)]/10 hover:text-[var(--store-primary)] border border-transparent hover:border-[var(--store-primary)]/20 transition-all group"
-            >
-              <Share2 size={18} className="group-hover:scale-110 transition-transform" />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden w-10 h-10 rounded-md border border-white/5"
+          >
+            <Menu size={18} />
+          </Button>
+
+          <Link href="#products" className="hidden lg:block">
+            <Button size="sm" className="h-10 px-6 rounded-md bg-[var(--store-primary)] text-white font-black text-[10px] uppercase tracking-wider group">
+              <span>Best Deals</span>
             </Button>
-
-            <Link href="#products" className="hidden sm:block">
-              <Button 
-                className="h-10 md:h-13 px-5 md:px-8 rounded-2xl bg-[var(--store-primary)] text-white hover:bg-[var(--store-primary)]/90 shadow-xl shadow-[var(--store-primary)]/25 transition-all font-black text-[10px] md:text-xs uppercase tracking-[0.2em] group border-t border-white/20"
-              >
-                <span>Browse Store</span>
-              </Button>
-            </Link>
-
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="lg:hidden w-10 h-10 rounded-2xl border border-white/5"
-            >
-              <Menu size={20} />
-            </Button>
+          </Link>
+        </div>
+      </div>
+      
+      {/* Category Nav - Shopping Mall Style */}
+      <div className="hidden md:flex bg-black/20 border-t border-[var(--store-border)] h-10 md:h-12 items-center">
+        <div className="max-w-7xl mx-auto px-6 w-full flex items-center gap-8 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-500 shrink-0">
+             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+             Live Deals
           </div>
+          <div className="w-px h-4 bg-white/5 shrink-0" />
+          {['Electronics', 'Fashion', 'Home', 'Beauty', 'Offers'].map((cat) => (
+            <button key={cat} className="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors whitespace-nowrap">
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
     </nav>
