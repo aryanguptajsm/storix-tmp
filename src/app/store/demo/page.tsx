@@ -66,6 +66,54 @@ export default function DemoStorePage() {
       discount_percentage: 28,
       original_url: "https://flipkart.com",
       created_at: new Date(Date.now() - 86400000 * 3).toISOString()
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440005",
+      user_id: "demo-id-123",
+      title: "Apple 2024 MacBook Air M3 Chip",
+      image_url: "https://images.unsplash.com/photo-1517336710211-4470593415a9?q=80&w=400&auto=format&fit=crop",
+      platform: "Amazon",
+      price: "$1099.00",
+      original_price: "$1299.00",
+      discount_percentage: 15,
+      original_url: "https://amazon.com",
+      created_at: new Date(Date.now() - 86400000 * 4).toISOString()
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440006",
+      user_id: "demo-id-123",
+      title: "Samsung Galaxy S24 Ultra 512GB",
+      image_url: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=400&auto=format&fit=crop",
+      platform: "Flipkart",
+      price: "$1299.99",
+      original_price: null,
+      discount_percentage: null,
+      original_url: "https://flipkart.com",
+      created_at: new Date(Date.now() - 86400000 * 5).toISOString()
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440007",
+      user_id: "demo-id-123",
+      title: "Anker 737 Power Bank (PowerCore 24K)",
+      image_url: "https://images.unsplash.com/photo-1609091839311-d53644652794?q=80&w=400&auto=format&fit=crop",
+      platform: "Amazon",
+      price: "$149.99",
+      original_price: "$159.99",
+      discount_percentage: 6,
+      original_url: "https://amazon.com",
+      created_at: new Date(Date.now() - 86400000 * 6).toISOString()
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440008",
+      user_id: "demo-id-123",
+      title: "Sony Alpha a7 IV Full-Frame Mirrorless",
+      image_url: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop",
+      platform: "Amazon",
+      price: "$2498.00",
+      original_price: null,
+      discount_percentage: null,
+      original_url: "https://amazon.com",
+      created_at: new Date(Date.now() - 86400000 * 7).toISOString()
     }
   ];
 
