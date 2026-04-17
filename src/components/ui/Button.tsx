@@ -18,7 +18,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "relative inline-flex items-center justify-center gap-2 font-bold rounded-2xl transition-colors duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary/40 overflow-hidden";
+    "relative inline-flex items-center justify-center gap-2 font-bold rounded-md transition-colors duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary/40 overflow-hidden";
 
   const variants: Record<string, string> = {
     primary:
