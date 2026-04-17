@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   keywords: ["affiliate", "store builder", "AI", "passive income", "storix"],
 };
 
+import { MeshBackground } from "@/components/ui/MeshBackground";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jakarta.variable} ${outfit.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col noise-overlay">
+      <body className="min-h-full flex flex-col bg-black">
+        <MeshBackground />
         <ThemeProvider>
           {children}
           <Toaster
@@ -41,6 +44,7 @@ export default function RootLayout({
                 background: "#0A0A0A",
                 border: "1px solid rgba(16, 185, 129, 0.2)",
                 color: "#F1F1F6",
+                borderRadius: "4px",
               },
             }}
           />
