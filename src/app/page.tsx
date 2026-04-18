@@ -20,6 +20,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import DotField from "@/components/ui/DotField";
+import SpotlightCard from "@/components/ui/SpotlightCard";
 
 export default function LandingPage() {
   const features = [
@@ -53,7 +55,18 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-black selection:bg-emerald-500/30 selection:text-white overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-black selection:bg-emerald-500/30 selection:text-white overflow-x-hidden relative">
+      {/* ─── Global Background Layers ─── */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <DotField 
+          dotRadius={1.2} 
+          dotSpacing={20} 
+          passiveSpeed={1.2} 
+          gradientFrom="rgba(16, 185, 129, 0.35)" 
+          gradientTo="rgba(0, 206, 201, 0.15)"
+        />
+      </div>
+      <div className="fixed inset-0 z-0 noise-subtle opacity-[0.03] pointer-events-none" />
 
       {/* ─── Navigation ─── */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/[0.04]">
@@ -101,8 +114,8 @@ export default function LandingPage() {
 
         {/* ═══════ HERO ═══════ */}
         <section className="relative pt-32 md:pt-44 pb-20 md:pb-36 px-4 sm:px-6 overflow-hidden">
-          {/* Background overlay for structure */}
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)]" />
+          {/* Background overlay for structure - now interacting with DotField */}
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_75%)]" />
 
 
           <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -264,15 +277,16 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               {features.map((feature, i) => (
                 <ScrollReveal key={i} delay={i * 0.1} variant="zoom-in">
-                  <div className="h-full group relative rounded-[2rem] border border-white/[0.05] bg-white/[0.02] p-8 md:p-10 hover:border-emerald-500/30 transition-all duration-500 overflow-hidden backdrop-blur-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.1)] hover:bg-white/[0.04]">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                    
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-8 shadow-lg`}>
+                  <SpotlightCard 
+                    className="h-full group !p-8 md:!p-10 border-white/[0.05] bg-white/[0.02] hover:border-emerald-500/30 transition-all duration-500"
+                    spotlightColor="rgba(16, 185, 129, 0.12)"
+                  >
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-8 shadow-lg relative z-20`}>
                       <feature.icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-2xl font-black mb-4 text-white group-hover:text-emerald-400 transition-colors duration-500">{feature.title}</h3>
-                    <p className="text-white/40 text-base leading-relaxed font-medium">{feature.desc}</p>
-                  </div>
+                    <h3 className="text-2xl font-black mb-4 text-white group-hover:text-emerald-400 transition-colors duration-500 relative z-20">{feature.title}</h3>
+                    <p className="text-white/40 text-base leading-relaxed font-medium relative z-20">{feature.desc}</p>
+                  </SpotlightCard>
                 </ScrollReveal>
               ))}
             </div>
@@ -292,12 +306,12 @@ export default function LandingPage() {
               {steps.map((step, i) => (
                 <ScrollReveal key={i} delay={i * 200}>
                   <div className="text-center group">
-                     <div className="w-24 h-24 rounded-[2rem] bg-white/[0.02] border border-white/5 mx-auto mb-10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 group-hover:shadow-[0_0_60px_rgba(16,185,129,0.4)] group-hover:border-emerald-500/30 transition-all duration-700 shadow-[0_0_20px_rgba(0,0,0,0.5)] relative">
-                        <div className="absolute -top-2 -right-2 w-8 h-8 rounded-xl bg-black border border-white/10 text-[11px] font-black text-white/40 flex items-center justify-center group-hover:text-emerald-500 transition-colors">{step.num}</div>
+                     <div className="w-24 h-24 rounded-[2.5rem] bg-white/[0.02] border border-white/5 mx-auto mb-10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 group-hover:shadow-[0_0_60px_rgba(16,185,129,0.3)] group-hover:border-emerald-500/30 transition-all duration-700 shadow-2xl relative backdrop-blur-sm">
+                        <div className="absolute -top-2 -right-2 w-9 h-9 rounded-2xl bg-black border border-white/10 text-[11px] font-black text-white/40 flex items-center justify-center group-hover:text-emerald-500 group-hover:border-emerald-500/30 transition-all shadow-xl">{step.num}</div>
                         <step.icon size={36} className="group-hover:rotate-12 transition-transform duration-700" />
                      </div>
-                     <h4 className="text-2xl font-black text-white mb-4 tracking-tight">{step.title}</h4>
-                     <p className="text-white/30 font-medium leading-relaxed">{step.desc}</p>
+                     <h4 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-emerald-400 transition-colors duration-500">{step.title}</h4>
+                     <p className="text-white/30 font-medium leading-relaxed max-w-[240px] mx-auto">{step.desc}</p>
                   </div>
                 </ScrollReveal>
               ))}
@@ -313,13 +327,13 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-20 relative z-10">
           <div className="space-y-8">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center shadow-2xl shadow-emerald-500/40">
+              <div className="w-12 h-12 rounded-[1.5rem] bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/40">
                 <ShoppingBag className="w-6 h-6 text-white" />
               </div>
               <span className="text-3xl font-black text-white tracking-tighter">Storix</span>
             </div>
             <p className="text-white/30 text-lg max-w-sm font-medium leading-relaxed">
-              The easiest way to build and manage your affiliate storefront. Powered by AI.
+              The easiest way to build and manage your affiliate storefront. Powered by AI and optimized for conversion.
             </p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24">
