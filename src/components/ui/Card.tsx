@@ -23,9 +23,9 @@ export function Card({
   hoverEffect = true
 }: CardProps) {
   const sizeStyles = {
-    default: "p-6 md:p-8 rounded-2xl",
-    medium: "p-5 md:p-6 rounded-xl",
-    small: "p-4 md:p-5 rounded-lg",
+    default: "p-6 md:p-8 rounded-[2.5rem]",
+    medium: "p-5 md:p-6 rounded-3xl",
+    small: "p-4 md:p-5 rounded-2xl",
   };
 
   const variants = {
