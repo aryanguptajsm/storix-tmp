@@ -186,7 +186,6 @@ export default function LandingPage() {
             {/* Browser Mockup */}
             <div className="relative max-w-6xl mx-auto mt-20">
               <ScrollReveal variant="zoom-in" delay={0.8}>
-              <ScrollReveal variant="zoom-in" delay={0.8}>
                 <div className="relative group rounded-3xl border border-white/[0.1] bg-[#0A0A0E] shadow-[0_40px_80px_rgba(0,0,0,0.9)] overflow-hidden">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent z-20" />
                   
@@ -249,7 +248,6 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-              </ScrollReveal>
               </ScrollReveal>
             </div>
           </div>
