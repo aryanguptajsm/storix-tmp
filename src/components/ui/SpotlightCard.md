@@ -8,6 +8,7 @@ A premium interactive component from React Bits, refined for the Storix design s
 - **Glassmorphism**: Built-in 80% opacity background with `backdrop-blur-xl` for a premium layered feel.
 - **Aesthetic Overlay**: High-fidelity noise texture for a professional, clinical look.
 - **Seamless Tracking**: Dual-state logic ensures the spotlight remains active and responsive regardless of focus or hover order.
+- **Keyboard Optimization**: Automatically centers the spotlight when focused via keyboard if the mouse hasn't interacted yet.
 - **Accessibility**: Full support for `tabIndex` and keyboard focus-visible styling.
 
 ## Usage

@@ -40,7 +40,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   spotlightColor = 'rgba(16, 185, 129, 0.15)'
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<Position | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -56,7 +56,15 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-  const handleFocus = () => setIsFocused(true);
+  
+  const handleFocus = () => {
+    setIsFocused(true);
+    // Default to center if no mouse position yet
+    if (!position && divRef.current) {
+      const rect = divRef.current.getBoundingClientRect();
+      setPosition({ x: rect.width / 2, y: rect.height / 2 });
+    }
+  };
   const handleBlur = () => setIsFocused(false);
 
   // Spotlight opacity logic ensuring focus and hover work together seamlessly
@@ -84,10 +92,12 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
       
       {/* Spotlight Gradient */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-1000 ease-in-out"
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 40%)`
+          background: position 
+            ? `radial-gradient(600px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 40%)`
+            : ''
         }}
         aria-hidden="true"
       />
