@@ -59,7 +59,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 w-full z-50 glass border-b border-white/[0.04]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 md:h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 group-hover:scale-110 transition-all duration-300">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 group-hover:scale-110 transition-all duration-300">
               <ShoppingBag className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-black bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent tracking-tighter font-display">
@@ -72,7 +72,7 @@ export default function LandingPage() {
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(/ /g, "-")}`}
-                className="px-4 py-2 text-sm font-medium text-white/50 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-white/50 hover:text-white rounded-xl hover:bg-white/5 transition-all duration-200"
               >
                 {item}
               </a>
@@ -111,7 +111,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-white/[0.03] border border-white/10 mb-12 shadow-2xl backdrop-blur-2xl"
+              className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 mb-12 shadow-2xl backdrop-blur-2xl"
             >
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]" />
               <span className="text-[11px] font-bold tracking-wider uppercase text-white/50">Now in Beta — Free to Use</span>
@@ -154,7 +154,7 @@ export default function LandingPage() {
                 className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-8 mb-24 md:mb-40 relative z-20"
              >
                <Link href="/signup">
-                 <Button className="h-[4.5rem] px-12 md:px-16 rounded-2xl shadow-[0_20px_60px_rgba(16,185,129,0.3)] hover:shadow-[0_0_80px_rgba(16,185,129,0.6)] hover:-translate-y-1 transition-all duration-500 font-bold text-lg">
+                 <Button className="h-[4.5rem] px-12 md:px-16 rounded-3xl shadow-[0_20px_60px_rgba(16,185,129,0.3)] hover:shadow-[0_0_80px_rgba(16,185,129,0.6)] hover:-translate-y-1 transition-all duration-500 font-bold text-lg">
                    <span className="flex items-center gap-3">
                      Get Started Free
                      <Sparkles size={20} className="animate-pulse" />
@@ -163,7 +163,7 @@ export default function LandingPage() {
                </Link>
 
                <Link href="/store/demo">
-                 <Button variant="secondary" className="h-[4.5rem] px-10 md:px-14 rounded-2xl bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500 font-bold text-lg">
+                 <Button variant="secondary" className="h-[4.5rem] px-10 md:px-14 rounded-3xl bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500 font-bold text-lg">
                    View Demo Store
                    <ArrowUpRight size={20} className="ml-2 text-white/40" />
                  </Button>
@@ -174,7 +174,7 @@ export default function LandingPage() {
             <div className="relative max-w-6xl mx-auto mt-20">
               <ScrollReveal variant="zoom-in" delay={0.8}>
               <ScrollReveal variant="zoom-in" delay={0.8}>
-                <div className="relative group rounded-md border border-white/[0.1] bg-[#0A0A0E] shadow-[0_40px_80px_rgba(0,0,0,0.9)] overflow-hidden">
+                <div className="relative group rounded-3xl border border-white/[0.1] bg-[#0A0A0E] shadow-[0_40px_80px_rgba(0,0,0,0.9)] overflow-hidden">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent z-20" />
                   
                   <div className="relative p-2 md:p-2 bg-gradient-to-b from-[#15151E] to-[#0A0A0A]">
@@ -185,7 +185,7 @@ export default function LandingPage() {
                           <div className="w-3 h-3 rounded-full bg-white/10" />
                           <div className="w-3 h-3 rounded-full bg-white/10" />
                        </div>
-                       <div className="flex-1 max-w-xl mx-auto h-8 rounded-md bg-white/[0.03] border border-white/[0.08] flex items-center px-4 gap-2">
+                       <div className="flex-1 max-w-xl mx-auto h-8 rounded-full bg-white/[0.03] border border-white/[0.08] flex items-center px-4 gap-2">
                           <Globe size={12} className="text-white/20" />
                           <div className="h-1.5 w-1/2 bg-white/[0.1] rounded-full" />
                        </div>
@@ -200,7 +200,7 @@ export default function LandingPage() {
                                   initial={{ width: "40%" }}
                                   animate={{ width: ["40%", "80%", "40%"] }}
                                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                  className="h-8 w-48 bg-emerald-500/5 rounded-md border border-emerald-500/10 flex items-center px-3"
+                                  className="h-8 w-48 bg-emerald-500/5 rounded-full border border-emerald-500/10 flex items-center px-3"
                                 >
                                   <div className="h-1.5 w-1/3 bg-emerald-400/30 rounded-full" />
                                 </motion.div>
@@ -219,7 +219,7 @@ export default function LandingPage() {
                              ].map((item, i) => (
                                 <motion.div 
                                   key={i} 
-                                  className="relative rounded-md bg-white/[0.01] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl"
+                                  className="relative rounded-3xl bg-white/[0.01] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl"
                                 >
                                    <div className={`flex-1 w-full bg-gradient-to-br ${i === 0 ? 'from-purple-500/5' : i === 1 ? 'from-blue-500/5' : 'from-orange-500/5'} to-transparent relative`} />
                                    <div className="relative z-20 space-y-3 bg-[#0A0A0E] p-4">
@@ -264,10 +264,10 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               {features.map((feature, i) => (
                 <ScrollReveal key={i} delay={i * 0.1} variant="zoom-in">
-                  <div className="h-full group relative rounded-lg border border-white/[0.05] bg-white/[0.02] p-8 md:p-10 hover:border-emerald-500/30 transition-all duration-500 overflow-hidden backdrop-blur-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.1)] hover:bg-white/[0.04]">
+                  <div className="h-full group relative rounded-[2rem] border border-white/[0.05] bg-white/[0.02] p-8 md:p-10 hover:border-emerald-500/30 transition-all duration-500 overflow-hidden backdrop-blur-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.1)] hover:bg-white/[0.04]">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     
-                    <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-8 shadow-lg`}>
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-8 shadow-lg`}>
                       <feature.icon className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-2xl font-black mb-4 text-white group-hover:text-emerald-400 transition-colors duration-500">{feature.title}</h3>
