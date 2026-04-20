@@ -53,11 +53,18 @@ export function CursorFollower() {
           backgroundColor: isPointer ? "rgba(16, 185, 129, 0.1)" : "transparent",
         }}
       />
-      {/* Fluid Glow */}
+      {/* Refined Mesh Spotlight */}
       <div
-        className="fixed top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none z-[9997] transition-transform duration-700 ease-out"
+        className="fixed top-0 left-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] pointer-events-none z-[9990] transition-opacity duration-1000 ease-in-out mix-blend-screen opacity-20"
         style={{
-          transform: `translate(${position.x - 128}px, ${position.y - 128}px)`,
+          transform: `translate(${position.x - 250}px, ${position.y - 250}px)`,
+        }}
+      />
+      {/* Interactive Core Glow */}
+      <div
+        className="fixed top-0 left-0 w-32 h-32 bg-primary/40 rounded-full blur-[40px] pointer-events-none z-[9991] transition-transform duration-500 ease-out opacity-30"
+        style={{
+          transform: `translate(${position.x - 64}px, ${position.y - 64}px)`,
         }}
       />
     </>
