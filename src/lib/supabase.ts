@@ -17,7 +17,17 @@ export function createClient() {
 
   client = createBrowserClient(
     url,
-    anonKey
+    anonKey,
+    {
+      auth: {
+        flowType: 'pkce',
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        // Reduce lock contention warnings in development/Strict Mode
+        storageKey: `sb-${url.split('.')[0].split('//')[1]}-auth-token`,
+      }
+    }
   );
 
   return client;
