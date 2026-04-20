@@ -13,9 +13,7 @@ export function ProductsSkeleton() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
-            <div className="h-48 bg-white/[0.03] relative">
-              <div className="absolute inset-0 shimmer opacity-30" />
-            </div>
+            <Skeleton className="h-48 w-full rounded-none" />
             <div className="p-5 space-y-3">
               <Skeleton className="h-5 w-3/4" />
               <div className="flex justify-between items-center pt-4 border-t border-white/5">
