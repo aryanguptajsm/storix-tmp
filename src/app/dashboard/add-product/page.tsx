@@ -210,23 +210,26 @@ export default function AddProductPage() {
       const insertData = {
         user_id: user.id,
         title: String(productData.title || "Untitled Product").trim(),
-        description: String(productData.description || "").trim(),
-        price: String(productData.price || "").trim(),
-        original_price: String(productData.originalPrice || "").trim(),
-        discount_percentage: String(productData.discountPercentage || "").trim(),
-        image_url: String(productData.image || "").trim(),
-        platform: String(productData.platform || "Universal").trim(),
-        original_url: String(productData.originalUrl || url || "").trim(),
+        description: productData.description?.trim() || null,
+        price: productData.price?.trim() || null,
+        original_price: productData.originalPrice?.trim() || null,
+        discount_percentage: String(productData.discountPercentage || "").trim() || null,
+        image_url: productData.image?.trim() || null,
+        platform: productData.platform?.trim() || "other",
+        original_url: (productData.originalUrl || url || "").trim(),
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("products")
-        .insert(insertData)
-        .select()
-        .single();
+        .insert(insertData);
       
       if (error) {
-        console.error("Supabase Deployment Error:", error);
+        console.error("Supabase Deployment Error:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         throw new Error(error.message || "Failed to save product.");
       }
       
