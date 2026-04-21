@@ -188,15 +188,15 @@ export function StoreView({ profile, products }: StoreViewProps) {
               {/* Product Grid Area */}
               <div className="flex-1">
                 {/* Mobile Tab Scroller */}
-                <div className="flex lg:hidden items-center gap-6 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5">
+                <div className="flex lg:hidden items-center gap-4 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5 scroll-smooth snap-x">
                   {['All Items', 'Best Sellers', 'New Arrivals'].map((tab) => (
                     <button 
                       key={tab} 
                       onClick={() => setActiveTab(tab)}
-                      className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap px-4 py-2 rounded-full border ${
+                      className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap px-6 py-2.5 rounded-full border transition-all snap-center ${
                         activeTab === tab 
                           ? 'bg-[var(--store-primary)] border-[var(--store-primary)] text-white shadow-lg shadow-primary/20' 
-                          : 'bg-white/5 border-white/5 text-white/40'
+                          : 'bg-white/5 border-white/5 text-white/40 hover:bg-white/10'
                       }`}
                     >
                       {tab}

@@ -91,16 +91,16 @@ export function ProductCard({ product, onBuyNow, priority = false }: ProductCard
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
             <Button
               variant="outline"
-              className="h-9 rounded-sm border-white/10 text-[9px] font-black uppercase tracking-widest hover:bg-white/5"
+              className="h-10 sm:h-9 rounded-sm border-white/10 text-[10px] font-black uppercase tracking-widest hover:bg-white/5 order-2 sm:order-1"
               onClick={() => onBuyNow(product)}
             >
               Details
             </Button>
             <Button
-              className="h-9 rounded-sm bg-[var(--store-primary)] text-white text-[9px] font-black uppercase tracking-widest hover:bg-[var(--store-primary)]/90 shadow-lg shadow-[var(--store-primary)]/10"
+              className="h-10 sm:h-9 rounded-sm bg-[var(--store-primary)] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[var(--store-primary)]/90 shadow-lg shadow-[var(--store-primary)]/10 order-1 sm:order-2"
               onClick={() => onBuyNow(product)}
             >
               <ShoppingBag size={12} className="mr-1.5" />
@@ -108,9 +108,9 @@ export function ProductCard({ product, onBuyNow, priority = false }: ProductCard
             </Button>
           </div>
           
-          <div className="mt-3 flex items-center gap-1.5">
-             <ShieldCheck size={10} className="text-emerald-500" />
-             <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest">Safe Affiliate Link</span>
+          <div className="mt-4 flex items-center gap-2">
+             <ShieldCheck size={12} className="text-emerald-500" />
+             <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest">Protocol Verified</span>
           </div>
         </div>
       </div>
