@@ -202,13 +202,11 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {plansList.map(({ id, icon, accent, bgHighlight, popular }) => {
             const plan = PLANS[id];
-            // Format price: assuming price is in paise, so divide by 100
-            const monthlyPrice = Math.round(plan.price / 100);
             const displayPrice = id === "free" 
               ? 0 
               : annual 
-                ? Math.round(monthlyPrice * 0.8) 
-                : monthlyPrice;
+                ? (plan.price * 0.8) / 100 
+                : plan.price / 100;
 
             return (
               <div
@@ -244,14 +242,14 @@ export default function PricingPage() {
                   <div className="mb-8">
                     <div className="flex items-end gap-2 text-white">
                       <span className="text-sm font-bold opacity-50 mb-2">{plan.symbol}</span>
-                      <span className="text-6xl font-black tracking-tighter leading-none">{displayPrice}</span>
+                      <span className="text-6xl font-black tracking-tighter leading-none">{displayPrice.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                       {id !== "free" && (
                         <span className="text-sm font-bold text-slate-500 mb-2">/ month</span>
                       )}
                     </div>
                     {annual && id !== "free" && (
                       <p className="text-xs text-emerald-400 font-bold mt-2 bg-emerald-400/10 inline-block px-3 py-1.5 rounded-xl border border-emerald-500/10 backdrop-blur-md">
-                        Billed {plan.symbol}{displayPrice * 12} annually
+                        Billed {plan.symbol}{(displayPrice * 12).toLocaleString()} annually
                       </p>
                     )}
                   </div>

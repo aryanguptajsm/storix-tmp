@@ -371,8 +371,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
               {(['free', 'pro', 'business'] as PlanId[]).map((id, i) => {
                 const plan = PLANS[id];
-                const monthlyPrice = Math.round(plan.price / 100);
-                const displayPrice = id === "free" ? 0 : annual ? Math.round(monthlyPrice * 0.8) : monthlyPrice;
+                const displayPrice = id === "free" ? 0 : annual ? (plan.price * 0.8) / 100 : plan.price / 100;
                 const isPro = id === 'pro';
 
                 return (
@@ -401,13 +400,13 @@ export default function LandingPage() {
                       <div className="mb-10">
                         <div className="flex items-baseline gap-2">
                           <span className="text-4xl md:text-5xl font-black text-white tracking-tighter">
-                            {plan.symbol}{displayPrice}
+                            {plan.symbol}{displayPrice.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                           </span>
                           <span className="text-white/30 font-bold text-sm">/mo</span>
                         </div>
                         {annual && id !== 'free' && (
                           <div className="mt-3 text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-400/5 inline-block px-3 py-1.5 rounded-xl border border-emerald-500/10">
-                            {plan.symbol}{displayPrice * 12} billed annually
+                            {plan.symbol}{(displayPrice * 12).toLocaleString()} billed annually
                           </div>
                         )}
                       </div>
