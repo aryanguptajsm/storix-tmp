@@ -71,7 +71,10 @@ export function StoreView({ profile, products }: StoreViewProps) {
 
   // Filtering Logic
   const filteredProducts = products.filter(p => {
-    const searchMatch = p.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchMatch = 
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      p.platform?.toLowerCase().includes(searchQuery.toLowerCase());
+      
     const tabMatch = activeTab === "All Items" || 
                     (activeTab === "Best Sellers" && p.discount_percentage) || 
                     (activeTab === "New Arrivals");
@@ -91,14 +94,14 @@ export function StoreView({ profile, products }: StoreViewProps) {
 
         <main className="pt-28 md:pt-36">
           {/* ─── Retail Banner Section ─── */}
-          <section className="px-4 md:px-8 mb-8 md:mb-12">
+          <section className="px-3 md:px-8 mb-8 md:mb-12">
             <div className="max-w-[1400px] mx-auto">
-               <div className="relative h-[200px] md:h-[400px] rounded-lg overflow-hidden bg-[#0A0A0E] border border-white/10 group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent z-10" />
+               <div className="relative h-[260px] sm:h-[300px] md:h-[450px] rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0E] border border-white/10 group shadow-2xl">
+                  <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-10" />
                   <div className="absolute inset-0 mesh-layered opacity-30" />
                   
                   {/* Banner Content */}
-                  <div className="relative z-20 h-full flex flex-col justify-center px-8 md:px-16 max-w-2xl">
+                  <div className="relative z-20 h-full flex flex-col justify-center px-6 sm:px-10 md:px-16 max-w-2xl">
                     <motion.div 
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -110,9 +113,9 @@ export function StoreView({ profile, products }: StoreViewProps) {
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 }}
-                      className="text-3xl md:text-6xl font-black text-white tracking-tighter mb-4 md:mb-6"
+                      className="text-2xl sm:text-4xl md:text-7xl font-black text-white tracking-tighter mb-3 md:mb-6 leading-[0.95]"
                     >
-                      Seasonal <br />Selection.
+                      Premier <br className="sm:hidden" />Selection.
                     </motion.h1>
                     <motion.p 
                       initial={{ opacity: 0 }}
@@ -140,8 +143,8 @@ export function StoreView({ profile, products }: StoreViewProps) {
           </section>
 
           {/* ─── Main Content Grid ─── */}
-          <section id="products" className="px-4 md:px-8 pb-32">
-            <div className="max-w-[1400px] mx-auto flex flex-col lg:grid lg:grid-cols-[240px_1fr] gap-8">
+          <section id="products" className="px-3 md:px-8 pb-32">
+            <div className="max-w-[1400px] mx-auto flex flex-col lg:grid lg:grid-cols-[240px_1fr] gap-6 md:gap-8">
               
               {/* Sidebar Filters */}
               <aside className="hidden lg:flex flex-col gap-8 sticky top-36 h-fit">
