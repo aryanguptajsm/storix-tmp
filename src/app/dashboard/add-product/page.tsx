@@ -212,8 +212,9 @@ export default function AddProductPage() {
         title: String(productData.title || "Untitled Product").trim(),
         description: productData.description?.trim() || null,
         price: productData.price?.trim() || null,
-        original_price: productData.originalPrice?.trim() || null,
-        discount_percentage: String(productData.discountPercentage || "").trim() || null,
+        // TEMPORARY: Stripping columns missing in current schema cache
+        // original_price: productData.originalPrice?.trim() || null,
+        // discount_percentage: String(productData.discountPercentage || "").trim() || null,
         image_url: productData.image?.trim() || null,
         platform: productData.platform?.trim() || "other",
         original_url: (productData.originalUrl || url || "").trim(),
