@@ -41,10 +41,44 @@ export function ThemeProvider({
     localStorage.setItem("storix-app-mode", appMode);
   }, [theme, appMode, mounted]);
 
-  const toggleAppMode = () => {
-    setAppMode(prev => prev === "light" ? "dark" : "light");
-  };
+  const toggleAppMode = (event?: React.MouseEvent | MouseEvent) => {
+    if (
+      !document.startViewTransition ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setAppMode(prev => prev === "light" ? "dark" : "light");
+      return;
+    }
 
+    const x = event?.clientX ?? window.innerWidth / 2;
+    const y = event?.clientY ?? window.innerHeight / 2;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      setAppMode(prev => prev === "light" ? "dark" : "light");
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+      document.documentElement.animate(
+        {
+          clipPath: appMode === "dark" ? clipPath : [...clipPath].reverse(),
+        },
+        {
+          duration: 500,
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          pseudoElement: appMode === "dark" ? "::view-transition-new(root)" : "::view-transition-old(root)",
+        }
+      );
+    });
+  };
+ pieces of information.
   return (
     <ThemeContext.Provider value={{ theme, setTheme, appMode, toggleAppMode }}>
       <div className={`theme-${theme} mode-${appMode} min-h-screen transition-colors duration-500`}>
