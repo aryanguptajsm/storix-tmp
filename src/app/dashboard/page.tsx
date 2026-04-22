@@ -155,29 +155,32 @@ export default async function DashboardPage() {
             </ScrollReveal>
           )}
 
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 animate-fade-in">
-            <div className="space-y-2">
-              <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 animate-fade-in group/header">
+            <div className="space-y-3 relative">
+              <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary/50 to-transparent opacity-0 group-hover/header:opacity-100 transition-opacity" />
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-tight">
                 Welcome back, <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light via-white to-secondary-light block mt-1">
-                   {profile?.store_name || "there"}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary block mt-2 drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                   {profile?.store_name || "Merchant"}
                 </span>
               </h1>
-              <p className="text-sm text-white/40 font-medium">
-                Here&apos;s an overview of your affiliate store performance.
+              <p className="text-base text-white/40 font-bold uppercase tracking-[0.2em]">
+                Node Status: <span className="text-emerald-500">Operational</span> // Performance Overview
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-              <CopyLinkButton username={profile?.username || ""} />
-              <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 lg:flex-initial">
-                <Button variant="secondary" className="w-full bg-white/[0.03] border-white/5 h-10 px-5 text-sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto mt-4 lg:mt-0">
+              <div className="flex-1 sm:flex-none">
+                <CopyLinkButton username={profile?.username || ""} />
+              </div>
+              <Link href={`/store/${profile?.username?.toLowerCase()}`} target="_blank" className="flex-1 sm:flex-none">
+                <Button variant="secondary" className="w-full bg-white/[0.03] border-white/5 h-12 px-6 text-[11px] font-black uppercase tracking-widest hover:bg-white/[0.08] transition-all">
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  View Store
+                  Live Store
                 </Button>
               </Link>
-              <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 lg:flex-initial">
-                <Button className="w-full h-10 px-6 text-sm shadow-lg shadow-primary/10">
+              <Link href="/dashboard/add-product" className="w-full sm:w-auto flex-1 sm:flex-none">
+                <Button className="w-full h-12 px-8 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Product
                 </Button>
@@ -186,52 +189,70 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <Card variant="glass" className="relative overflow-hidden group hover:glow-primary transition-all duration-300 h-full border-white/[0.05]">
-            <CardHeader className="flex flex-row items-center justify-between pb-1 px-4 pt-4">
-              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted/50">
+        <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          <Card variant="glass" className="relative overflow-hidden group hover:border-primary/30 transition-all duration-500 h-full border-white/[0.05] p-6 lg:p-8">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 px-0 pt-0">
+              <CardTitle className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30">
                 Inventory
               </CardTitle>
-              <Package className="w-3.5 h-3.5 text-primary/40" />
+              <div className="p-2 rounded-lg bg-primary/10 border border-primary/20 text-primary group-hover:scale-110 transition-transform">
+                <Package size={18} />
+              </div>
             </CardHeader>
-            <CardContent className="px-4 pb-4 pt-1 relative z-10">
-              <div className="text-2xl font-black text-white tracking-tight">
+            <CardContent className="px-0 pb-0 pt-4 relative z-10">
+              <div className="text-4xl lg:text-5xl font-black text-white tracking-tighter">
                 {stats.totalProducts}
               </div>
-              <div className="text-[9px] font-bold text-primary/40 uppercase tracking-widest mt-1">Products Active</div>
+              <div className="flex items-center gap-2 mt-2">
+                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Active Units</span>
+              </div>
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="relative overflow-hidden group hover:glow-secondary transition-all duration-300 h-full border-white/[0.05]">
-            <CardHeader className="flex flex-row items-center justify-between pb-1 px-4 pt-4">
-              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted/50">
+          <Card variant="glass" className="relative overflow-hidden group hover:border-secondary/30 transition-all duration-500 h-full border-white/[0.05] p-6 lg:p-8">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-secondary/10 transition-colors" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 px-0 pt-0">
+              <CardTitle className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30">
                 Engagement
               </CardTitle>
-              <MousePointerClick className="w-3.5 h-3.5 text-secondary/40" />
+              <div className="p-2 rounded-lg bg-secondary/10 border border-secondary/20 text-secondary group-hover:scale-110 transition-transform">
+                <MousePointerClick size={18} />
+              </div>
             </CardHeader>
-            <CardContent className="px-4 pb-4 pt-1 relative z-10">
-              <div className="text-2xl font-black text-white tracking-tight">
+            <CardContent className="px-0 pb-0 pt-4 relative z-10">
+              <div className="text-4xl lg:text-5xl font-black text-white tracking-tighter">
                 {stats.totalClicks}
               </div>
-              <div className="text-[9px] font-bold text-secondary/40 uppercase tracking-widest mt-1">Total Clicks</div>
+              <div className="flex items-center gap-2 mt-2">
+                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Total Hits</span>
+              </div>
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="relative overflow-hidden group hover:glow-accent transition-all duration-300 h-full border-white/[0.05]">
-            <CardHeader className="flex flex-row items-center justify-between pb-1 px-4 pt-4">
-              <CardTitle className="text-[10px] font-bold uppercase tracking-widest text-muted/50">
-                Performance
+          <Card variant="glass" className="relative overflow-hidden group hover:border-accent/30 transition-all duration-500 h-full border-white/[0.05] p-6 lg:p-8 sm:col-span-2 lg:col-span-1">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-accent/10 transition-colors" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 px-0 pt-0">
+              <CardTitle className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30">
+                Revenue
               </CardTitle>
-              <TrendingUp className="w-3.5 h-3.5 text-accent/40" />
+              <div className="p-2 rounded-lg bg-accent/10 border border-accent/20 text-accent group-hover:scale-110 transition-transform">
+                <TrendingUp size={18} />
+              </div>
             </CardHeader>
-            <CardContent className="px-4 pb-4 pt-1 relative z-10">
-              <div className="text-2xl font-black text-white tracking-tight">
+            <CardContent className="px-0 pb-0 pt-4 relative z-10">
+              <div className="text-4xl lg:text-5xl font-black text-white tracking-tighter">
                 $0.00
               </div>
-              <div className="text-[9px] font-bold text-accent/40 uppercase tracking-widest mt-1">Est. Revenue</div>
+              <div className="flex items-center gap-2 mt-2">
+                 <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                 <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Est. Payout</span>
+              </div>
             </CardContent>
           </Card>
-        </div>
+        </StaggerReveal>
 
         <Card variant="premium" className="shadow-lg relative group transition-all duration-500 overflow-hidden border-white/[0.05]">
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-50" />
