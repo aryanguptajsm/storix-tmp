@@ -207,19 +207,31 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 w-full h-20 glass z-[100] border-b border-white/5 flex items-center px-6 justify-between">
-        <div className="flex items-center gap-3">
-           <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
+      {/* Mobile Header Architecture */}
+      <div className="lg:hidden fixed top-0 left-0 w-full h-24 z-[100] px-6 flex items-center justify-between border-b border-white/[0.03] overflow-hidden">
+        {/* Superior Glass Layer */}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl z-[-1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent z-[-1]" />
+        <div className="absolute -top-[50%] -left-[10%] w-[40%] h-[100%] bg-primary/10 blur-[80px] z-[-1] animate-pulse" />
+        
+        <div className="flex items-center gap-4">
+           <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity" />
+              <div className="relative w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg border border-white/20">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
            </div>
-           <span className="font-black text-xl tracking-tighter text-white">Storix</span>
+           <div className="flex flex-col">
+              <span className="font-black text-2xl tracking-tighter text-white leading-none">Storix</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Admin Node</span>
+           </div>
         </div>
         <button
-          className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white active:scale-95 transition-transform cursor-pointer"
+          className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer relative group overflow-hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
+          {mobileOpen ? <X size={24} className="relative z-10" /> : <Menu size={24} className="relative z-10" />}
         </button>
       </div>
 
