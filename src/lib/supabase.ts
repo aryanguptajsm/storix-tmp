@@ -11,7 +11,7 @@ export function createClient() {
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     console.warn(
-      "SUPABASE_CONFIG_WARNING: Missing or invalid Supabase environment variables. Using dummy values for build."
+      "SUPABASE_CONFIG_WARNING: Missing client-side Supabase environment variables. Using fallback values for build safety."
     );
   }
 
