@@ -342,8 +342,8 @@ export default function LandingPage() {
                   <button
                     onClick={() => setAnnual(false)}
                     className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 ${!annual
-                        ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
-                        : "text-white/30 hover:text-white scale-95 hover:scale-100"
+                      ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
+                      : "text-white/30 hover:text-white scale-95 hover:scale-100"
                       }`}
                   >
                     Monthly
@@ -351,8 +351,8 @@ export default function LandingPage() {
                   <button
                     onClick={() => setAnnual(true)}
                     className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-3 ${annual
-                        ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
-                        : "text-white/30 hover:text-white scale-95 hover:scale-100"
+                      ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
+                      : "text-white/30 hover:text-white scale-95 hover:scale-100"
                       }`}
                   >
                     Annually
@@ -436,7 +436,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ═══════ HOW IT WORKS ═══════ */}
+        {/* ═══════ HOW IT WORKS ═════ */}
         <section id="how-it-works" className="py-24 md:py-40 px-6 relative">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24 md:mb-32">
