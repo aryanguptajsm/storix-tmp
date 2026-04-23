@@ -83,11 +83,11 @@ export default function LandingPage() {
 
         {/* DotField (Interactive Layer) */}
         <div className="absolute inset-0 z-10 transition-opacity duration-1000">
-          <DotField 
-            dotRadius={1.2} 
-            dotSpacing={20} 
-            passiveSpeed={1.2} 
-            gradientFrom="rgba(16, 185, 129, 0.25)" 
+          <DotField
+            dotRadius={1.2}
+            dotSpacing={20}
+            passiveSpeed={1.2}
+            gradientFrom="rgba(16, 185, 129, 0.25)"
             gradientTo="rgba(0, 206, 201, 0.05)"
           />
         </div>
@@ -148,7 +148,7 @@ export default function LandingPage() {
 
           <div className="max-w-7xl mx-auto text-center relative z-10">
             {/* Status Badge */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -160,7 +160,7 @@ export default function LandingPage() {
 
             {/* Headline */}
             <div className="max-w-5xl mx-auto mb-10 md:mb-14">
-              <motion.h1 
+              <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
@@ -169,16 +169,16 @@ export default function LandingPage() {
                 <span className="text-white block">Build Your</span>
                 <span className="text-gradient block pb-4">Affiliate Store</span>
               </motion.h1>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: 1.5, delay: 0.8, ease: "circOut" }}
-                className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mt-6" 
+                className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mt-6"
               />
             </div>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
@@ -187,92 +187,92 @@ export default function LandingPage() {
               Paste affiliate links, let AI optimize your titles, and launch a beautiful storefront in minutes. Start earning from clicks — no coding required.
             </motion.p>
 
-             {/* CTA Buttons */}
-             <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-8 mb-24 md:mb-40 relative z-20"
-             >
-               <Link href="/signup">
-                 <Button className="h-[4.5rem] px-12 md:px-16 rounded-3xl shadow-[0_20px_60px_rgba(16,185,129,0.3)] hover:shadow-[0_0_80px_rgba(16,185,129,0.6)] hover:-translate-y-1 transition-all duration-500 font-bold text-lg">
-                   <span className="flex items-center gap-3">
-                     Get Started Free
-                     <Sparkles size={20} className="animate-pulse" />
-                   </span>
-                 </Button>
-               </Link>
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-8 mb-24 md:mb-40 relative z-20"
+            >
+              <Link href="/signup">
+                <Button className="h-[4.5rem] px-12 md:px-16 rounded-3xl shadow-[0_20px_60px_rgba(16,185,129,0.3)] hover:shadow-[0_0_80px_rgba(16,185,129,0.6)] hover:-translate-y-1 transition-all duration-500 font-bold text-lg">
+                  <span className="flex items-center gap-3">
+                    Get Started Free
+                    <Sparkles size={20} className="animate-pulse" />
+                  </span>
+                </Button>
+              </Link>
 
-               <Link href="/store/demo">
-                 <Button variant="secondary" className="h-[4.5rem] px-10 md:px-14 rounded-3xl bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500 font-bold text-lg">
-                   View Demo Store
-                   <ArrowUpRight size={20} className="ml-2 text-white/40" />
-                 </Button>
-               </Link>
-             </motion.div>
+              <Link href="/store/demo">
+                <Button variant="secondary" className="h-[4.5rem] px-10 md:px-14 rounded-3xl bg-white/[0.04] border-white/10 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500 font-bold text-lg">
+                  View Demo Store
+                  <ArrowUpRight size={20} className="ml-2 text-white/40" />
+                </Button>
+              </Link>
+            </motion.div>
 
             {/* Browser Mockup */}
             <div className="relative max-w-6xl mx-auto mt-20">
               <ScrollReveal variant="zoom-in" delay={0.8}>
                 <div className="relative group rounded-3xl border border-white/[0.1] bg-[#0A0A0E] shadow-[0_40px_80px_rgba(0,0,0,0.9)] overflow-hidden">
                   <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent z-20" />
-                  
+
                   <div className="relative p-2 md:p-2 bg-gradient-to-b from-[#15151E] to-[#0A0A0A]">
                     {/* Browser Chrome */}
                     <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.04] bg-white/[0.01]">
-                       <div className="flex gap-2">
-                          <div className="w-3 h-3 rounded-full bg-white/10" />
-                          <div className="w-3 h-3 rounded-full bg-white/10" />
-                          <div className="w-3 h-3 rounded-full bg-white/10" />
-                       </div>
-                       <div className="flex-1 max-w-xl mx-auto h-8 rounded-full bg-white/[0.03] border border-white/[0.08] flex items-center px-4 gap-2">
-                          <Globe size={12} className="text-white/20" />
-                          <div className="h-1.5 w-1/2 bg-white/[0.1] rounded-full" />
-                       </div>
+                      <div className="flex gap-2">
+                        <div className="w-3 h-3 rounded-full bg-white/10" />
+                        <div className="w-3 h-3 rounded-full bg-white/10" />
+                        <div className="w-3 h-3 rounded-full bg-white/10" />
+                      </div>
+                      <div className="flex-1 max-w-xl mx-auto h-8 rounded-full bg-white/[0.03] border border-white/[0.08] flex items-center px-4 gap-2">
+                        <Globe size={12} className="text-white/20" />
+                        <div className="h-1.5 w-1/2 bg-white/[0.1] rounded-full" />
+                      </div>
                     </div>
 
                     <div className="aspect-[16/10] bg-[#050508] relative overflow-hidden flex flex-col">
-                       {/* Animated Content */}
-                       <div className="p-6 md:p-8 space-y-8 relative z-10 h-full flex flex-col">
-                          <div className="flex items-center justify-between">
-                             <div className="space-y-3">
-                                <motion.div 
-                                  initial={{ width: "40%" }}
-                                  animate={{ width: ["40%", "80%", "40%"] }}
-                                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                  className="h-8 w-48 bg-emerald-500/5 rounded-full border border-emerald-500/10 flex items-center px-3"
-                                >
-                                  <div className="h-1.5 w-1/3 bg-emerald-400/30 rounded-full" />
-                                </motion.div>
-                                <div className="text-[10px] font-bold text-emerald-400/40 uppercase tracking-[0.2em]">
-                                   Scraping Amazon Data...
-                                </div>
-                             </div>
-                             <Zap className="text-emerald-400/40" size={20} />
+                      {/* Animated Content */}
+                      <div className="p-6 md:p-8 space-y-8 relative z-10 h-full flex flex-col">
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-3">
+                            <motion.div
+                              initial={{ width: "40%" }}
+                              animate={{ width: ["40%", "80%", "40%"] }}
+                              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                              className="h-8 w-48 bg-emerald-500/5 rounded-full border border-emerald-500/10 flex items-center px-3"
+                            >
+                              <div className="h-1.5 w-1/3 bg-emerald-400/30 rounded-full" />
+                            </motion.div>
+                            <div className="text-[10px] font-bold text-emerald-400/40 uppercase tracking-[0.2em]">
+                              Scraping Amazon Data...
+                            </div>
                           </div>
+                          <Zap className="text-emerald-400/40" size={20} />
+                        </div>
 
-                          <div className="grid grid-cols-3 gap-4 flex-1">
-                             {[
-                                { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio" },
-                                { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop" },
-                                { title: "Dyson V15 Detect", price: "$749.99", badge: "Home" }
-                             ].map((item, i) => (
-                                <motion.div 
-                                  key={i} 
-                                  className="relative rounded-3xl bg-white/[0.01] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl"
-                                >
-                                   <div className={`flex-1 w-full bg-gradient-to-br ${i === 0 ? 'from-purple-500/5' : i === 1 ? 'from-blue-500/5' : 'from-orange-500/5'} to-transparent relative`} />
-                                   <div className="relative z-20 space-y-3 bg-[#0A0A0E] p-4">
-                                      <h5 className="font-bold text-white text-sm tracking-tight">{item.title}</h5>
-                                      <div className="flex items-center justify-between">
-                                        <div className="text-[10px] text-emerald-400 font-bold">{item.price}</div>
-                                        <ArrowUpRight size={12} className="text-white/20" />
-                                      </div>
-                                   </div>
-                                </motion.div>
-                             ))}
-                          </div>
-                       </div>
+                        <div className="grid grid-cols-3 gap-4 flex-1">
+                          {[
+                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio" },
+                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop" },
+                            { title: "Dyson V15 Detect", price: "$749.99", badge: "Home" }
+                          ].map((item, i) => (
+                            <motion.div
+                              key={i}
+                              className="relative rounded-3xl bg-white/[0.01] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl"
+                            >
+                              <div className={`flex-1 w-full bg-gradient-to-br ${i === 0 ? 'from-purple-500/5' : i === 1 ? 'from-blue-500/5' : 'from-orange-500/5'} to-transparent relative`} />
+                              <div className="relative z-20 space-y-3 bg-[#0A0A0E] p-4">
+                                <h5 className="font-bold text-white text-sm tracking-tight">{item.title}</h5>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-[10px] text-emerald-400 font-bold">{item.price}</div>
+                                  <ArrowUpRight size={12} className="text-white/20" />
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -289,11 +289,11 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24 md:mb-32">
               <div className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-white/[0.02] border border-white/10 mb-8 backdrop-blur-xl">
-                 <Sparkles size={16} className="text-emerald-400" />
-                 <span className="text-[11px] font-bold text-white/50 uppercase tracking-wider">Powerful Features</span>
+                <Sparkles size={16} className="text-emerald-400" />
+                <span className="text-[11px] font-bold text-white/50 uppercase tracking-wider">Powerful Features</span>
               </div>
               <h2 className="text-5xl md:text-7xl font-black mb-8 text-white tracking-tighter leading-[0.9]">
-                 Everything You Need<br />to Start Earning
+                Everything You Need<br />to Start Earning
               </h2>
               <p className="text-white/40 text-xl md:text-2xl max-w-3xl mx-auto font-medium leading-relaxed">
                 From scraping product data to AI-optimized titles and real-time analytics — Storix handles the heavy lifting so you can focus on growing.
@@ -303,7 +303,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               {features.map((feature, i) => (
                 <ScrollReveal key={i} delay={i * 0.1} variant="zoom-in">
-                  <SpotlightCard 
+                  <SpotlightCard
                     className="h-full group !p-8 md:!p-10 border-white/[0.05] bg-white/[0.02] hover:border-emerald-500/30 transition-all duration-500"
                     spotlightColor="rgba(16, 185, 129, 0.12)"
                   >
@@ -322,7 +322,7 @@ export default function LandingPage() {
         {/* ═══════ PRICING ═══════ */}
         <section id="pricing" className="py-32 md:py-48 px-6 relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] -z-10" />
-          
+
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <ScrollReveal variant="fade-up">
@@ -341,26 +341,23 @@ export default function LandingPage() {
                 <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-3xl shadow-2xl mb-16">
                   <button
                     onClick={() => setAnnual(false)}
-                    className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 ${
-                      !annual 
-                        ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100" 
+                    className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 ${!annual
+                        ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
                         : "text-white/30 hover:text-white scale-95 hover:scale-100"
-                    }`}
+                      }`}
                   >
                     Monthly
                   </button>
                   <button
                     onClick={() => setAnnual(true)}
-                    className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-3 ${
-                      annual 
-                        ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100" 
+                    className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-3 ${annual
+                        ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
                         : "text-white/30 hover:text-white scale-95 hover:scale-100"
-                    }`}
+                      }`}
                   >
                     Annually
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-black ${
-                      annual ? "bg-black/20 text-white" : "bg-emerald-500/20 text-emerald-400"
-                    }`}>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-black ${annual ? "bg-black/20 text-white" : "bg-emerald-500/20 text-emerald-400"
+                      }`}>
                       Save 20%
                     </span>
                   </button>
@@ -376,10 +373,9 @@ export default function LandingPage() {
 
                 return (
                   <ScrollReveal key={id} delay={i * 150} variant="zoom-in">
-                    <SpotlightCard 
-                      className={`h-full flex flex-col group !p-10 border-white/[0.05] bg-white/[0.01] hover:border-emerald-500/30 transition-all duration-700 relative overflow-hidden ${
-                        isPro ? 'ring-2 ring-emerald-500/50 shadow-[0_0_80px_rgba(16,185,129,0.15)] bg-emerald-500/[0.02]' : ''
-                      }`}
+                    <SpotlightCard
+                      className={`h-full flex flex-col group !p-10 border-white/[0.05] bg-white/[0.01] hover:border-emerald-500/30 transition-all duration-700 relative overflow-hidden ${isPro ? 'ring-2 ring-emerald-500/50 shadow-[0_0_80px_rgba(16,185,129,0.15)] bg-emerald-500/[0.02]' : ''
+                        }`}
                       spotlightColor={isPro ? "rgba(16, 185, 129, 0.15)" : "rgba(255, 255, 255, 0.05)"}
                     >
                       {isPro && (
@@ -423,11 +419,10 @@ export default function LandingPage() {
                       </div>
 
                       <Link href={id === 'free' ? '/signup' : `/pricing`} className="w-full">
-                        <Button 
-                          variant={isPro ? 'primary' : 'secondary'} 
-                          className={`w-full h-18 rounded-[2rem] font-bold text-xs uppercase tracking-[0.2em] transition-all duration-500 ${
-                            isPro ? 'shadow-[0_20px_40px_rgba(16,185,129,0.3)] hover:shadow-emerald-500/50' : 'bg-white/5 border-white/5 hover:bg-white hover:text-black'
-                          }`}
+                        <Button
+                          variant={isPro ? 'primary' : 'secondary'}
+                          className={`w-full h-18 rounded-[2rem] font-bold text-xs uppercase tracking-[0.2em] transition-all duration-500 ${isPro ? 'shadow-[0_20px_40px_rgba(16,185,129,0.3)] hover:shadow-emerald-500/50' : 'bg-white/5 border-white/5 hover:bg-white hover:text-black'
+                            }`}
                         >
                           Select Protocol
                           <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -454,12 +449,12 @@ export default function LandingPage() {
               {steps.map((step, i) => (
                 <ScrollReveal key={i} delay={i * 200}>
                   <div className="text-center group">
-                     <div className="w-24 h-24 rounded-[2.5rem] bg-white/[0.02] border border-white/5 mx-auto mb-10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 group-hover:shadow-[0_0_60px_rgba(16,185,129,0.3)] group-hover:border-emerald-500/30 transition-all duration-700 shadow-2xl relative backdrop-blur-sm">
-                        <div className="absolute -top-2 -right-2 w-9 h-9 rounded-2xl bg-black border border-white/10 text-[11px] font-black text-white/40 flex items-center justify-center group-hover:text-emerald-500 group-hover:border-emerald-500/30 transition-all shadow-xl">{step.num}</div>
-                        <step.icon size={36} className="group-hover:rotate-12 transition-transform duration-700" />
-                     </div>
-                     <h4 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-emerald-400 transition-colors duration-500">{step.title}</h4>
-                     <p className="text-white/30 font-medium leading-relaxed max-w-[240px] mx-auto">{step.desc}</p>
+                    <div className="w-24 h-24 rounded-[2.5rem] bg-white/[0.02] border border-white/5 mx-auto mb-10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/10 group-hover:shadow-[0_0_60px_rgba(16,185,129,0.3)] group-hover:border-emerald-500/30 transition-all duration-700 shadow-2xl relative backdrop-blur-sm">
+                      <div className="absolute -top-2 -right-2 w-9 h-9 rounded-2xl bg-black border border-white/10 text-[11px] font-black text-white/40 flex items-center justify-center group-hover:text-emerald-500 group-hover:border-emerald-500/30 transition-all shadow-xl">{step.num}</div>
+                      <step.icon size={36} className="group-hover:rotate-12 transition-transform duration-700" />
+                    </div>
+                    <h4 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-emerald-400 transition-colors duration-500">{step.title}</h4>
+                    <p className="text-white/30 font-medium leading-relaxed max-w-[240px] mx-auto">{step.desc}</p>
                   </div>
                 </ScrollReveal>
               ))}
@@ -471,7 +466,7 @@ export default function LandingPage() {
       {/* ═══════ FOOTER ═══════ */}
       <footer className="py-24 md:py-32 px-8 border-t border-white/[0.04] bg-black relative overflow-hidden">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-20 relative z-10">
           <div className="space-y-8">
             <div className="flex items-center gap-3">
@@ -485,27 +480,27 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24">
-             <div className="space-y-6">
-                <h6 className="text-[11px] font-black text-white uppercase tracking-[0.3em]">Product</h6>
-                <div className="flex flex-col gap-4 text-sm text-white/30 font-medium">
-                   <Link href="#features" className="hover:text-white transition-colors">Features</Link>
-                   <Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link>
-                   <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-                </div>
-             </div>
-             <div className="space-y-6">
-                <h6 className="text-[11px] font-black text-white uppercase tracking-[0.3em]">Legal</h6>
-                <div className="flex flex-col gap-4 text-sm text-white/30 font-medium">
-                   <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-                   <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-                </div>
-             </div>
+            <div className="space-y-6">
+              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.3em]">Product</h6>
+              <div className="flex flex-col gap-4 text-sm text-white/30 font-medium">
+                <Link href="#features" className="hover:text-white transition-colors">Features</Link>
+                <Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link>
+                <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.3em]">Legal</h6>
+              <div className="flex flex-col gap-4 text-sm text-white/30 font-medium">
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+              </div>
+            </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-sm text-white/20 relative z-10">
           <p>© 2026 Storix. All rights reserved.</p>
           <div className="flex items-center gap-6 text-xs text-white/15">
-             <span>Powered by Gemini AI</span>
+            <span>Powered by Gemini AI</span>
           </div>
         </div>
       </footer>
