@@ -147,21 +147,22 @@ h1, h2, h3, h4, h5, h6 {
   mix-blend-mode: normal;
 }
 
+/* Base states: new on top for reveal */
 ::view-transition-old(root) {
   z-index: 1;
 }
-
 ::view-transition-new(root) {
   z-index: 9999;
 }
 
-[data-app-theme="light"]::view-transition-old(root) {
+/* Reverse: old on top when shrinking away from Light to Dark */
+[data-app-theme="dark"]::view-transition-old(root) {
   z-index: 9999;
 }
-
-[data-app-theme="light"]::view-transition-new(root) {
+[data-app-theme="dark"]::view-transition-new(root) {
   z-index: 1;
 }
+
 @keyframes orbit {
   from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
   to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
