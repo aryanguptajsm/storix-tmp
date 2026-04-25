@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signUp, updateProfile, signInWithGoogle } from "@/lib/auth";
@@ -299,8 +299,8 @@ function SignupContent() {
 
 export default function SignupPage() {
   return (
-    <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center p-4 bg-[#020205]"><div className="animate-spin w-8 h-8 rounded-full border-b-2 border-primary" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center p-4 bg-[#020205]"><div className="animate-spin w-8 h-8 rounded-full border-b-2 border-primary" /></div>}>
       <SignupContent />
-    </React.Suspense>
+    </Suspense>
   );
 }
