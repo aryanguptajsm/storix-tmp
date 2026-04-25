@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/auth-middleware";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Auth session refresh (handles cookies + redirects)
   const res = await updateSession(request);
 
