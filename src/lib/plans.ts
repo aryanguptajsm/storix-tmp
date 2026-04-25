@@ -101,10 +101,10 @@ export const PLANS: Record<PlanId, Plan> = {
   business: {
     id: 'business',
     name: 'Business',
-    price: 199900, // ₹1,999
-    priceDisplay: '₹1,999',
-    currency: 'INR',
-    symbol: '₹',
+    price: 2500, // $25
+    priceDisplay: '$25',
+    currency: 'USD',
+    symbol: '$',
     interval: 'month',
     description: 'For agencies and power users who need everything.',
     badge: 'Maximum Power',
