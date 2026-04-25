@@ -81,7 +81,7 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* DotField (Interactive Layer) */}
+        {/* DotField (Interactive Layer )*/}
         <div className="absolute inset-0 z-10 transition-opacity duration-1000">
           <DotField
             dotRadius={1.2}
@@ -281,7 +281,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ═══════ FEATURES ═══════ */}
+        {/* ═══════ FEATURES ════ */}
         <section id="features" className="py-32 md:py-48 px-4 sm:px-6 relative">
           <div className="absolute inset-0 noise-subtle opacity-30 -z-10 pointer-events-none" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] bg-gradient-to-r from-violet-500/5 via-cyan-500/5 to-emerald-500/5 blur-[100px] -z-10" />

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient as createSupabaseClient } from "@/lib/supabase-server";
 import DodoPayments from "dodopayments";
 import type { CheckoutSessionCreateParams } from "dodopayments/resources/checkout-sessions";
+import { PLANS, type PlanId } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +51,16 @@ export async function POST(req: Request) {
       );
     }
 
+    // Secure validation: Ensure planId and productId are consistent with our source of truth
+    const plan = PLANS[planId as PlanId];
+    if (!plan || (plan.dodoProductId !== productId)) {
+      console.warn(`[Security] Plan tampering attempt detected: planId=${planId}, productId=${productId}`);
+      return NextResponse.json(
+        { error: "Invalid plan or product selection. Please refresh and try again." },
+        { status: 400 }
+      );
+    }
+
     // Get logged-in user email for pre-filling checkout
     const supabase = await createSupabaseClient();
 
@@ -76,11 +87,8 @@ export async function POST(req: Request) {
       ],
       return_url: `${origin}/dashboard/billing?success=true`,
       cancel_url: `${origin}/pricing`,
-      metadata: {
-        plan_id: planId || "pro",
-        user_id: user?.id || "",
-      },
     };
+
 
     // Add customer info if available
     if (user?.email) {
@@ -88,10 +96,26 @@ export async function POST(req: Request) {
         email: user.email,
         name: user.user_metadata?.full_name || undefined,
       };
+    } else {
+      // Enforcement: We MUST have a user to link the subscription
+      return NextResponse.json(
+        { error: "Authentication required. Please sign in to continue." },
+        { status: 401 }
+      );
     }
 
-    // Removed hardcoded billing address to support international customers ($4.99 plan)
-    // Dodo Payments hosted checkout will handle country selection
+    // Double check user_id is present for metadata (critical for webhook)
+    if (!user?.id) {
+       return NextResponse.json(
+         { error: "Authentication required. Please sign in to continue." },
+         { status: 401 }
+       );
+    }
+    
+    sessionParams.metadata = {
+      plan_id: planId || "pro",
+      user_id: user.id
+    };
 
     const session = await client.checkoutSessions.create(sessionParams);
 

@@ -29,7 +29,20 @@ export default function PricingPage() {
       return;
     }
 
-    if (planId === "pro" && plan.dodoProductId) {
+    // Securely check auth before attempting checkout
+    const { getUser } = await import("@/lib/auth");
+    const user = await getUser();
+    if (!user) {
+      const { toast } = await import("sonner");
+      toast.info("Please sign in to upgrade your plan.");
+      // Small delay to allow toast to be seen
+      setTimeout(() => {
+        window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+      }, 1000);
+      return;
+    }
+
+    if ((planId === "pro" || planId === "business") && plan.dodoProductId) {
       setLoadingPlan(planId);
       try {
         // 20s timeout to avoid hung requests
@@ -69,7 +82,7 @@ export default function PricingPage() {
         setLoadingPlan(null);
       }
     } else {
-      // Fallback for business plan or missing dodoProductId
+      // Fallback for free plan or missing dodoProductId
       window.location.href = `/signup?plan=${planId}`;
     }
   };
