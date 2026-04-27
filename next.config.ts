@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   compress: true,
   images: {
-    minimumCacheTTL: 60, // Optimized per user request
+    minimumCacheTTL: 60,
     remotePatterns: [
       { protocol: "https", hostname: "**.amazon.com" },
       { protocol: "https", hostname: "**.media-amazon.com" },
@@ -22,6 +24,18 @@ const nextConfig: NextConfig = {
     ],
   },
   devIndicators: false,
+
+  // Exclude heavy server-only packages from the Next.js bundle
+  // This prevents the bundler from tracing into their deeply nested node_modules
+  serverExternalPackages: [
+    "playwright",
+    "cheerio",
+    "open-graph-scraper",
+    "axios",
+    "csv-parse",
+    "csv-stringify",
+  ],
+
   turbopack: {
     root: path.resolve("."),
     ignoreIssue: [
@@ -35,14 +49,25 @@ const nextConfig: NextConfig = {
       { path: ".next/**" },
       { path: "**/.next/**" },
       { path: ".config/**" },
+      { path: "**/node_modules/playwright/**" },
+      { path: "**/node_modules/playwright-core/**" },
     ],
   },
+
   experimental: {
-    optimizePackageImports: ["framer-motion", "sonner", "lucide-react"],
+    optimizePackageImports: [
+      "framer-motion",
+      "sonner",
+      "lucide-react",
+      "recharts",
+      "@supabase/supabase-js",
+    ],
     memoryBasedWorkersCount: true,
   },
-  output: "standalone",
+
+  // Only use standalone output for production builds — it causes
+  // extra filesystem tracing during dev which triggers "slow filesystem" warnings
+  ...(isProd ? { output: "standalone" as const } : {}),
 };
 
 export default nextConfig;
-
