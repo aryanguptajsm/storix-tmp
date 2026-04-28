@@ -14,11 +14,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized access. Command sequence denied." }, { status: 401 });
     }
 
+    console.log("SCRAPING REQUEST RECEIVED");
+
     const { url } = await req.json();
 
     if (!url) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
+
+    console.log("URL:", url);
 
     // ─── Plan Limit Enforcement ───
     const { data: profile } = await supabase
@@ -41,10 +45,15 @@ export async function POST(req: NextRequest) {
       }, { status: 403 });
     }
 
+    console.log("Plan:", plan);
+    console.log("Limit:", limit);
+    console.log("Count:", count);
+
     // Use the new robust ProductScraper Agent
     const scraper = new ProductScraper();
-    const result = await scraper.scrape(url);
-    await scraper.close();
+    const result = await scraper.scrape(url).finally(() => scraper.close());
+
+    console.log("Result:", result);
 
     if (result.image_status === "error") {
        return NextResponse.json({ 
@@ -53,11 +62,17 @@ export async function POST(req: NextRequest) {
        }, { status: 500 });
     }
 
+    console.log("Image Status:", result.image_status);
+
     const parsedUrl = new URL(url);
     let platform = "other";
     if (/amazon/i.test(parsedUrl.hostname)) platform = "amazon";
     else if (/flipkart/i.test(parsedUrl.hostname)) platform = "flipkart";
     else if (/meesho/i.test(parsedUrl.hostname)) platform = "meesho";
+
+    console.log("Platform:", platform);
+
+    console.log("Returning Response...");
 
     return NextResponse.json({
       title: result.product_title || "Untitled Product",
@@ -72,6 +87,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Scraping failed";
+    console.log(msg);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

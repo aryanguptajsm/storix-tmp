@@ -1,7 +1,6 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import * as cheerio from "cheerio";
-import { chromium, Browser, Page } from "playwright";
-import { parseAffiliateUrl } from "../affiliate";
+import { chromium, Browser } from "playwright";
 
 /**
  * ProductScraper Agent
@@ -69,6 +68,8 @@ export class ProductScraper {
     const scrapedAt = new Date().toISOString();
     let attempt = 0;
     let delay = 2000 + Math.random() * 2000; // 2-4s initial delay
+    let lastHttpCode = 0;
+    let lastErrorMessage = "Scraping failed";
 
     // Append affiliate tag if needed
     const finalUrl = this.appendAffiliateTag(url);
@@ -78,13 +79,23 @@ export class ProductScraper {
         await this.sleep(delay);
 
         // Try standard fetch first (fast)
-        const response = await axios.get(url, {
-          headers: { "User-Agent": this.getRandomUA() },
-          timeout: 15000,
-          validateStatus: (status) => status < 500,
-        });
+        let response: AxiosResponse<string> | null = null;
+        let fetchErrorReason: string | undefined;
 
-        if (response.status === 429) {
+        try {
+          response = await axios.get<string>(url, {
+            headers: { "User-Agent": this.getRandomUA() },
+            timeout: 15000,
+            validateStatus: () => true,
+          });
+          lastHttpCode = response.status;
+        } catch (error: unknown) {
+          fetchErrorReason = error instanceof Error ? error.message : String(error);
+          lastErrorMessage = fetchErrorReason;
+          lastHttpCode = axios.isAxiosError(error) ? error.response?.status || 0 : 0;
+        }
+
+        if (response?.status === 429) {
           console.warn(`429 Too Many Requests for ${url}. Pausing 30s...`);
           await this.sleep(30000);
           attempt++;
@@ -94,15 +105,20 @@ export class ProductScraper {
 
         let result: Partial<ProductScrapeResult> = {
           product_url: finalUrl,
-          http_code: response.status,
+          http_code: lastHttpCode,
           scraped_at: scrapedAt,
         };
 
         // For JS-heavy or protected sites, or if standard fetch yields low quality
         // we use Playwright as a fallback or primary for certain domains
-        if (this.isJsHeavy(url) || response.status !== 200) {
+        if (!response || this.isJsHeavy(url) || response.status !== 200) {
           const pwResult = await this.scrapeWithPlaywright(url);
           result = { ...result, ...pwResult };
+
+          if (!result.product_title && !result.image_url && result.error_reason) {
+            const combinedReason = [fetchErrorReason, result.error_reason].filter(Boolean).join("; ");
+            throw new Error(combinedReason || result.error_reason);
+          }
         } else {
           const $ = cheerio.load(response.data);
           const extracted = this.extractDataFromCheerio($, url);
@@ -121,22 +137,23 @@ export class ProductScraper {
            }
         } else {
            result.image_status = "not_found";
-           result.error_reason = result.error_reason || "No image found in content";
+           result.error_reason = result.error_reason || fetchErrorReason || "No image found in content";
         }
 
         return result as ProductScrapeResult;
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         attempt++;
         const errorMessage = error instanceof Error ? error.message : String(error);
+        lastErrorMessage = errorMessage;
         if (attempt > retryCount) {
           return {
             product_title: "Error",
             product_url: finalUrl,
             image_url: null,
             image_status: "error",
-            http_code: error.response?.status || 0,
-            error_reason: errorMessage,
+            http_code: lastHttpCode,
+            error_reason: lastErrorMessage,
             scraped_at: scrapedAt,
           };
         }
@@ -149,8 +166,8 @@ export class ProductScraper {
       product_url: finalUrl,
       image_url: null,
       image_status: "error",
-      http_code: 0,
-      error_reason: "Max retries exceeded",
+      http_code: lastHttpCode,
+      error_reason: lastErrorMessage || "Max retries exceeded",
       scraped_at: scrapedAt,
     };
   }

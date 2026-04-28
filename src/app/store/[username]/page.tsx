@@ -116,10 +116,16 @@ export default async function PublicStorePage({ params }: Props) {
   const productsRes = profile
     ? await supabase
         .from("products")
-        .select("id, user_id, title, image_url, platform, price, original_price, discount_percentage, original_url, created_at")
+        // Keep this select schema-safe. Some deployments still miss
+        // original_price/discount_percentage and would otherwise return zero products.
+        .select("id, user_id, title, image_url, platform, price, original_url, created_at")
         .eq("user_id", profile.id)
         .order("created_at", { ascending: false })
-    : { data: [] };
+    : { data: [], error: null };
+
+  if (productsRes.error) {
+    console.error("Public store product fetch failed:", productsRes.error);
+  }
 
   const products = productsRes.data || [];
 
