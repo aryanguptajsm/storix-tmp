@@ -158,10 +158,10 @@ export default async function PublicStorePage({ params }: Props) {
             {isPotentialOwner ? (
                <span className="block mt-4 p-4 rounded-xl bg-primary/5 border border-primary/20 text-white/60 text-sm">
                  <Sparkles size={16} className="inline mr-2 text-primary" />
-                 This is your allocated username. Initialize your node to go live.
+                 This is your allocated username. Initialize your store to go live.
                </span>
             ) : (
-               <span className="block mt-2">The requested node is offline or has been decommissioned.</span>
+               <span className="block mt-2">The requested store is offline or has been removed.</span>
             )}
           </p>
 
