@@ -87,7 +87,7 @@ export default function LandingPage() {
             dotRadius={1.2}
             dotSpacing={20}
             passiveSpeed={1.2}
-            gradientFrom="rgba(16, 185, 129, 0.25)"
+            gradientFrom="rgba(10, 255, 173, 0.17)"
             gradientTo="rgba(0, 206, 201, 0.05)"
           />
         </div>
