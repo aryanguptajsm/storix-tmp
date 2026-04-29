@@ -34,7 +34,6 @@ const nextConfig: NextConfig = {
     "axios",
     "csv-parse",
     "csv-stringify",
-    "three",
     "standardwebhooks",
   ],
 
@@ -56,7 +55,6 @@ const nextConfig: NextConfig = {
       "recharts",
       "@supabase/supabase-js",
       "@supabase/ssr",
-      "three",
     ],
     // Use memory-based worker count to auto-tune parallelism
     memoryBasedWorkersCount: true,
