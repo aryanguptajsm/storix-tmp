@@ -4,86 +4,48 @@ import { Skeleton } from "./Skeleton";
 
 export function DashboardSkeleton() {
   return (
-    <div className="relative min-h-[100dvh] w-full bg-black animate-fade-in overflow-hidden">
+    <div className="space-y-6 pb-20 relative min-h-screen animate-fade-in overflow-hidden bg-black">
+      <div className="fixed inset-0 pointer-events-none -z-20 bg-black/60" />
+      
       {/* Premium Background Layer */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.05),transparent_40%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(0,206,201,0.05),transparent_40%)]" />
       </div>
 
-      {/* Subtle overlay to ensure good contrast */}
-      <div className="absolute inset-0 bg-black/40 pointer-events-none z-0" />
+      <div className="max-w-[1400px] mx-auto space-y-8 relative z-10 px-4 sm:px-6 lg:px-8 pt-20">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+            <div className="space-y-3 relative w-full max-w-md">
+              <Skeleton className="h-[3rem] md:h-[4rem] lg:h-[4.5rem] w-full max-w-sm rounded-2xl" />
+              <Skeleton className="h-6 w-3/4 max-w-xs mt-2 rounded-lg" />
+            </div>
 
-      {/* Main Skeleton Content */}
-      <div className="space-y-8 px-4 sm:px-6 lg:px-8 pt-20 max-w-[1400px] mx-auto relative z-10">
-        {/* Header */}
-        <div className="space-y-2 relative z-10">
-          <Skeleton className="h-10 w-72 bg-white/10" />
-          <Skeleton className="h-4 w-96 opacity-50 bg-white/5" />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto mt-4 lg:mt-0">
+              <Skeleton className="h-12 w-full sm:w-32 rounded-xl" />
+              <Skeleton className="h-12 w-full sm:w-32 rounded-xl" />
+              <Skeleton className="h-12 w-full sm:w-40 rounded-xl" />
+            </div>
+          </div>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="rounded-[1.5rem] border border-white/[0.05] bg-black/60 backdrop-blur-xl p-5 space-y-3 shadow-[inset_0_2px_4px_rgba(255,255,255,0.02),0_4px_16px_rgba(0,0,0,0.4)] relative overflow-hidden group"
+              className="rounded-[3rem] border border-white/[0.05] bg-black/60 backdrop-blur-2xl p-6 lg:p-8 h-full shadow-[inset_0_2px_4px_rgba(255,255,255,0.02),0_4px_16px_rgba(0,0,0,0.4)] relative overflow-hidden flex flex-col"
             >
-              <div className="absolute inset-0 noise-subtle opacity-20 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4 border-b border-white/[0.02] pb-2">
-                  <Skeleton className="h-3 w-20 opacity-40 rounded-sm bg-white/20" />
-                  <Skeleton className="h-8 w-8 rounded-md bg-white/10" />
-                </div>
-                <Skeleton className="h-8 w-24 mb-2 rounded-md bg-white/10" />
-                <Skeleton className="h-1 w-full rounded-full opacity-30 mt-3 bg-emerald-500/30" />
+              <div className="flex flex-row items-center justify-between pb-2 mb-6">
+                <Skeleton className="h-3 w-20 rounded-sm" />
+                <Skeleton className="h-8 w-8 rounded-lg" />
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Store Card */}
-        <div className="rounded-[2rem] border border-white/[0.05] bg-black/60 backdrop-blur-xl p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[inset_0_2px_4px_rgba(255,255,255,0.02),0_4px_16px_rgba(0,0,0,0.4)] relative overflow-hidden group">
-          <div className="absolute inset-0 noise-subtle opacity-20 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          <div className="relative z-10 flex items-center gap-5 w-full md:w-auto">
-            <Skeleton className="h-12 w-12 rounded-xl bg-emerald-500/20" />
-            <div className="space-y-1">
-              <Skeleton className="h-6 w-48 rounded-md bg-white/10" />
-              <Skeleton className="h-3 w-72 opacity-40 rounded-md bg-white/5" />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-             <Skeleton className="h-10 w-40 rounded-lg bg-white/10" />
-             <Skeleton className="h-10 w-32 rounded-lg bg-white/10" />
-          </div>
-        </div>
-
-        {/* Two Column details */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10">
-          {[1, 2].map((i) => (
-            <div
-              key={i}
-              className="rounded-[2rem] border border-white/[0.05] bg-black/60 backdrop-blur-xl p-5 space-y-4 shadow-[inset_0_2px_4px_rgba(255,255,255,0.02),0_4px_16px_rgba(0,0,0,0.4)] relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 noise-subtle opacity-20 pointer-events-none" />
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative z-10">
-                <div className="flex items-center justify-between border-b border-white/[0.02] pb-3 mb-4">
-                  <Skeleton className="h-4 w-32 rounded-sm bg-white/10" />
-                  <Skeleton className="h-7 w-16 rounded-md opacity-40 bg-white/5" />
-                </div>
-                <div className="space-y-4">
-                  {[1, 2, 3].map((j) => (
-                    <div key={j} className="flex items-center gap-4">
-                      <Skeleton className="h-10 w-10 rounded-lg flex-shrink-0 bg-white/10" />
-                      <div className="flex-1 space-y-1">
-                        <Skeleton className="h-3 w-2/3 rounded-sm bg-white/10" />
-                        <Skeleton className="h-2 w-1/4 opacity-40 rounded-sm bg-white/5" />
-                      </div>
-                    </div>
-                  ))}
+              <div className="pt-4 mt-auto">
+                <Skeleton className="h-12 w-32 rounded-lg mb-2" />
+                <div className="flex items-center gap-2 mt-2">
+                  <Skeleton className="h-2 w-2 rounded-full flex-shrink-0" />
+                  <Skeleton className="h-3 w-24 rounded-sm" />
                 </div>
               </div>
             </div>

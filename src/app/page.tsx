@@ -499,9 +499,6 @@ export default function LandingPage() {
         </div>
         <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-sm text-white/20 relative z-10">
           <p>© 2026 Storix. All rights reserved.</p>
-          <div className="flex items-center gap-6 text-xs text-white/15">
-            <span>Powered by Gemini AI</span>
-          </div>
         </div>
       </footer>
     </div>
