@@ -51,8 +51,8 @@ const navSections = [
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [user, setUser] = React.useState<any>(null);
-  const [profile, setProfile] = React.useState<any>(null);
+  const [user, setUser] = React.useState<any>(null); // Keeping any for user to avoid complex import for now if it's already there, but fixing profile
+  const [profile, setProfile] = React.useState<import("@/lib/auth").UserProfile | null>(null);
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
   React.useEffect(() => {
