@@ -223,16 +223,57 @@ export class ProductScraper {
     let discount = "";
     let rating = "";
 
+    // 1. JSON-LD check for price
+    const jsonLd = $('script[type="application/ld+json"]');
+    if (jsonLd.length) {
+      for (const el of jsonLd.toArray()) {
+        try {
+          const data = JSON.parse($(el).html() || "{}");
+          if (data.offers && data.offers.price) {
+             const curr = data.offers.priceCurrency === "INR" ? "₹" : data.offers.priceCurrency === "USD" ? "$" : "";
+             price = `${curr}${data.offers.price}`;
+          }
+        } catch {}
+      }
+    }
+
     if (/amazon/i.test(url)) {
-      const priceWhole = $(".a-price-whole").first().text().trim();
+      const priceWhole = $(".a-price-whole").first().text().trim().replace(/[,.]/g, "");
       const priceFraction = $(".a-price-fraction").first().text().trim();
-      if (priceWhole) price = `${priceWhole}${priceFraction ? "." + priceFraction : ""}`;
-      original_price = $(".a-price.a-text-price span.a-offscreen").first().text().trim();
+      
+      const dealPrice = $("#priceblock_dealprice").text().trim();
+      const ourPrice = $("#priceblock_ourprice").text().trim();
+      const apexPrice = $(".apexPriceToPay .a-offscreen").first().text().trim();
+      
+      if (apexPrice) price = apexPrice;
+      else if (dealPrice) price = dealPrice;
+      else if (ourPrice) price = ourPrice;
+      else if (priceWhole) price = `₹${priceWhole}${priceFraction ? "." + priceFraction : ""}`;
+
+      original_price = $(".a-price.a-text-price span.a-offscreen").first().text().trim() || 
+                       $(".basisPrice .a-offscreen").first().text().trim();
+                       
       discount = $(".savingsPercentage").first().text().trim().replace(/[^0-9]/g, "");
-      const ratingText = $("span.a-icon-alt").first().text().trim();
+      const ratingText = $("span.a-icon-alt").first().text().trim() || $("#acrPopover").attr("title");
       if (ratingText) {
         const match = ratingText.match(/([\d.]+)/);
         if (match) rating = match[1];
+      }
+    } else if (/flipkart/i.test(url)) {
+      price = $("div._30jeq3._16Jk6d").first().text().trim() || $("div.Nx9bqj.CxhGGd").first().text().trim() || $("div.Nx9bqj").first().text().trim();
+      original_price = $("div._3I9_wc._2p6lqe").first().text().trim() || $("div.yRaY8j.A60-H-").first().text().trim() || $("div.yRaY8j").first().text().trim();
+      discount = $("div._3Ay6Sb._31Dcoz span").first().text().trim().replace(/[^0-9]/g, "") || $("div.UkUFwK span").first().text().trim().replace(/[^0-9]/g, "");
+      rating = $("div._3LWZlK").first().text().trim() || $("div.XQDdHH").first().text().trim();
+    } else if (/meesho/i.test(url)) {
+      price = $("h4").filter((_, el) => $(el).text().includes("₹")).first().text().trim();
+    }
+
+    // Generic price fallback
+    if (!price) {
+      const genericPrice = $('meta[property="product:price:amount"]').attr("content");
+      const currency = $('meta[property="product:price:currency"]').attr("content") || "$";
+      if (genericPrice) {
+        price = `${currency === "INR" ? "₹" : currency}${genericPrice}`;
       }
     }
     
@@ -264,11 +305,11 @@ export class ProductScraper {
 
     // 2. Open Graph
     const ogImage = $('meta[property="og:image"]').attr("content");
-    if (ogImage) return ogImage;
+    if (ogImage && !ogImage.includes("captcha")) return ogImage;
 
     // 3. Twitter
     const twitterImage = $('meta[name="twitter:image"]').attr("content");
-    if (twitterImage) return twitterImage;
+    if (twitterImage && !twitterImage.includes("captcha")) return twitterImage;
 
     // 4. Platform Specific
     if (/amazon/i.test(url)) {
@@ -277,15 +318,19 @@ export class ProductScraper {
         try {
           const parsed = JSON.parse(dynamicImage);
           const keys = Object.keys(parsed);
-          // Pick the one with the highest resolution (usually the key is the URL and value is dimensions)
-          // Actually, in Amazon JSON, keys are URLs, values are [w,h]
+          // Pick the one with the highest resolution
           return keys.sort((a,b) => (parsed[b][0] * parsed[b][1]) - (parsed[a][0] * parsed[a][1]))[0];
         } catch {}
       }
+      const oldHires = $("#landingImage").attr("data-old-hires");
+      if (oldHires) return oldHires;
+      
+      const imgTagWrapper = $("#imgTagWrapperId img").attr("src");
+      if (imgTagWrapper && !imgTagWrapper.includes("data:image")) return imgTagWrapper;
     }
     
     if (/flipkart/i.test(url)) {
-      const fkImg = $("._396cs4 img").attr("src") || $("._2r_T1I img").attr("src");
+      const fkImg = $("img.v2bfbI").attr("src") || $("._396cs4 img").attr("src") || $("._2r_T1I img").attr("src");
       if (fkImg) return fkImg;
     }
 
@@ -298,13 +343,19 @@ export class ProductScraper {
     let largestImg: string | null = null;
     let maxArea = 0;
     $("img").each((_, el) => {
+      // Fix bug: Prevent user review images from being scraped
+      if ($(el).closest('#customerReviews, .review, .reviews, [data-hook="review"]').length > 0) return;
+      const parentClass = $(el).parent().attr("class") || "";
+      const parentId = $(el).parent().attr("id") || "";
+      if (parentClass.toLowerCase().includes("review") || parentId.toLowerCase().includes("review")) return;
+
       const src = $(el).attr("src");
-      if (!src || src.startsWith("data:") || src.includes("spinner") || src.includes("loading")) return;
+      if (!src || src.startsWith("data:") || src.includes("spinner") || src.includes("loading") || src.includes("captcha")) return;
       
       const width = parseInt($(el).attr("width") || "0");
       const height = parseInt($(el).attr("height") || "0");
       const area = width * height;
-      if (area > maxArea && width > 50 && height > 50) {
+      if (area > maxArea && width > 100 && height > 100) {
         maxArea = area;
         largestImg = src;
       }
