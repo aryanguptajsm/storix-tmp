@@ -52,8 +52,8 @@ const nextConfig: NextConfig = {
     ],
     // Use memory-based worker count to auto-tune parallelism
     memoryBasedWorkersCount: true,
-    // Enable partial pre-rendering for better performance
-    ppr: "incremental" as const,
+    // Enable partial pre-rendering (PPR) via cacheComponents — replaces the old `ppr` flag in Next.js 16
+    cacheComponents: true,
   },
   // Disable powered by header for security
   poweredByHeader: false,
