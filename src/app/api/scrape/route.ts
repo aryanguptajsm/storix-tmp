@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       }, { status: 403 });
     }
 
-    // Use the new robust ProductScraper Agent
+    // Use the robust ProductScraper Agent
     const scraper = new ProductScraper();
     const result = await scraper.scrape(url);
     await scraper.close();
@@ -57,6 +57,9 @@ export async function POST(req: NextRequest) {
     if (/amazon/i.test(parsedUrl.hostname)) platform = "amazon";
     else if (/flipkart/i.test(parsedUrl.hostname)) platform = "flipkart";
     else if (/meesho/i.test(parsedUrl.hostname)) platform = "meesho";
+    else if (/myntra/i.test(parsedUrl.hostname)) platform = "myntra";
+    else if (/ajio/i.test(parsedUrl.hostname)) platform = "ajio";
+    else if (/ebay/i.test(parsedUrl.hostname)) platform = "ebay";
 
     return NextResponse.json({
       title: result.product_title || "Untitled Product",
@@ -66,6 +69,10 @@ export async function POST(req: NextRequest) {
       originalPrice: result.original_price || "",
       discountPercentage: result.discount || "",
       rating: result.rating || "",
+      reviewCount: result.review_count || "",
+      brand: result.brand || "",
+      category: result.category || "",
+      features: result.features || [],
       platform,
       originalUrl: url,
     });
