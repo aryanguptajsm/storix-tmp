@@ -8,10 +8,6 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { StoreSearch } from "@/components/store/StoreSearch";
 
-// Cache rendered pages for 60s (ISR) — drastically speeds up repeat visits
-// Dynamic rendering ensures newly created stores are immediately available
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
 
 interface Props {
   params: { username: string };
@@ -116,9 +112,7 @@ export default async function PublicStorePage({ params }: Props) {
   const productsRes = profile
     ? await supabase
         .from("products")
-        // Keep this select schema-safe. Some deployments still miss
-        // original_price/discount_percentage and would otherwise return zero products.
-        .select("id, user_id, title, image_url, platform, price, original_url, created_at")
+        .select("id, user_id, title, description, image_url, platform, price, original_price, discount_percentage, rating, review_count, brand, category, original_url, created_at")
         .eq("user_id", profile.id)
         .order("created_at", { ascending: false })
     : { data: [], error: null };
@@ -164,10 +158,10 @@ export default async function PublicStorePage({ params }: Props) {
             {isPotentialOwner ? (
                <span className="block mt-4 p-4 rounded-xl bg-primary/5 border border-primary/20 text-white/60 text-sm">
                  <Sparkles size={16} className="inline mr-2 text-primary" />
-                 This is your allocated username. Initialize your node to go live.
+                 This is your allocated username. Initialize your store to go live.
                </span>
             ) : (
-               <span className="block mt-2">The requested node is offline or has been decommissioned.</span>
+               <span className="block mt-2">The requested store is offline or has been removed.</span>
             )}
           </p>
 

@@ -20,11 +20,15 @@ export interface Product {
   price?: string;
   original_price?: string;
   discount_percentage?: string;
+  rating?: string;
+  review_count?: string;
+  brand?: string;
+  category?: string;
+  features?: string[];
   image_url?: string;
   platform: string;
   original_url: string;
   affiliate_url?: string;
-  category?: string;
   ai_content?: string;
   article_type?: string;
   content_status?: 'pending' | 'generated' | 'failed';

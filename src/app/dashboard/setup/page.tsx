@@ -117,7 +117,7 @@ CREATE TRIGGER on_auth_user_created
         {[
           { icon: Terminal, title: "1. Copy Script", desc: "Extract the secure SQL initialization directive.", color: "text-primary" },
           { icon: ExternalLink, title: "2. Open Console", desc: "Navigate to your remote SQL deployment unit.", color: "text-secondary" },
-          { icon: Zap, title: "3. Run Protocol", desc: "Execute script to finalize your link nodes.", color: "text-accent" },
+          { icon: Zap, title: "3. Run Protocol", desc: "Execute script to finalize your link setup.", color: "text-accent" },
         ].map((step, i) => (
           <AnimatedSection key={i} delay={0.2 + (i * 0.1)}>
             <Card size="small" variant="glass" className="h-full group hover:border-primary/30 transition-all border-white/5 bg-white/[0.01]">
@@ -178,7 +178,7 @@ CREATE TRIGGER on_auth_user_created
                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Deployment Ready</span>
             </div>
             <h3 className="text-3xl font-black text-white italic tracking-tighter">Ready for Signal Broadcast?</h3>
-            <p className="text-lg text-white/40 font-medium leading-relaxed">Once the SQL protocol is executed, your storefront nodes will synchronize with our AI inventory pipeline instantly.</p>
+            <p className="text-lg text-white/40 font-medium leading-relaxed">Once the SQL protocol is executed, your storefronts will synchronize with our AI inventory pipeline instantly.</p>
           </div>
           <Link href="https://supabase.com/dashboard/project/lnckyrvxehzcjvyultkd/sql/new" target="_blank" className="w-full md:w-auto relative z-10">
             <Button className="w-full md:w-auto gap-4 px-10 h-20 text-xs font-black uppercase tracking-[0.4em] shadow-[0_20px_50px_rgba(16,185,129,0.3)] group bg-primary hover:bg-primary-light transition-all rounded-[2rem] hover:scale-105 active:scale-95">

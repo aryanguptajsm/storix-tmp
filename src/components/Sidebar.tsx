@@ -51,8 +51,8 @@ const navSections = [
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [user, setUser] = React.useState<any>(null);
-  const [profile, setProfile] = React.useState<any>(null);
+  const [user, setUser] = React.useState<any>(null); // Keeping any for user to avoid complex import for now if it's already there, but fixing profile
+  const [profile, setProfile] = React.useState<import("@/lib/auth").UserProfile | null>(null);
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
   React.useEffect(() => {
@@ -93,7 +93,7 @@ export function Sidebar() {
           <span className="text-2xl font-black tracking-tighter leading-none bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
             Storix
           </span>
-          <span className="text-[10px] text-primary/60 font-black uppercase tracking-[0.3em] mt-1">Admin Node</span>
+          <span className="text-[10px] text-primary/60 font-black uppercase tracking-[0.3em] mt-1">Admin Panel</span>
         </div>
       </div>
 
@@ -184,7 +184,7 @@ export function Sidebar() {
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/5 transition-all group/link"
               >
                 <ExternalLink size={14} className="group-hover/link:rotate-12 transition-transform" />
-                Live Node
+                Live Store
               </Link>
             )}
             <button
@@ -197,7 +197,7 @@ export function Sidebar() {
               ) : (
                 <LogOut size={14} className="group-hover/out:-translate-x-1 transition-transform" />
               )}
-              {isLoggingOut ? "Terminating..." : "Terminate"}
+              {isLoggingOut ? "Signing out..." : "Sign out"}
             </button>
           </div>
         </div>
@@ -223,7 +223,7 @@ export function Sidebar() {
            </div>
            <div className="flex flex-col">
               <span className="font-black text-2xl tracking-tighter text-white leading-none">Storix</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Admin Node</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Admin Panel</span>
            </div>
         </div>
         <button

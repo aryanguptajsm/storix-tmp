@@ -1,5 +1,0 @@
-product_url,http_code,scraped_at,error_reason,image_status
-https://www.amazon.com/dp/B08N5KWBKM?tag=storix-21,404,2026-04-06T18:08:53.954Z,Playwright error: url is not defined,not_found
-https://www.flipkart.com/apple-iphone-15-black-128-gb/p/itm227447d95392e?tag=storix-21,200,2026-04-06T18:09:13.965Z,Playwright error: url is not defined,not_found
-https://www.ebay.com/itm/334963503527?tag=storix-21,404,2026-04-06T18:09:20.110Z,Playwright error: url is not defined,not_found
-https://google.com/?tag=storix-21,0,2026-04-06T18:09:30.854Z,url is not defined,error

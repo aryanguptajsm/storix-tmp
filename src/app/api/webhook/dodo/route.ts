@@ -3,7 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { PLANS, PlanId } from "@/lib/plans";
 
-export const dynamic = "force-dynamic";
 
 /**
  * Verifies the Standard Webhooks (Svix) signature from Dodo Payments

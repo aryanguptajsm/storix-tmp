@@ -119,7 +119,7 @@ export default async function DashboardPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white tracking-tight">Configuration Required</h3>
-                    <p className="text-muted/80 text-sm max-w-md font-medium mt-0.5">Your database nodes are disconnected. Re-establish connection via environment variable mapping.</p>
+                    <p className="text-muted/80 text-sm max-w-md font-medium mt-0.5">Your database connection is disconnected. Re-establish connection via environment variable mapping.</p>
                   </div>
                 </div>
                 <Link href="https://supabase.com/dashboard/project/lnckyrvxehzcjvyultkd/settings/api" target="_blank" className="w-full md:w-auto relative z-10">
@@ -165,7 +165,7 @@ export default async function DashboardPage() {
                 </span>
               </h1>
               <p className="text-base text-white/40 font-bold uppercase tracking-[0.2em]">
-                Node Status: <span className="text-emerald-500">Operational</span> // Performance Overview
+                System Status: <span className="text-emerald-500">Operational</span> // Performance Overview
               </p>
             </div>
 
@@ -268,7 +268,7 @@ export default async function DashboardPage() {
               </div>
               <div className="space-y-1.5 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-3">
-                    <h3 className="text-2xl font-black text-white tracking-tighter italic">Live Merchant Node</h3>
+                    <h3 className="text-2xl font-black text-white tracking-tighter italic">Live Store</h3>
                     <div className="flex justify-center md:justify-start">
                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[9px] font-black uppercase tracking-[0.2em] animate-pulse">Broadcast Active</span>
                     </div>
@@ -348,7 +348,7 @@ export default async function DashboardPage() {
             <CardHeader className="border-b border-white/[0.03] py-6 px-8 bg-white/[0.01]">
               <div className="flex items-center gap-3">
                  <Sparkles className="w-4 h-4 text-secondary" />
-                 <CardTitle className="text-[14px] font-black tracking-[0.1em] uppercase text-white/80">Strategy Node</CardTitle>
+                 <CardTitle className="text-[14px] font-black tracking-[0.1em] uppercase text-white/80">Strategy Board</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-4 p-8">

@@ -118,9 +118,11 @@ export default function EditProductPage() {
           title: productData.title,
           description: productData.description,
           price: productData.price,
-          // TEMPORARY: Stripping columns missing in current schema cache
-          // original_price: productData.originalPrice,
-          // discount_percentage: productData.discountPercentage,
+          original_price: productData.originalPrice,
+          discount_percentage: productData.discountPercentage,
+          rating: productData.rating,
+          review_count: productData.reviewCount,
+          brand: productData.brand,
           image_url: productData.image,
           platform: productData.platform,
           original_url: productData.originalUrl,
@@ -232,7 +234,7 @@ export default function EditProductPage() {
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Product Title</label>
                 <Input
-                  value={productData.title}
+                  value={productData.title ?? ""}
                   onChange={(e) => setProductData({ ...productData, title: e.target.value })}
                   className="bg-white/5 border-white/5 font-bold"
                 />
@@ -242,7 +244,7 @@ export default function EditProductPage() {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Current Price</label>
                   <Input
-                    value={productData.price}
+                    value={productData.price ?? ""}
                     onChange={(e) => setProductData({ ...productData, price: e.target.value })}
                     className="bg-white/5 border-white/5"
                   />
@@ -250,7 +252,7 @@ export default function EditProductPage() {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Original Price</label>
                   <Input
-                    value={productData.originalPrice}
+                    value={productData.originalPrice ?? ""}
                     onChange={(e) => setProductData({ ...productData, originalPrice: e.target.value })}
                     className="bg-white/5 border-white/5"
                   />
@@ -261,7 +263,7 @@ export default function EditProductPage() {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Discount %</label>
                   <Input
-                    value={productData.discountPercentage}
+                    value={productData.discountPercentage ?? ""}
                     onChange={(e) => setProductData({ ...productData, discountPercentage: e.target.value })}
                     className="bg-white/5 border-white/5"
                   />
@@ -269,7 +271,7 @@ export default function EditProductPage() {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Platform Flag</label>
                   <Input
-                    value={productData.platform}
+                    value={productData.platform ?? ""}
                     onChange={(e) => setProductData({ ...productData, platform: e.target.value })}
                     className="bg-white/5 border-white/5"
                   />
@@ -280,7 +282,7 @@ export default function EditProductPage() {
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted/60">Product Description</label>
                 <textarea
                   rows={4}
-                  value={productData.description}
+                  value={productData.description ?? ""}
                   onChange={(e) => setProductData({ ...productData, description: e.target.value })}
                   className="w-full rounded-2xl bg-white/5 border border-white/5 p-4 text-sm font-medium text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary/40 outline-none transition-all resize-none leading-relaxed"
                 />

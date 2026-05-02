@@ -3,28 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--dns-result-order=ipv4first' next dev",
+    "dev": "NODE_OPTIONS='--dns-result-order=ipv4first' next dev --turbo",
     "build": "NODE_OPTIONS='--dns-result-order=ipv4first' next build",
     "start": "NODE_OPTIONS='--dns-result-order=ipv4first' next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@opentelemetry/api": "^1.9.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.100.0",
-    "@types/three": "^0.184.0",
     "axios": "^1.13.6",
     "cheerio": "^1.2.0",
     "clsx": "^2.1.1",
-    "csv-parse": "^6.2.1",
-    "csv-stringify": "^6.7.0",
     "dodopayments": "^2.25.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.0.1",
     "next": "^16.2.4",
-    "open-graph-scraper": "^6.11.0",
-    "playwright": "^1.59.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "recharts": "^3.8.0",
@@ -33,6 +27,7 @@
     "tailwind-merge": "^3.5.0",
     "three": "^0.184.0"
   },
+
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/csv-parse": "^1.1.12",
@@ -41,11 +36,17 @@
     "@types/node": "^20.19.39",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.0",
+    "csv-parse": "^6.2.1",
+    "csv-stringify": "^6.7.0",
     "dotenv": "^17.4.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "open-graph-scraper": "^6.11.0",
+    "playwright": "^1.59.1",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
   }
+
 }

@@ -87,7 +87,7 @@ export default function LandingPage() {
             dotRadius={1.2}
             dotSpacing={20}
             passiveSpeed={1.2}
-            gradientFrom="rgba(16, 185, 129, 0.25)"
+            gradientFrom="rgba(10, 255, 173, 0.17)"
             gradientTo="rgba(0, 206, 201, 0.05)"
           />
         </div>
@@ -499,9 +499,6 @@ export default function LandingPage() {
         </div>
         <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-sm text-white/20 relative z-10">
           <p>© 2026 Storix. All rights reserved.</p>
-          <div className="flex items-center gap-6 text-xs text-white/15">
-            <span>Powered by Gemini AI</span>
-          </div>
         </div>
       </footer>
     </div>

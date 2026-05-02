@@ -279,7 +279,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
             </div>
             
             <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold text-white/10 uppercase tracking-[0.4em]">
-              <p>© 2026 {profile.store_name} Node</p>
+              <p>© 2026 {profile.store_name} Store</p>
               <p className="hover:text-white transition-colors cursor-pointer">Powered by Gemini AI</p>
             </div>
           </div>

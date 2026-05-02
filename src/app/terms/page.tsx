@@ -66,12 +66,12 @@ export default function TermsPage() {
             </div>
             <div className="space-y-6 text-white/40 text-lg leading-relaxed font-medium">
               <p>
-                Storix grants a non-exclusive, non-transferable tactical license to deploy affiliate store nodes according to your registered plan status.
+                Storix grants a non-exclusive, non-transferable tactical license to deploy affiliate stores according to your registered plan status.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
                  {[
-                   { label: "Free Operative", value: "10 Store Nodes" },
-                   { label: "Pro Commander", value: "100 Store Nodes" },
+                   { label: "Free Operative", value: "10 Stores" },
+                   { label: "Pro Commander", value: "100 Stores" },
                    { label: "Business Elite", value: "Unlimited Grid" }
                  ].map((tier, i) => (
                    <div key={i} className="p-4 rounded-xl bg-white/[0.03] border border-white/5 border-beam">
@@ -106,7 +106,7 @@ export default function TermsPage() {
             </div>
             <div className="space-y-6 text-white/40 text-lg leading-relaxed font-medium">
               <p>
-                Storix acts as an integration layer between supply nodes and storefronts. We are not liable for external marketplace pricing variances, commission disputes, or regional trade restrictions.
+                Storix acts as an integration layer between suppliers and storefronts. We are not liable for external marketplace pricing variances, commission disputes, or regional trade restrictions.
               </p>
             </div>
           </section>

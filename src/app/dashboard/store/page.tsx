@@ -344,7 +344,7 @@ export default function StoreManagementPage() {
                   { id: "midnight", name: "Midnight Ops", color: "bg-[#0A0A0A]", desc: "Pure stealth obsidian." },
                   { id: "neon", name: "Cyber Sync", color: "bg-[#00FFD1]", desc: "Futuristic glow." },
                   { id: "amazon", name: "Amazon Core", color: "bg-[#FF9900]", desc: "Deep marketplace links." },
-                  { id: "flipkart", name: "Flipkart Node", color: "bg-[#2874F0]", desc: "Vibrant trade signal." }
+                  { id: "flipkart", name: "Flipkart Theme", color: "bg-[#2874F0]", desc: "Vibrant trade signal." }
                 ].map((t) => (
                   <button
                     key={t.id}
