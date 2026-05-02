@@ -8,6 +8,9 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { StoreSearch } from "@/components/store/StoreSearch";
 
+// Cache store pages for 60s, then background-revalidate (ISR)
+// This makes repeat visits instant while still getting fresh data
+export const revalidate = 60;
 
 interface Props {
   params: { username: string };
