@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { chromium, Browser, Page } from "playwright";
+import { chromium, Browser } from "playwright";
 import { parseAffiliateUrl } from "../affiliate";
 
 /**
@@ -17,6 +17,10 @@ export interface ProductScrapeResult {
   original_price?: string;
   discount?: string;
   rating?: string;
+  review_count?: string;
+  brand?: string;
+  category?: string;
+  features?: string[];
   image_status: "ok" | "not_found" | "error";
   http_code: number;
   error_reason?: string;
@@ -24,12 +28,11 @@ export interface ProductScrapeResult {
 }
 
 const UA_POOL = [
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_2_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
-  "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
 ];
 
 export class ProductScraper {
@@ -68,64 +71,93 @@ export class ProductScraper {
   public async scrape(url: string, retryCount: number = 3): Promise<ProductScrapeResult> {
     const scrapedAt = new Date().toISOString();
     let attempt = 0;
-    let delay = 2000 + Math.random() * 2000; // 2-4s initial delay
+    let delay = 1500 + Math.random() * 1500;
 
-    // Append affiliate tag if needed
     const finalUrl = this.appendAffiliateTag(url);
 
     while (attempt <= retryCount) {
       try {
         await this.sleep(delay);
 
-        // Try standard fetch first (fast)
-        const response = await axios.get(url, {
-          headers: { "User-Agent": this.getRandomUA() },
-          timeout: 15000,
-          validateStatus: (status) => status < 500,
-        });
-
-        if (response.status === 429) {
-          console.warn(`429 Too Many Requests for ${url}. Pausing 30s...`);
-          await this.sleep(30000);
-          attempt++;
-          delay *= 2; // Exponential backoff
-          continue;
-        }
-
         let result: Partial<ProductScrapeResult> = {
           product_url: finalUrl,
-          http_code: response.status,
           scraped_at: scrapedAt,
         };
 
-        // For JS-heavy or protected sites, or if standard fetch yields low quality
-        // we use Playwright as a fallback or primary for certain domains
-        if (this.isJsHeavy(url) || response.status !== 200) {
+        // JS-heavy sites go straight to Playwright for best results
+        if (this.isJsHeavy(url)) {
           const pwResult = await this.scrapeWithPlaywright(url);
-          result = { ...result, ...pwResult };
+          result = { ...result, ...pwResult, http_code: 200 };
         } else {
-          const $ = cheerio.load(response.data);
-          const extracted = this.extractDataFromCheerio($, url);
-          result = { ...result, ...extracted };
+          // Try standard fetch first (fast)
+          const response = await axios.get(url, {
+            headers: {
+              "User-Agent": this.getRandomUA(),
+              "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+              "Accept-Language": "en-US,en;q=0.9",
+            },
+            timeout: 15000,
+            validateStatus: (status) => status < 500,
+          });
+
+          if (response.status === 429) {
+            console.warn(`429 Too Many Requests for ${url}. Pausing 30s...`);
+            await this.sleep(30000);
+            attempt++;
+            delay *= 2;
+            continue;
+          }
+
+          result.http_code = response.status;
+
+          if (response.status === 200) {
+            const $ = cheerio.load(response.data);
+            const extracted = this.extractDataFromCheerio($, url);
+            result = { ...result, ...extracted };
+
+            // If cheerio found no image or title, fallback to Playwright
+            if (!result.image_url || result.product_title === "Unknown Product") {
+              const pwResult = await this.scrapeWithPlaywright(url);
+              // Merge: prefer Playwright data if cheerio was empty
+              if (pwResult.image_url && !result.image_url) result.image_url = pwResult.image_url;
+              if (pwResult.product_title && result.product_title === "Unknown Product") result.product_title = pwResult.product_title;
+              if (pwResult.price && !result.price) result.price = pwResult.price;
+              if (pwResult.original_price && !result.original_price) result.original_price = pwResult.original_price;
+              if (pwResult.discount && !result.discount) result.discount = pwResult.discount;
+              if (pwResult.rating && !result.rating) result.rating = pwResult.rating;
+              if (pwResult.description && !result.description) result.description = pwResult.description;
+              if (pwResult.brand && !result.brand) result.brand = pwResult.brand;
+              if (pwResult.review_count && !result.review_count) result.review_count = pwResult.review_count;
+            }
+          } else {
+            // Non-200 response, try Playwright
+            const pwResult = await this.scrapeWithPlaywright(url);
+            result = { ...result, ...pwResult };
+          }
         }
 
         // Validate image URL
         if (result.image_url) {
-           const isValid = await this.validateImage(result.image_url);
-           if (!isValid) {
-             result.image_url = null;
-             result.image_status = "not_found";
-             result.error_reason = "Image validation failed (non-200)";
-           } else {
-             result.image_status = "ok";
-           }
+          result.image_url = this.upgradeImageResolution(result.image_url, url);
+          const isValid = await this.validateImage(result.image_url);
+          if (!isValid) {
+            result.image_url = null;
+            result.image_status = "not_found";
+            result.error_reason = "Image validation failed (non-200)";
+          } else {
+            result.image_status = "ok";
+          }
         } else {
-           result.image_status = "not_found";
-           result.error_reason = result.error_reason || "No image found in content";
+          result.image_status = "not_found";
+          result.error_reason = result.error_reason || "No image found in content";
+        }
+
+        // Auto-calculate discount if we have both prices but no discount
+        if (result.price && result.original_price && !result.discount) {
+          result.discount = this.calculateDiscount(result.price, result.original_price);
         }
 
         return result as ProductScrapeResult;
-
       } catch (error: any) {
         attempt++;
         const errorMessage = error instanceof Error ? error.message : String(error);
@@ -156,7 +188,7 @@ export class ProductScraper {
   }
 
   private isJsHeavy(url: string): boolean {
-    const jsHeavyDomains = [/amazon/i, /flipkart/i, /ebay/i, /meesho/i];
+    const jsHeavyDomains = [/amazon/i, /flipkart/i, /ebay/i, /meesho/i, /myntra/i, /ajio/i];
     return jsHeavyDomains.some((d) => d.test(url));
   }
 
@@ -172,22 +204,54 @@ export class ProductScraper {
     }
   }
 
+  /** Upgrade Amazon/Flipkart image URLs to highest resolution */
+  private upgradeImageResolution(imageUrl: string, pageUrl: string): string {
+    try {
+      if (/amazon/i.test(pageUrl) || /media-amazon/i.test(imageUrl) || /ssl-images-amazon/i.test(imageUrl)) {
+        // Amazon images: replace size tokens like ._SX300_ or ._SL1500_ with max resolution
+        return imageUrl
+          .replace(/\._[A-Z]{2}\d+_?\./g, ".")
+          .replace(/\._[A-Z]{2}\d+,\d+_?\./g, ".");
+      }
+      if (/flipkart/i.test(pageUrl) || /rukminim/i.test(imageUrl)) {
+        // Flipkart: upgrade to 832x832 and best quality
+        return imageUrl
+          .replace(/\d+\/\d+/g, "832/832")
+          .replace(/q=\d+/g, "q=90");
+      }
+    } catch {}
+    return imageUrl;
+  }
+
+  /** Calculate discount percentage from two price strings */
+  private calculateDiscount(currentPrice: string, originalPrice: string): string {
+    try {
+      const current = parseFloat(currentPrice.replace(/[^0-9.]/g, ""));
+      const original = parseFloat(originalPrice.replace(/[^0-9.]/g, ""));
+      if (original > current && original > 0) {
+        return Math.round(((original - current) / original) * 100).toString();
+      }
+    } catch {}
+    return "";
+  }
+
   private async validateImage(url: string): Promise<boolean> {
     if (!url || url.startsWith("data:")) return false;
     try {
-      const res = await axios.head(url, { 
+      const res = await axios.head(url, {
         headers: { "User-Agent": this.getRandomUA() },
-        timeout: 5000 
+        timeout: 5000,
       });
       return res.status === 200;
     } catch {
       // Some servers block HEAD, try small GET
       try {
-        const res = await axios.get(url, { 
-          headers: { "User-Agent": this.getRandomUA() }, 
+        const res = await axios.get(url, {
+          headers: { "User-Agent": this.getRandomUA() },
           timeout: 5000,
-          responseType: 'stream'
+          responseType: "stream",
         });
+        res.data.destroy(); // Close stream immediately
         return res.status === 200;
       } catch {
         return false;
@@ -196,162 +260,335 @@ export class ProductScraper {
   }
 
   private extractDataFromCheerio($: cheerio.CheerioAPI, url: string): Partial<ProductScrapeResult> {
-    const title = this.extractTitle($);
-    const image_url = this.extractImage($, url);
-    const description = this.extractDescription($);
-    const priceData = this.extractPrice($, url);
-    
-    return { 
-      product_title: title, 
-      image_url,
-      description,
-      ...priceData
-    };
+    // 1. Try JSON-LD first — most reliable structured data source
+    const jsonLdData = this.extractFromJsonLd($);
+
+    // 2. Platform-specific extraction
+    const platformData = this.extractPlatformSpecific($, url);
+
+    // 3. Generic OG/meta fallbacks
+    const metaData = this.extractMetaFallbacks($);
+
+    // Merge with priority: platform > jsonLd > meta
+    const title = platformData.product_title || jsonLdData.product_title || metaData.product_title || "Unknown Product";
+    const image_url = platformData.image_url || jsonLdData.image_url || metaData.image_url || this.extractLargestImage($) || null;
+    const description = platformData.description || jsonLdData.description || metaData.description || "";
+    const price = platformData.price || jsonLdData.price || metaData.price || "";
+    const original_price = platformData.original_price || jsonLdData.original_price || "";
+    const discount = platformData.discount || jsonLdData.discount || "";
+    const rating = platformData.rating || jsonLdData.rating || "";
+    const review_count = platformData.review_count || jsonLdData.review_count || "";
+    const brand = platformData.brand || jsonLdData.brand || "";
+    const category = platformData.category || jsonLdData.category || "";
+    const features = platformData.features || [];
+
+    return { product_title: title, image_url, description, price, original_price, discount, rating, review_count, brand, category, features };
   }
 
-  private extractDescription($: cheerio.CheerioAPI): string {
-    return (
-      $('meta[property="og:description"]').attr("content") ||
-      $('meta[name="description"]').attr("content") ||
-      ""
-    );
-  }
-
-  private extractPrice($: cheerio.CheerioAPI, url: string): Partial<ProductScrapeResult> {
-    let price = "";
-    let original_price = "";
-    let discount = "";
-    let rating = "";
-
-    // 1. JSON-LD check for price
+  /** Extract structured data from JSON-LD scripts */
+  private extractFromJsonLd($: cheerio.CheerioAPI): Partial<ProductScrapeResult> {
+    const result: Partial<ProductScrapeResult> = {};
     const jsonLd = $('script[type="application/ld+json"]');
-    if (jsonLd.length) {
-      for (const el of jsonLd.toArray()) {
-        try {
-          const data = JSON.parse($(el).html() || "{}");
-          if (data.offers && data.offers.price) {
-             const curr = data.offers.priceCurrency === "INR" ? "₹" : data.offers.priceCurrency === "USD" ? "$" : "";
-             price = `${curr}${data.offers.price}`;
+
+    for (const el of jsonLd.toArray()) {
+      try {
+        let data = JSON.parse($(el).html() || "{}");
+
+        // Handle @graph arrays
+        if (data["@graph"] && Array.isArray(data["@graph"])) {
+          data = data["@graph"];
+        }
+
+        const products = this.findProductsInJson(Array.isArray(data) ? data : [data]);
+        if (products.length === 0) continue;
+
+        const product = products[0];
+
+        if (product.name && !result.product_title) {
+          result.product_title = String(product.name).trim();
+        }
+
+        if (product.image && !result.image_url) {
+          if (Array.isArray(product.image)) {
+            result.image_url = typeof product.image[0] === "string" ? product.image[0] : product.image[0]?.url;
+          } else if (typeof product.image === "string") {
+            result.image_url = product.image;
+          } else if (product.image?.url) {
+            result.image_url = product.image.url;
           }
-        } catch {}
-      }
+        }
+
+        if (product.description && !result.description) {
+          result.description = String(product.description).trim().substring(0, 500);
+        }
+
+        if (product.brand && !result.brand) {
+          result.brand = typeof product.brand === "string" ? product.brand : product.brand?.name || "";
+        }
+
+        if (product.category && !result.category) {
+          result.category = String(product.category);
+        }
+
+        // Extract offers/pricing
+        const offers = product.offers;
+        if (offers && !result.price) {
+          const offerObj = Array.isArray(offers) ? offers[0] : offers;
+          const curr = offerObj.priceCurrency === "INR" ? "₹" : offerObj.priceCurrency === "USD" ? "$" : offerObj.priceCurrency || "";
+          if (offerObj.price) {
+            result.price = `${curr}${offerObj.price}`;
+          } else if (offerObj.lowPrice) {
+            result.price = `${curr}${offerObj.lowPrice}`;
+          }
+          if (offerObj.highPrice && offerObj.lowPrice) {
+            result.original_price = `${curr}${offerObj.highPrice}`;
+          }
+        }
+
+        // Extract rating
+        const aggRating = product.aggregateRating;
+        if (aggRating && !result.rating) {
+          result.rating = String(aggRating.ratingValue || "");
+          result.review_count = String(aggRating.reviewCount || aggRating.ratingCount || "");
+        }
+      } catch {}
     }
 
-    if (/amazon/i.test(url)) {
-      const priceWhole = $(".a-price-whole").first().text().trim().replace(/[,.]/g, "");
-      const priceFraction = $(".a-price-fraction").first().text().trim();
-      
-      const dealPrice = $("#priceblock_dealprice").text().trim();
-      const ourPrice = $("#priceblock_ourprice").text().trim();
-      const apexPrice = $(".apexPriceToPay .a-offscreen").first().text().trim();
-      
-      if (apexPrice) price = apexPrice;
-      else if (dealPrice) price = dealPrice;
-      else if (ourPrice) price = ourPrice;
-      else if (priceWhole) price = `₹${priceWhole}${priceFraction ? "." + priceFraction : ""}`;
-
-      original_price = $(".a-price.a-text-price span.a-offscreen").first().text().trim() || 
-                       $(".basisPrice .a-offscreen").first().text().trim();
-                       
-      discount = $(".savingsPercentage").first().text().trim().replace(/[^0-9]/g, "");
-      const ratingText = $("span.a-icon-alt").first().text().trim() || $("#acrPopover").attr("title");
-      if (ratingText) {
-        const match = ratingText.match(/([\d.]+)/);
-        if (match) rating = match[1];
-      }
-    } else if (/flipkart/i.test(url)) {
-      price = $("div._30jeq3._16Jk6d").first().text().trim() || $("div.Nx9bqj.CxhGGd").first().text().trim() || $("div.Nx9bqj").first().text().trim();
-      original_price = $("div._3I9_wc._2p6lqe").first().text().trim() || $("div.yRaY8j.A60-H-").first().text().trim() || $("div.yRaY8j").first().text().trim();
-      discount = $("div._3Ay6Sb._31Dcoz span").first().text().trim().replace(/[^0-9]/g, "") || $("div.UkUFwK span").first().text().trim().replace(/[^0-9]/g, "");
-      rating = $("div._3LWZlK").first().text().trim() || $("div.XQDdHH").first().text().trim();
-    } else if (/meesho/i.test(url)) {
-      price = $("h4").filter((_, el) => $(el).text().includes("₹")).first().text().trim();
-    }
-
-    // Generic price fallback
-    if (!price) {
-      const genericPrice = $('meta[property="product:price:amount"]').attr("content");
-      const currency = $('meta[property="product:price:currency"]').attr("content") || "$";
-      if (genericPrice) {
-        price = `${currency === "INR" ? "₹" : currency}${genericPrice}`;
-      }
-    }
-    
-    return { price, original_price, discount, rating };
+    return result;
   }
 
-  private extractTitle($: cheerio.CheerioAPI): string {
-    return (
-      $("#productTitle").text().trim() ||
-      $("h1").first().text().trim() ||
-      $('meta[property="og:title"]').attr("content") ||
-      $("title").text().trim() ||
-      "Unknown Product"
-    );
+  /** Recursively find Product-type objects in JSON-LD */
+  private findProductsInJson(items: any[]): any[] {
+    const products: any[] = [];
+    for (const item of items) {
+      if (!item || typeof item !== "object") continue;
+      if (item["@type"] === "Product" || item["@type"] === "IndividualProduct") {
+        products.push(item);
+      }
+      if (Array.isArray(item)) {
+        products.push(...this.findProductsInJson(item));
+      }
+    }
+    return products;
   }
 
-  private extractImage($: cheerio.CheerioAPI, url: string): string | null {
-    // 1. JSON-LD
-    const jsonLd = $('script[type="application/ld+json"]');
-    if (jsonLd.length) {
-      for (const el of jsonLd.toArray()) {
-        try {
-          const data = JSON.parse($(el).html() || "{}");
-          const image = this.findImageInJson(data);
-          if (image) return image;
-        } catch {}
+  /** Platform-specific CSS selector extraction */
+  private extractPlatformSpecific($: cheerio.CheerioAPI, url: string): Partial<ProductScrapeResult> & { features?: string[] } {
+    if (/amazon/i.test(url)) return this.extractAmazon($);
+    if (/flipkart/i.test(url)) return this.extractFlipkart($);
+    if (/meesho/i.test(url)) return this.extractMeesho($);
+    return {};
+  }
+
+  private extractAmazon($: cheerio.CheerioAPI): Partial<ProductScrapeResult> & { features?: string[] } {
+    const result: Partial<ProductScrapeResult> & { features?: string[] } = {};
+
+    // Title
+    result.product_title = $("#productTitle").text().trim() || $("h1#title span").text().trim() || "";
+
+    // Brand
+    result.brand = $("#bylineInfo").text().trim().replace(/^(Visit the |Brand: )/, "") || "";
+
+    // Image — multiple strategies
+    const dynamicImage = $("#landingImage").attr("data-a-dynamic-image");
+    if (dynamicImage) {
+      try {
+        const parsed = JSON.parse(dynamicImage);
+        const keys = Object.keys(parsed);
+        result.image_url = keys.sort((a, b) => (parsed[b][0] * parsed[b][1]) - (parsed[a][0] * parsed[a][1]))[0];
+      } catch {}
+    }
+    if (!result.image_url) {
+      result.image_url = $("#landingImage").attr("data-old-hires") || "";
+    }
+    if (!result.image_url) {
+      result.image_url = $(".imgTagWrapper img").attr("src") || "";
+    }
+    if (result.image_url?.startsWith("data:")) result.image_url = "";
+
+    // Price — try multiple selectors (Amazon updates these often)
+    const apexPrice = $(".priceToPay .a-offscreen, .apexPriceToPay .a-offscreen").first().text().trim();
+    const dealPrice = $("#priceblock_dealprice, #dealprice_feature .a-offscreen").first().text().trim();
+    const ourPrice = $("#priceblock_ourprice, #corePrice_feature_div .a-offscreen").first().text().trim();
+    const priceWhole = $(".a-price-whole").first().text().trim().replace(/[,.]/g, "");
+    const priceFraction = $(".a-price-fraction").first().text().trim();
+
+    if (apexPrice) result.price = apexPrice;
+    else if (dealPrice) result.price = dealPrice;
+    else if (ourPrice) result.price = ourPrice;
+    else if (priceWhole) result.price = `₹${priceWhole}${priceFraction ? "." + priceFraction : ""}`;
+
+    // Original price
+    result.original_price = $(".basisPrice .a-offscreen").first().text().trim()
+      || $(".a-price.a-text-price .a-offscreen").first().text().trim()
+      || $(".priceBlockStrikePriceString").first().text().trim()
+      || "";
+
+    // Discount
+    const savingsText = $(".savingsPercentage").first().text().trim();
+    result.discount = savingsText.replace(/[^0-9]/g, "");
+
+    // Rating
+    const ratingText = $("span.a-icon-alt").first().text().trim() || $("#acrPopover").attr("title") || "";
+    const ratingMatch = ratingText.match(/([\d.]+)/);
+    if (ratingMatch) result.rating = ratingMatch[1];
+
+    // Review count
+    const reviewText = $("#acrCustomerReviewText").first().text().trim();
+    const reviewMatch = reviewText.match(/([\d,]+)/);
+    if (reviewMatch) result.review_count = reviewMatch[1].replace(/,/g, "");
+
+    // Features (bullet points)
+    const features: string[] = [];
+    $("#feature-bullets li span.a-list-item").each((_, el) => {
+      const text = $(el).text().trim();
+      if (text && text.length > 5 && text.length < 300) features.push(text);
+    });
+    if (features.length > 0) result.features = features.slice(0, 6);
+
+    // Description
+    result.description = $("#productDescription p").first().text().trim()
+      || $('meta[name="description"]').attr("content")
+      || "";
+
+    return result;
+  }
+
+  private extractFlipkart($: cheerio.CheerioAPI): Partial<ProductScrapeResult> & { features?: string[] } {
+    const result: Partial<ProductScrapeResult> & { features?: string[] } = {};
+
+    // Title — Flipkart uses many different class patterns; use robust selectors
+    result.product_title = $("h1 span.VU-ZEz").first().text().trim()
+      || $("h1.yhB1nd span").first().text().trim()
+      || $("h1._35KyD6").first().text().trim()
+      || $("h1").first().text().trim()
+      || "";
+
+    // Brand
+    result.brand = $("span.mEh187").first().text().trim()
+      || $("span._2J4LW2").first().text().trim()
+      || "";
+
+    // Image — multiple class patterns
+    result.image_url = $("img.DByuf4").first().attr("src")
+      || $("img._396cs4").first().attr("src")
+      || $("img.q6DClP").first().attr("src")
+      || $("div._3kidJX img").first().attr("src")
+      || $("div.CXW8mj img").first().attr("src")
+      || "";
+
+    // Price — Flipkart shuffles class names, use multiple patterns
+    result.price = $("div.Nx9bqj.CxhGGd").first().text().trim()
+      || $("div.Nx9bqj").first().text().trim()
+      || $("div._30jeq3._16Jk6d").first().text().trim()
+      || $("div._30jeq3").first().text().trim()
+      || $("div.CEmiEU div").first().text().trim()
+      || "";
+
+    // Original price
+    result.original_price = $("div.yRaY8j.A6\\+E6v").first().text().trim()
+      || $("div.yRaY8j").first().text().trim()
+      || $("div._3I9_wc._2p6lqe").first().text().trim()
+      || "";
+
+    // Discount
+    const discountText = $("div.UkUFwK span").first().text().trim()
+      || $("div._3Ay6Sb span").first().text().trim()
+      || "";
+    result.discount = discountText.replace(/[^0-9]/g, "");
+
+    // Rating
+    result.rating = $("div.XQDdHH").first().text().trim()
+      || $("div._3LWZlK").first().text().trim()
+      || "";
+
+    // Review count
+    const reviewText = $("span.Wphh3N span").first().text().trim()
+      || $("span._2_R_DZ span").first().text().trim()
+      || "";
+    const reviewMatch = reviewText.match(/([\d,]+)\s*(?:Ratings|Reviews)/i);
+    if (reviewMatch) result.review_count = reviewMatch[1].replace(/,/g, "");
+
+    // Features
+    const features: string[] = [];
+    $("li._21Ahn- div").each((_, el) => {
+      const text = $(el).text().trim();
+      if (text && text.length > 5 && text.length < 300) features.push(text);
+    });
+    if (features.length > 0) result.features = features.slice(0, 6);
+
+    // Description
+    result.description = $("div._1mXcCf.RmoJUa p").first().text().trim()
+      || $('meta[property="og:description"]').attr("content")
+      || "";
+
+    return result;
+  }
+
+  private extractMeesho($: cheerio.CheerioAPI): Partial<ProductScrapeResult> & { features?: string[] } {
+    const result: Partial<ProductScrapeResult> & { features?: string[] } = {};
+
+    result.product_title = $("h1").first().text().trim() || $('meta[property="og:title"]').attr("content") || "";
+
+    // Price — find elements containing ₹
+    $("h4, h3, h2, span").each((_, el) => {
+      const text = $(el).text().trim();
+      if (text.includes("₹") && !result.price) {
+        result.price = text;
       }
+    });
+
+    result.image_url = $('meta[property="og:image"]').attr("content") || "";
+    result.description = $('meta[property="og:description"]').attr("content") || "";
+
+    return result;
+  }
+
+  /** OG/meta fallback extraction */
+  private extractMetaFallbacks($: cheerio.CheerioAPI): Partial<ProductScrapeResult> {
+    const result: Partial<ProductScrapeResult> = {};
+
+    result.product_title = $('meta[property="og:title"]').attr("content")
+      || $("title").text().trim()
+      || "";
+
+    result.image_url = $('meta[property="og:image"]').attr("content")
+      || $('meta[name="twitter:image"]').attr("content")
+      || "";
+
+    if (result.image_url?.includes("captcha")) result.image_url = "";
+
+    result.description = $('meta[property="og:description"]').attr("content")
+      || $('meta[name="description"]').attr("content")
+      || "";
+
+    // Generic product price meta tags
+    const genericPrice = $('meta[property="product:price:amount"]').attr("content");
+    const currency = $('meta[property="product:price:currency"]').attr("content") || "";
+    if (genericPrice) {
+      const symbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : currency;
+      result.price = `${symbol}${genericPrice}`;
     }
 
-    // 2. Open Graph
-    const ogImage = $('meta[property="og:image"]').attr("content");
-    if (ogImage && !ogImage.includes("captcha")) return ogImage;
+    return result;
+  }
 
-    // 3. Twitter
-    const twitterImage = $('meta[name="twitter:image"]').attr("content");
-    if (twitterImage && !twitterImage.includes("captcha")) return twitterImage;
-
-    // 4. Platform Specific
-    if (/amazon/i.test(url)) {
-      const dynamicImage = $("#landingImage").attr("data-a-dynamic-image");
-      if (dynamicImage) {
-        try {
-          const parsed = JSON.parse(dynamicImage);
-          const keys = Object.keys(parsed);
-          // Pick the one with the highest resolution
-          return keys.sort((a,b) => (parsed[b][0] * parsed[b][1]) - (parsed[a][0] * parsed[a][1]))[0];
-        } catch {}
-      }
-      const oldHires = $("#landingImage").attr("data-old-hires");
-      if (oldHires) return oldHires;
-      
-      const imgTagWrapper = $("#imgTagWrapperId img").attr("src");
-      if (imgTagWrapper && !imgTagWrapper.includes("data:image")) return imgTagWrapper;
-    }
-    
-    if (/flipkart/i.test(url)) {
-      const fkImg = $("img.v2bfbI").attr("src") || $("._396cs4 img").attr("src") || $("._2r_T1I img").attr("src");
-      if (fkImg) return fkImg;
-    }
-
-    if (/ebay/i.test(url)) {
-      const ebayImg = $("#icImg").attr("src") || $(".ux-image-magnify__image").attr("src");
-      if (ebayImg) return ebayImg;
-    }
-
-    // 5. Generic Fallback
+  /** Find the largest non-review image as a last resort */
+  private extractLargestImage($: cheerio.CheerioAPI): string | null {
     let largestImg: string | null = null;
     let maxArea = 0;
-    $("img").each((_, el) => {
-      // Fix bug: Prevent user review images from being scraped
-      if ($(el).closest('#customerReviews, .review, .reviews, [data-hook="review"]').length > 0) return;
-      const parentClass = $(el).parent().attr("class") || "";
-      const parentId = $(el).parent().attr("id") || "";
-      if (parentClass.toLowerCase().includes("review") || parentId.toLowerCase().includes("review")) return;
+    const skipPatterns = /review|captcha|spinner|loading|avatar|icon|logo|badge|button|ad-|banner/i;
 
-      const src = $(el).attr("src");
-      if (!src || src.startsWith("data:") || src.includes("spinner") || src.includes("loading") || src.includes("captcha")) return;
-      
+    $("img").each((_, el) => {
+      // Skip images inside review sections
+      if ($(el).closest('#customerReviews, .review, .reviews, [data-hook="review"], .cr-widget').length > 0) return;
+
+      const src = $(el).attr("src") || $(el).attr("data-src") || "";
+      if (!src || src.startsWith("data:") || skipPatterns.test(src)) return;
+
+      const parentClass = ($(el).parent().attr("class") || "") + ($(el).parent().attr("id") || "");
+      if (skipPatterns.test(parentClass)) return;
+
       const width = parseInt($(el).attr("width") || "0");
       const height = parseInt($(el).attr("height") || "0");
       const area = width * height;
@@ -364,42 +601,40 @@ export class ProductScraper {
     return largestImg;
   }
 
-  private findImageInJson(data: any): string | null {
-    if (!data) return null;
-    if (data["@type"] === "Product" && data.image) {
-      if (Array.isArray(data.image)) return data.image[0];
-      if (typeof data.image === "string") return data.image;
-      if (data.image.url) return data.image.url;
-    }
-    if (Array.isArray(data)) {
-      for (const item of data) {
-        const res = this.findImageInJson(item);
-        if (res) return res;
-      }
-    }
-    if (data["@graph"] && Array.isArray(data["@graph"])) {
-      return this.findImageInJson(data["@graph"]);
-    }
-    return null;
-  }
-
   private async scrapeWithPlaywright(targetUrl: string): Promise<Partial<ProductScrapeResult>> {
     const browser = await this.initBrowser();
-    const context = await browser.newContext({ userAgent: this.getRandomUA() });
+    const context = await browser.newContext({
+      userAgent: this.getRandomUA(),
+      viewport: { width: 1920, height: 1080 },
+    });
     const page = await context.newPage();
-    
+
     try {
       if (!targetUrl) throw new Error("Scrape Target URL is undefined");
-      
-      await page.goto(targetUrl, { waitUntil: "networkidle", timeout: 30000 });
-      
-      // Wait for image selectors if specific platforms
-      if (/amazon/i.test(targetUrl)) await page.waitForSelector("#landingImage", { timeout: 5000 }).catch(() => {});
+
+      // Block heavy resources for speed
+      await page.route(/\.(woff2?|ttf|eot|mp4|mp3|avi|mov)$/i, (route) => route.abort());
+
+      await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
+
+      // Wait for key content to render based on platform
+      if (/amazon/i.test(targetUrl)) {
+        await page.waitForSelector("#landingImage, #imgTagWrapperId img", { timeout: 8000 }).catch(() => {});
+        await page.waitForSelector("#productTitle, h1#title", { timeout: 5000 }).catch(() => {});
+      } else if (/flipkart/i.test(targetUrl)) {
+        await page.waitForSelector("img.DByuf4, img._396cs4, img.q6DClP", { timeout: 8000 }).catch(() => {});
+        await page.waitForSelector("h1 span", { timeout: 5000 }).catch(() => {});
+      } else {
+        await page.waitForSelector("h1, [data-testid='product-title']", { timeout: 5000 }).catch(() => {});
+      }
+
+      // Give JS frameworks a moment to hydrate
+      await this.sleep(2000);
 
       const content = await page.content();
       const $ = cheerio.load(content);
       const extracted = this.extractDataFromCheerio($, targetUrl);
-      
+
       await context.close();
       return extracted;
     } catch (e: any) {
