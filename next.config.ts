@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
   },
 
   devIndicators: false,
+  typedRoutes: false,
 
   // Exclude heavy server-only packages from the Next.js bundle.
   // This prevents the bundler from tracing into deeply nested node_modules
@@ -63,8 +64,6 @@ const nextConfig: NextConfig = {
     memoryBasedWorkersCount: true,
     // Inline CSS for critical path — removes render-blocking stylesheet requests
     inlineCss: true,
-    // Parallelize type checking with SWC transforms
-    typedRoutes: false,
   },
 
   // Disable powered-by header for security
@@ -73,29 +72,10 @@ const nextConfig: NextConfig = {
   // Strict mode for better hydration error detection in dev
   reactStrictMode: true,
 
-  // Add long-lived cache headers for static assets
+  // Keep API responses uncached. Let Next.js manage its own static asset and
+  // image cache headers so development resources keep working correctly.
   async headers() {
     return [
-      {
-        // Cache static assets for 1 year
-        source: "/_next/static/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        // Cache optimized images for 30 days
-        source: "/_next/image",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=2592000, stale-while-revalidate=86400",
-          },
-        ],
-      },
       {
         // Allow API routes to be called cross-origin where needed
         source: "/api/:path*",

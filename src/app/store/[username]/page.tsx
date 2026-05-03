@@ -13,7 +13,7 @@ import { StoreSearch } from "@/components/store/StoreSearch";
 export const revalidate = 60;
 
 interface Props {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
 // Dynamic Metadata for SEO

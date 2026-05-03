@@ -8,6 +8,8 @@
   --surface-lighter: #1A1A1A;
   --border: rgba(255, 255, 255, 0.08);
   --muted: #8B8BA7;
+  --font-jakarta: Arial, Helvetica, sans-serif;
+  --font-outfit: Arial, Helvetica, sans-serif;
   
   /* Responsive Spacing & Padding */
   --space-unit: clamp(0.5rem, 1vw, 1rem);
