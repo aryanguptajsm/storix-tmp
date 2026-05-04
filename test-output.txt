@@ -1,0 +1,8 @@
+◇ injected env (7) from .env.local // tip: ⌁ auth for agents [www.vestauth.com]
+Field discount_percentage: Missing
+Field rating: Missing
+Field review_count: Missing
+Field brand: Missing
+Field category: Missing
+Field original_url: Exists
+Field original_price: Missing
