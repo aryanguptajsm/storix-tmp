@@ -1,8 +1,14 @@
-◇ injected env (7) from .env.local // tip: ⌁ auth for agents [www.vestauth.com]
-Field discount_percentage: Missing
-Field rating: Missing
-Field review_count: Missing
-Field brand: Missing
-Field category: Missing
+◇ injected env (7) from .env.local // tip: ⌘ override existing { override: true }
+Field user_id: Exists
+Field title: Exists
+Field description: Exists
+Field price: Exists
+Field original_price: Missing (column products.original_price does not exist)
+Field image_url: Exists
+Field platform: Exists
 Field original_url: Exists
-Field original_price: Missing
+Field discount_percentage: Missing (column products.discount_percentage does not exist)
+Field rating: Missing (column products.rating does not exist)
+Field review_count: Missing (column products.review_count does not exist)
+Field brand: Missing (column products.brand does not exist)
+Field category: Missing (column products.category does not exist)

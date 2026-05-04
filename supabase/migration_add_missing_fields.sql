@@ -7,3 +7,7 @@ ALTER TABLE public.products ADD COLUMN IF NOT EXISTS rating TEXT;
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS review_count TEXT;
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS brand TEXT;
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS category TEXT;
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS affiliate_url TEXT;
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS ai_content TEXT;
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS article_type TEXT DEFAULT 'review';
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS content_status TEXT DEFAULT 'pending';
