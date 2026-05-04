@@ -6,6 +6,7 @@ async function test() {
   for (const field of fields) {
     const { error } = await supabase.from('products').select(field).limit(1);
     console.log(`Field ${field}: ${error ? 'Missing (' + error.message + ')' : 'Exists'}`);
+  }
   const profileFields = ['id', 'username', 'store_name', 'store_description', 'store_logo', 'theme', 'plan', 'subscription_id'];
   for (const field of profileFields) {
     const { error } = await supabase.from('profiles').select(field).limit(1);

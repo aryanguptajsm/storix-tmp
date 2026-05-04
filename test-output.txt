@@ -1,18 +1,16 @@
-◇ injected env (7) from .env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
-Field user_id: Exists
-Field title: Exists
-Field description: Exists
-Field price: Exists
-Field original_price: Missing (column products.original_price does not exist)
-Field image_url: Exists
-Field platform: Exists
-Field original_url: Exists
-Field discount_percentage: Missing (column products.discount_percentage does not exist)
-Field rating: Missing (column products.rating does not exist)
-Field review_count: Missing (column products.review_count does not exist)
-Field brand: Missing (column products.brand does not exist)
-Field category: Missing (column products.category does not exist)
-Field affiliate_url: Missing (column products.affiliate_url does not exist)
-Field ai_content: Missing (column products.ai_content does not exist)
-Field article_type: Missing (column products.article_type does not exist)
-Field content_status: Missing (column products.content_status does not exist)
+/home/aryan/storix/test-fields.js:16
+
+
+
+SyntaxError: Unexpected end of input
+    at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+    at Module._compile (node:internal/modules/cjs/loader:1680:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1839:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Module._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+
+Node.js v22.22.0
