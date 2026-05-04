@@ -212,16 +212,18 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   </div>
                 ) : (
                   <motion.div layout className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
-                    {filteredProducts.map((product, index) => (
-                      <ProductCard
-                        key={product.id}
-                        product={product}
-                        onBuyNow={handleBuyNow}
-                        priority={index < 8}
-                        index={index}
-                      />
-                    ))}
-                  </div>
+                    <AnimatePresence mode="popLayout">
+                      {filteredProducts.map((product, index) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          onBuyNow={handleBuyNow}
+                          priority={index < 8}
+                          index={index}
+                        />
+                      ))}
+                    </AnimatePresence>
+                  </motion.div>
                 )}
               </div>
             </div>

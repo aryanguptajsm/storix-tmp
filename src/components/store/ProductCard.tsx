@@ -80,6 +80,7 @@ export function ProductCard({ product, onBuyNow, priority = false, index = 0 }: 
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col bg-[var(--store-card)] rounded-md border border-[var(--store-border)] hover:border-[var(--store-primary)]/40 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 font-sans h-full"
     >
