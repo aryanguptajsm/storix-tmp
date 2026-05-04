@@ -213,6 +213,7 @@ export default function AddProductPage() {
         description: productData.description?.trim() || null,
         price: productData.price?.trim() || null,
         original_price: productData.originalPrice?.trim() || null,
+        discount_percentage: productData.discountPercentage?.trim() || null,
         image_url: productData.image?.trim() || null,
         platform: productData.platform?.trim() || "other",
         original_url: (productData.originalUrl || url || "").trim(),
@@ -224,13 +225,9 @@ export default function AddProductPage() {
       
       // Cache invalidation trigger to ensure client bundle reloads
       if (error) {
-        console.error("Supabase Deployment Error:", {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
-        throw new Error(error.message || "Failed to save product.");
+        console.error("Supabase Deployment Error:", error);
+        const errorMessage = error.message || error.details || error.hint || (typeof error === 'string' ? error : JSON.stringify(error));
+        throw new Error(errorMessage || "Failed to save product.");
       }
       
       toast.success("Product successfully deployed to your hangar!");

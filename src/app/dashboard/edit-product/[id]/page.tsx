@@ -119,6 +119,7 @@ export default function EditProductPage() {
           description: productData.description,
           price: productData.price,
           original_price: productData.originalPrice,
+          discount_percentage: productData.discountPercentage,
           image_url: productData.image,
           platform: productData.platform,
           original_url: productData.originalUrl,
