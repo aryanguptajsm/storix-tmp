@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.walmartimages.com" },
       { protocol: "https", hostname: "**.alicdn.com" },
       { protocol: "https", hostname: "**.flipkart.com" },
+      { protocol: "https", hostname: "**.flixcart.com" },
       { protocol: "https", hostname: "**.rukminim.com" },
       { protocol: "https", hostname: "**.cloudinary.com" },
       { protocol: "https", hostname: "**.imgix.net" },
