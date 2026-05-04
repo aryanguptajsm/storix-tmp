@@ -11,3 +11,9 @@ ALTER TABLE public.products ADD COLUMN IF NOT EXISTS affiliate_url TEXT;
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS ai_content TEXT;
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS article_type TEXT DEFAULT 'review';
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS content_status TEXT DEFAULT 'pending';
+
+-- Add missing columns to profiles table
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS store_logo TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT 'default';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS plan TEXT DEFAULT 'free';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS subscription_id TEXT;

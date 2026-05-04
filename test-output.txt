@@ -1,16 +1,29 @@
-/home/aryan/storix/test-fields.js:16
+◇ injected env (7) from .env.local // tip: ◈ encrypted .env [www.dotenvx.com]
+--- Checking Products Table ---
+Product Field user_id: Exists
+Product Field title: Exists
+Product Field description: Exists
+Product Field price: Exists
+Product Field original_price: Missing (column products.original_price does not exist)
+Product Field image_url: Exists
+Product Field platform: Exists
+Product Field original_url: Exists
+Product Field discount_percentage: Missing (column products.discount_percentage does not exist)
+Product Field rating: Missing (column products.rating does not exist)
+Product Field review_count: Missing (column products.review_count does not exist)
+Product Field brand: Missing (column products.brand does not exist)
+Product Field category: Missing (column products.category does not exist)
+Product Field affiliate_url: Missing (column products.affiliate_url does not exist)
+Product Field ai_content: Missing (column products.ai_content does not exist)
+Product Field article_type: Missing (column products.article_type does not exist)
+Product Field content_status: Missing (column products.content_status does not exist)
 
-
-
-SyntaxError: Unexpected end of input
-    at wrapSafe (node:internal/modules/cjs/loader:1638:18)
-    at Module._compile (node:internal/modules/cjs/loader:1680:20)
-    at Module._extensions..js (node:internal/modules/cjs/loader:1839:10)
-    at Module.load (node:internal/modules/cjs/loader:1441:32)
-    at Module._load (node:internal/modules/cjs/loader:1263:12)
-    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
-    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
-    at node:internal/main/run_main_module:36:49
-
-Node.js v22.22.0
+--- Checking Profiles Table ---
+Profile Field id: Exists
+Profile Field username: Exists
+Profile Field store_name: Exists
+Profile Field store_description: Exists
+Profile Field store_logo: Missing (column profiles.store_logo does not exist)
+Profile Field theme: Missing (column profiles.theme does not exist)
+Profile Field plan: Missing (column profiles.plan does not exist)
+Profile Field subscription_id: Missing (column profiles.subscription_id does not exist)
