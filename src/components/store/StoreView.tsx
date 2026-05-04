@@ -160,7 +160,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                         }`}
                       >
                         {tab}
-                        {activeTab === tab && <div className="h-0.5 w-4 bg-[var(--store-primary)] mt-1 rounded-full" />}
+                        {activeTab === tab && <motion.div layoutId="activeTabDesktop" className="h-0.5 w-4 bg-[var(--store-primary)] mt-1 rounded-full" />}
                       </button>
                     ))}
                   </div>
