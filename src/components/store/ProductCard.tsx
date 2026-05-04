@@ -77,6 +77,7 @@ export function ProductCard({ product, onBuyNow, priority = false, index = 0 }: 
 
   return (
     <motion.div 
+      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
