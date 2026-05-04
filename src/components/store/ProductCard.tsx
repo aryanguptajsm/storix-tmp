@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   ExternalLink,
   ShoppingBag,
@@ -18,6 +19,7 @@ interface ProductCardProps {
   onBuyNow: (product: Product) => void;
   isLoading?: boolean;
   priority?: boolean;
+  index?: number;
 }
 
 /** Parse the numeric value from a price string like "₹1,299" or "$19.99" */
@@ -69,12 +71,17 @@ function StarRating({ rating, reviewCount }: { rating?: string; reviewCount?: st
   );
 }
 
-export function ProductCard({ product, onBuyNow, priority = false }: ProductCardProps) {
+export function ProductCard({ product, onBuyNow, priority = false, index = 0 }: ProductCardProps) {
   const hasDiscount = product.discount_percentage && parseInt(product.discount_percentage) > 0;
   const { symbol, amount } = parsePriceDisplay(product.price);
 
   return (
-    <div className="group relative flex flex-col bg-[var(--store-card)] rounded-md border border-[var(--store-border)] hover:border-[var(--store-primary)]/40 hover:shadow-xl transition-all duration-300 font-sans h-full">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      className="group relative flex flex-col bg-[var(--store-card)] rounded-md border border-[var(--store-border)] hover:border-[var(--store-primary)]/40 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 font-sans h-full"
+    >
       {/* Image Section */}
       <div className="relative aspect-[4/5] overflow-hidden bg-white flex items-center justify-center p-4 border-b border-[var(--store-border)]">
         {product.image_url ? (
@@ -165,6 +172,6 @@ export function ProductCard({ product, onBuyNow, priority = false }: ProductCard
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

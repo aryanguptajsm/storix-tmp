@@ -218,6 +218,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                         product={product}
                         onBuyNow={handleBuyNow}
                         priority={index < 8}
+                        index={index}
                       />
                     ))}
                   </div>
