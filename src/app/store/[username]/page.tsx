@@ -115,7 +115,7 @@ export default async function PublicStorePage({ params }: Props) {
   const productsRes = profile
     ? await supabase
         .from("products")
-        .select("id, user_id, title, description, image_url, platform, price, original_price, original_url, created_at")
+        .select("id, user_id, title, description, image_url, platform, price, original_price, discount_percentage, rating, review_count, brand, original_url, created_at")
         .eq("user_id", profile.id)
         .order("created_at", { ascending: false })
     : { data: [], error: null };
