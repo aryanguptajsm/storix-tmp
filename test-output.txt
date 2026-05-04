@@ -1,4 +1,4 @@
-◇ injected env (7) from .env.local // tip: ⌘ override existing { override: true }
+◇ injected env (7) from .env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
 Field user_id: Exists
 Field title: Exists
 Field description: Exists
@@ -12,3 +12,7 @@ Field rating: Missing (column products.rating does not exist)
 Field review_count: Missing (column products.review_count does not exist)
 Field brand: Missing (column products.brand does not exist)
 Field category: Missing (column products.category does not exist)
+Field affiliate_url: Missing (column products.affiliate_url does not exist)
+Field ai_content: Missing (column products.ai_content does not exist)
+Field article_type: Missing (column products.article_type does not exist)
+Field content_status: Missing (column products.content_status does not exist)
