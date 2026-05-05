@@ -2,22 +2,16 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import {
   Sparkles,
   ShoppingBag,
   Zap,
-  ArrowRight,
   ArrowUpRight,
-  Layout,
   TrendingUp,
   Globe,
-  Shield,
-  Star,
   MousePointerClick,
-  CheckCircle2,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import DotField from "@/components/ui/DotField";

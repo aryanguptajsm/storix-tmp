@@ -78,7 +78,7 @@ export async function getUser() {
         return null;
       }
       return user;
-    } catch (error) {
+    } catch {
        // Silent catch for network errors during initial load
        return null;
     } finally {

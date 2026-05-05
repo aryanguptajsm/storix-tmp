@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { PLANS, normalizePlanId, type PlanId } from "@/lib/plans";
 
+type JsonRecord = Record<string, unknown>;
+
 
 /**
  * Verifies the Standard Webhooks (Svix) signature from Dodo Payments
@@ -29,7 +31,7 @@ function verifySignature(body: string, headers: Headers, secret: string): boolea
   let decodedSecret: Buffer;
   try {
     decodedSecret = Buffer.from(secretKey, "base64");
-  } catch (e) {
+  } catch {
     console.error("[Dodo Webhook] Failed to decode secret key");
     return false;
   }
@@ -51,7 +53,7 @@ function verifySignature(body: string, headers: Headers, secret: string): boolea
       if (sigBuffer.length === computedBuffer.length && crypto.timingSafeEqual(sigBuffer, computedBuffer)) {
         return true;
       }
-    } catch (e) {
+    } catch {
       continue;
     }
   }
@@ -71,27 +73,47 @@ function getSupabaseAdmin() {
   return createClient(url, key);
 }
 
-function extractMetadata(data: Record<string, any>): Record<string, any> {
-  return (
-    data.metadata ||
-    data.checkout_session?.metadata ||
-    data.subscription?.metadata ||
-    data.payment?.metadata ||
-    {}
-  );
+function asRecord(value: unknown): JsonRecord | null {
+  return value && typeof value === "object" ? (value as JsonRecord) : null;
 }
 
-function extractAuditFields(data: Record<string, any>) {
+function getString(value: unknown): string | null {
+  return typeof value === "string" ? value : null;
+}
+
+function extractMetadata(data: JsonRecord): JsonRecord {
+  const directMetadata = asRecord(data.metadata);
+  if (directMetadata) return directMetadata;
+
+  const checkoutSession = asRecord(data.checkout_session);
+  const checkoutMetadata = checkoutSession ? asRecord(checkoutSession.metadata) : null;
+  if (checkoutMetadata) return checkoutMetadata;
+
+  const subscription = asRecord(data.subscription);
+  const subscriptionMetadata = subscription ? asRecord(subscription.metadata) : null;
+  if (subscriptionMetadata) return subscriptionMetadata;
+
+  const payment = asRecord(data.payment);
+  const paymentMetadata = payment ? asRecord(payment.metadata) : null;
+  if (paymentMetadata) return paymentMetadata;
+
+  return {};
+}
+
+function extractAuditFields(data: JsonRecord) {
+  const subscription = asRecord(data.subscription);
+  const payment = asRecord(data.payment);
+
   return {
     subscriptionId:
-      data.subscription_id ||
-      data.subscription?.subscription_id ||
-      data.subscription?.id ||
+      getString(data.subscription_id) ||
+      getString(subscription?.subscription_id) ||
+      getString(subscription?.id) ||
       null,
     paymentId:
-      data.payment_id ||
-      data.payment?.payment_id ||
-      data.payment?.id ||
+      getString(data.payment_id) ||
+      getString(payment?.payment_id) ||
+      getString(payment?.id) ||
       null,
   };
 }
@@ -149,9 +171,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
-    const payload = JSON.parse(rawBody);
-    const eventType = payload.event_type;
-    const data = payload.data;
+    const payload = JSON.parse(rawBody) as {
+      event_type?: unknown;
+      event_id?: unknown;
+      data?: unknown;
+    };
+    const eventType =
+      typeof payload.event_type === "string" ? payload.event_type : "";
+    const data = asRecord(payload.data) || {};
 
     console.log(`[Dodo Webhook] Verified Event: ${eventType} (ID: ${payload.event_id})`);
 
@@ -213,15 +240,17 @@ export async function POST(req: Request) {
           const supabaseAdmin = getSupabaseAdmin();
           await supabaseAdmin
             .from("profiles")
-            .update({ plan: "free" })
-            .eq("id", userId);
+          .update({ plan: "free" as PlanId })
+          .eq("id", userId);
        }
     }
 
     // Always respond with 200 to Dodo if we reached here
     return NextResponse.json({ received: true });
-  } catch (err: any) {
-    console.error(`[Dodo Webhook] Processing Error:`, err.message);
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "Unknown webhook processing error";
+    console.error(`[Dodo Webhook] Processing Error:`, message);
     return NextResponse.json({ error: "Webhook processing failed" }, { status: 400 });
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { PlanBadge } from "@/components/dashboard/PlanBadge";
 import { QuotaBar } from "@/components/dashboard/QuotaBar";
@@ -233,7 +233,7 @@ export default function BillingPage() {
     },
   ];
 
-  const variants: any = {
+  const variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -307,7 +307,6 @@ export default function BillingPage() {
           const plan = PLANS[id];
           const planIndex = PLAN_ORDER.indexOf(id);
           const isCurrent = id === currentPlan;
-          const isDowngrade = planIndex < currentIndex;
           const isUpgrade = planIndex > currentIndex;
 
           return (

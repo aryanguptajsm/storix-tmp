@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,7 +53,7 @@ const navSections = [
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [user, setUser] = React.useState<any>(null); // Keeping any for user to avoid complex import for now if it's already there, but fixing profile
+  const [user, setUser] = React.useState<User | null>(null);
   const [profile, setProfile] = React.useState<import("@/lib/auth").UserProfile | null>(null);
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 

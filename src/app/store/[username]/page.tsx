@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase-server";
 import { cookies } from "next/headers";
 import { StoreView } from "@/components/store/StoreView";
 import { Button } from "@/components/ui/Button";
-import { ShoppingBag, Sparkles, Search } from "lucide-react";
+import { ShoppingBag, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { StoreSearch } from "@/components/store/StoreSearch";
@@ -127,7 +127,12 @@ export default async function PublicStorePage({ params }: Props) {
   const products = productsRes.data || [];
 
   // Only if profile is not found, fetch featured stores for better engagement
-  let featuredStores: any[] = [];
+  let featuredStores: Array<{
+    username: string;
+    store_name: string;
+    store_description?: string | null;
+    store_logo?: string | null;
+  }> = [];
   if (!profile) {
     const { data: stores } = await supabase
       .from("profiles")

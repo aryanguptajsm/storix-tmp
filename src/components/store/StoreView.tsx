@@ -2,12 +2,8 @@
 import React from "react";
 import {
   ShoppingBag,
-  ArrowRight,
-  Sparkles,
   Package,
   ArrowUp,
-  Search,
-  ChevronRight,
   ShieldCheck,
   Zap,
 } from "lucide-react";
@@ -21,6 +17,7 @@ import { PoweredByBadge } from "@/components/store/PoweredByBadge";
 import { WhatsAppButton } from "@/components/store/WhatsAppButton";
 import { Button } from "@/components/ui/Button";
 import { Product } from "@/lib/types";
+import type { Theme } from "@/components/ThemeProvider";
 import {
   hasPlanFeature,
   isPaidPlan,
@@ -94,7 +91,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
   });
 
   return (
-    <ThemeProvider initialTheme={finalTheme as any}>
+    <ThemeProvider initialTheme={finalTheme as Theme}>
       <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
         
         <StoreHeader 
