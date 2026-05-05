@@ -23,7 +23,7 @@ import {
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
 import { ThemeToggle } from "./ui/ThemeToggle";
-import { normalizePlanId } from "@/lib/plans";
+import { PLANS, normalizePlanId } from "@/lib/plans";
 
 const navSections = [
   {
@@ -171,7 +171,7 @@ export function Sidebar() {
               <div className="flex flex-col min-w-0">
                 <span className="text-[11px] font-black text-white truncate">{profile?.store_name || user.email}</span>
                 <span className="text-[9px] text-primary font-black uppercase tracking-widest">
-                  {normalizePlanId(profile?.plan)} Tier
+                  {PLANS[normalizePlanId(profile?.plan)].name} Tier
                 </span>
               </div>
             </div>
