@@ -1,6 +1,7 @@
 import React from "react";
 import { createClient } from "@/lib/supabase-server";
 import { cookies } from "next/headers";
+import Image from "next/image";
 import { StoreView } from "@/components/store/StoreView";
 import { Button } from "@/components/ui/Button";
 import { ShoppingBag, Sparkles } from "lucide-react";
@@ -211,7 +212,13 @@ export default async function PublicStorePage({ params }: Props) {
                     <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all text-left group">
                       <div className="w-10 h-10 rounded-lg bg-surface-light mb-3 flex items-center justify-center overflow-hidden border border-white/10">
                         {store.store_logo ? (
-                          <img src={store.store_logo} alt={store.store_name} className="w-full h-full object-cover" />
+                          <Image
+                            src={store.store_logo}
+                            alt={store.store_name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <ShoppingBag size={16} className="text-white/20" />
                         )}
