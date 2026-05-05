@@ -25,10 +25,9 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import DotField from "@/components/ui/DotField";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import LightPillar from "@/components/ui/LightPillar";
-import { PLANS, type PlanId } from "@/lib/plans";
+import { PublicPricingSection } from "@/components/pricing/PublicPricingSection";
 
 export default function LandingPage() {
-  const [annual, setAnnual] = React.useState(false);
   const features = [
     {
       icon: Zap,
@@ -320,120 +319,14 @@ export default function LandingPage() {
         </section>
 
         {/* ═══════ PRICING ═══════ */}
-        <section id="pricing" className="py-32 md:py-48 px-6 relative overflow-hidden">
+        <section className="py-32 md:py-48 px-6 relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] -z-10" />
-
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-              <ScrollReveal variant="fade-up">
-                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-white/[0.02] border border-white/10 mb-8 backdrop-blur-xl">
-                  <Crown size={16} className="text-emerald-400" />
-                  <span className="text-[11px] font-bold text-white/50 uppercase tracking-wider">Strategic Investment</span>
-                </div>
-                <h2 className="text-5xl md:text-7xl font-black mb-8 text-white tracking-tighter leading-[0.9]">
-                  Pick Your Strategy
-                </h2>
-                <p className="text-white/40 text-xl font-medium max-w-2xl mx-auto mb-12">
-                  Scale your affiliate empire with precision. Choose the plan that fits your current mission parameters.
-                </p>
-
-                {/* Billing Toggle */}
-                <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-3xl shadow-2xl mb-16">
-                  <button
-                    onClick={() => setAnnual(false)}
-                    className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 ${!annual
-                      ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
-                      : "text-white/30 hover:text-white scale-95 hover:scale-100"
-                      }`}
-                  >
-                    Monthly
-                  </button>
-                  <button
-                    onClick={() => setAnnual(true)}
-                    className={`px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-3 ${annual
-                      ? "bg-emerald-500 text-white shadow-[0_10px_30px_rgba(16,185,129,0.4)] scale-100"
-                      : "text-white/30 hover:text-white scale-95 hover:scale-100"
-                      }`}
-                  >
-                    Annually
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-black ${annual ? "bg-black/20 text-white" : "bg-emerald-500/20 text-emerald-400"
-                      }`}>
-                      Save 20%
-                    </span>
-                  </button>
-                </div>
-              </ScrollReveal>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-              {(['free', 'pro', 'business'] as PlanId[]).map((id, i) => {
-                const plan = PLANS[id];
-                const displayPrice = id === "free" ? 0 : annual ? (plan.price * 0.8) / 100 : plan.price / 100;
-                const isPro = id === 'pro';
-
-                return (
-                  <ScrollReveal key={id} delay={i * 150} variant="zoom-in">
-                    <SpotlightCard
-                      className={`h-full flex flex-col group !p-10 border-white/[0.05] bg-white/[0.01] hover:border-emerald-500/30 transition-all duration-700 relative overflow-hidden ${isPro ? 'ring-2 ring-emerald-500/50 shadow-[0_0_80px_rgba(16,185,129,0.15)] bg-emerald-500/[0.02]' : ''
-                        }`}
-                      spotlightColor={isPro ? "rgba(16, 185, 129, 0.15)" : "rgba(255, 255, 255, 0.05)"}
-                    >
-                      {isPro && (
-                        <div className="absolute top-6 right-8 px-4 py-1.5 rounded-full bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest shadow-xl">
-                          Recommended
-                        </div>
-                      )}
-
-                      <div className="mb-10">
-                        <h3 className="text-3xl font-black text-white mb-2 tracking-tight group-hover:text-emerald-400 transition-colors duration-500">
-                          {plan.name}
-                        </h3>
-                        <p className="text-white/30 text-sm font-medium leading-relaxed max-w-[200px]">
-                          {plan.description}
-                        </p>
-                      </div>
-
-                      <div className="mb-10">
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-4xl md:text-5xl font-black text-white tracking-tighter">
-                            {plan.symbol}{displayPrice.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                          </span>
-                          <span className="text-white/30 font-bold text-sm">/mo</span>
-                        </div>
-                        {annual && id !== 'free' && (
-                          <div className="mt-3 text-[10px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-400/5 inline-block px-3 py-1.5 rounded-xl border border-emerald-500/10">
-                            {plan.symbol}{(displayPrice * 12).toLocaleString()} billed annually
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="space-y-5 mb-12 flex-1">
-                        {plan.features.slice(0, 6).map((feature, j) => (
-                          <div key={j} className="flex items-center gap-3">
-                            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                              <Check size={10} strokeWidth={4} />
-                            </div>
-                            <span className="text-white/40 text-sm font-medium tracking-tight group-hover:text-white/60 transition-colors">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <Link href={id === 'free' ? '/signup' : `/pricing`} className="w-full">
-                        <Button
-                          variant={isPro ? 'primary' : 'secondary'}
-                          className={`w-full h-18 rounded-[2rem] font-bold text-xs uppercase tracking-[0.2em] transition-all duration-500 ${isPro ? 'shadow-[0_20px_40px_rgba(16,185,129,0.3)] hover:shadow-emerald-500/50' : 'bg-white/5 border-white/5 hover:bg-white hover:text-black'
-                            }`}
-                        >
-                          Select Protocol
-                          <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </Link>
-                    </SpotlightCard>
-                  </ScrollReveal>
-                );
-              })}
-            </div>
-          </div>
+          <PublicPricingSection
+            id="pricing"
+            eyebrow="Strategic Investment"
+            title="Pick Your Strategy"
+            description="Scale your affiliate empire with precision. Choose the plan that fits your current mission parameters."
+          />
         </section>
 
         {/* ═══════ HOW IT WORKS ═════ */}
