@@ -1,6 +1,7 @@
 // Storix Plan Definitions & Gating Logic
 
 export type PlanId = 'free' | 'pro' | 'business';
+export type PlanFeature = keyof PlanLimits;
 
 export interface PlanLimits {
   maxProducts: number;
@@ -29,6 +30,12 @@ export interface Plan {
   features: string[];
   razorpayPlanId?: string;
   dodoProductId?: string;
+}
+
+export interface PlanPresentation {
+  tier: string;
+  badge?: string;
+  cta: string;
 }
 
 export const PLANS: Record<PlanId, Plan> = {
@@ -86,13 +93,11 @@ export const PLANS: Record<PlanId, Plan> = {
     },
     features: [
       'Up to 100 products',
-      '3 storefronts',
-      'All premium themes',
-      'Advanced analytics',
+      'Premium storefront themes',
+      'Advanced click analytics',
       'AI description writer',
-      'Custom domain',
       'No Storix branding',
-      'WhatsApp integration',
+      'WhatsApp sharing',
       'Email capture widget',
     ],
     razorpayPlanId: process.env.RAZORPAY_PRO_PLAN_ID,
@@ -122,19 +127,35 @@ export const PLANS: Record<PlanId, Plan> = {
     },
     features: [
       'Unlimited products',
-      '10 storefronts',
-      'All premium themes',
-      'Priority analytics',
+      'Premium storefront themes',
+      'Priority analytics views',
       'AI description writer',
-      'Custom domain',
-      'White-label support',
-      'Bulk CSV import',
-      'WhatsApp catalog sync',
+      'No Storix branding',
+      'Bulk workspace access',
+      'WhatsApp sharing',
       'Email capture widget',
-      'Priority support',
     ],
     razorpayPlanId: process.env.RAZORPAY_BUSINESS_PLAN_ID,
     dodoProductId: process.env.NEXT_PUBLIC_DODO_PRODUCT_ID_BUSINESS || 'pdt_0NdG5Q5kJJp0JImaI5wm3',
+  },
+};
+
+export const PLAN_ORDER: PlanId[] = ['free', 'pro', 'business'];
+
+export const PLAN_PRESENTATION: Record<PlanId, PlanPresentation> = {
+  free: {
+    tier: 'Starter',
+    cta: 'Start Free',
+  },
+  pro: {
+    tier: 'Scale',
+    badge: 'Most Popular',
+    cta: 'Command Pro',
+  },
+  business: {
+    tier: 'Enterprise',
+    badge: 'Maximum Power',
+    cta: 'Command Business',
   },
 };
 
@@ -147,17 +168,35 @@ export function getPlan(planId: string | null | undefined): Plan {
   return PLANS.free;
 }
 
+export function normalizePlanId(planId: string | null | undefined): PlanId {
+  return getPlan(planId).id;
+}
+
+export function isPaidPlan(planId: string | null | undefined): boolean {
+  return normalizePlanId(planId) !== 'free';
+}
+
+export function hasPlanFeature(
+  planId: string | null | undefined,
+  feature: PlanFeature
+): boolean {
+  const value = getPlan(planId).limits[feature];
+  return typeof value === 'boolean' ? value : true;
+}
+
 export function canUserPerformAction(
   userPlan: PlanId,
   action: keyof PlanLimits
 ): boolean {
-  const plan = getPlan(userPlan);
-  const value = plan.limits[action];
-  return typeof value === 'boolean' ? value : true;
+  return hasPlanFeature(userPlan, action);
 }
 
 export function getProductLimit(planId: PlanId): number {
   return getPlan(planId).limits.maxProducts;
+}
+
+export function getStoreLimit(planId: PlanId): number {
+  return getPlan(planId).limits.maxStores;
 }
 
 export function isWithinProductLimit(

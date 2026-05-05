@@ -123,7 +123,7 @@ export async function updateProfile(
 ) {
   // Strip columns that are not present in the live Supabase schema to prevent 400 Bad Request
   const validUpdates = { ...updates };
-  const missingColumns: (keyof UserProfile)[] = ['theme', 'store_logo', 'avatar_url', 'plan'];
+  const missingColumns: (keyof UserProfile)[] = ['avatar_url'];
   
   missingColumns.forEach(col => {
     if (col in validUpdates) {
