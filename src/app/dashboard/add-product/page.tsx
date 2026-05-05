@@ -444,7 +444,7 @@ export default function AddProductPage() {
                         ) : (
                           <Sparkles size={12} className="group-hover/ai:rotate-12 transition-transform" />
                         )}
-                        {profile?.plan && profile?.plan !== "free" ? "Neural Forge Master" : "Neural Forge (Free)"}
+                        {isPro ? "Neural Forge Master" : "Neural Forge (Free)"}
                         {!isPro && <div className="ml-1 w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />}
                       </button>
                     </div>

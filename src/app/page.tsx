@@ -18,8 +18,6 @@ import {
   Star,
   MousePointerClick,
   CheckCircle2,
-  Check,
-  Crown,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import DotField from "@/components/ui/DotField";

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { toast } from "sonner";
+import { isPaidPlan } from "@/lib/plans";
 import { 
   Settings, 
   User, 
@@ -102,7 +103,7 @@ export default function SettingsPage() {
     { label: "Security", icon: Shield },
   ];
 
-  const isPro = profile?.plan && profile?.plan !== "free";
+  const isPro = isPaidPlan(profile?.plan);
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
