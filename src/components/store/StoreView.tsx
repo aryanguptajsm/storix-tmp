@@ -16,10 +16,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ProductCard } from "@/components/store/ProductCard";
 import { StoreHeader } from "@/components/store/StoreHeader";
-import { TrustSection } from "@/components/store/TrustSection";
+import { EmailCaptureWidget } from "@/components/store/EmailCaptureWidget";
+import { PoweredByBadge } from "@/components/store/PoweredByBadge";
+import { WhatsAppButton } from "@/components/store/WhatsAppButton";
 import { Button } from "@/components/ui/Button";
 import { Product } from "@/lib/types";
-import { isPremiumTheme } from "@/lib/plans";
+import {
+  hasPlanFeature,
+  isPaidPlan,
+  isPremiumTheme,
+  normalizePlanId,
+} from "@/lib/plans";
 
 interface Profile {
   store_name: string;
@@ -66,8 +73,13 @@ export function StoreView({ profile, products }: StoreViewProps) {
     }).catch(() => {});
   };
 
-  const isPro = profile.plan && profile.plan !== "free";
+  const plan = normalizePlanId(profile.plan);
+  const isPro = isPaidPlan(plan);
   const finalTheme = !isPro && isPremiumTheme(profile.theme || "default") ? "default" : (profile.theme || "default");
+  const canShowEmailCapture = hasPlanFeature(plan, "emailCapture");
+  const canShowWhatsApp = hasPlanFeature(plan, "whatsappSync");
+  const canRemoveBranding = hasPlanFeature(plan, "removeBranding");
+  const storeUrl = typeof window === "undefined" ? "" : window.location.href;
 
   // Filtering Logic
   const filteredProducts = products.filter(p => {
@@ -230,6 +242,14 @@ export function StoreView({ profile, products }: StoreViewProps) {
           </section>
         </main>
 
+        {canShowEmailCapture && (
+          <section className="px-3 md:px-8 pb-12">
+            <div className="max-w-[1400px] mx-auto">
+              <EmailCaptureWidget storeOwnerId={profile.id} variant="inline" />
+            </div>
+          </section>
+        )}
+
         {/* Back to Top Feature */}
         <AnimatePresence>
           {showBackToTop && (
@@ -283,10 +303,17 @@ export function StoreView({ profile, products }: StoreViewProps) {
             
             <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold text-white/10 uppercase tracking-[0.4em]">
               <p>© 2026 {profile.store_name} Store</p>
-              <p className="hover:text-white transition-colors cursor-pointer">Powered by Gemini AI</p>
+              {!canRemoveBranding && (
+                <p className="hover:text-white transition-colors cursor-pointer">Powered by Storix</p>
+              )}
             </div>
           </div>
         </footer>
+
+        {canShowWhatsApp && (
+          <WhatsAppButton storeName={profile.store_name} storeUrl={storeUrl} />
+        )}
+        {!canRemoveBranding && <PoweredByBadge />}
       </div>
     </ThemeProvider>
   );
