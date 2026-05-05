@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
-import { PLANS, PlanId } from "@/lib/plans";
+import { PLANS, normalizePlanId, type PlanId } from "@/lib/plans";
 
 
 /**
@@ -71,6 +71,68 @@ function getSupabaseAdmin() {
   return createClient(url, key);
 }
 
+function extractMetadata(data: Record<string, any>): Record<string, any> {
+  return (
+    data.metadata ||
+    data.checkout_session?.metadata ||
+    data.subscription?.metadata ||
+    data.payment?.metadata ||
+    {}
+  );
+}
+
+function extractAuditFields(data: Record<string, any>) {
+  return {
+    subscriptionId:
+      data.subscription_id ||
+      data.subscription?.subscription_id ||
+      data.subscription?.id ||
+      null,
+    paymentId:
+      data.payment_id ||
+      data.payment?.payment_id ||
+      data.payment?.id ||
+      null,
+  };
+}
+
+async function updateUserPlan(
+  supabaseAdmin: ReturnType<typeof getSupabaseAdmin>,
+  userId: string,
+  planId: PlanId,
+  audit: { subscriptionId: string | null; paymentId: string | null }
+) {
+  const updatePayload: Record<string, string> = {
+    plan: planId,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (audit.subscriptionId) {
+    updatePayload.subscription_id = audit.subscriptionId;
+  }
+  if (audit.paymentId) {
+    updatePayload.last_payment_id = audit.paymentId;
+  }
+
+  const { error } = await supabaseAdmin
+    .from("profiles")
+    .update(updatePayload)
+    .eq("id", userId);
+
+  if (!error) {
+    return null;
+  }
+
+  console.warn("[Dodo Webhook] Audit payload failed, retrying with plan only.", error);
+
+  const fallback = await supabaseAdmin
+    .from("profiles")
+    .update({ plan: planId })
+    .eq("id", userId);
+
+  return fallback.error;
+}
+
 export async function POST(req: Request) {
   try {
     const rawBody = await req.text();
@@ -102,7 +164,7 @@ export async function POST(req: Request) {
 
     if (relevantEvents.includes(eventType)) {
       // Extract metadata (passed during checkout creation)
-      const metadata = data.metadata || {};
+      const metadata = extractMetadata(data);
       const userId = metadata.user_id;
       let planId = metadata.plan_id;
 
@@ -124,18 +186,17 @@ export async function POST(req: Request) {
          return NextResponse.json({ error: "Invalid planId" }, { status: 400 });
       }
 
-      console.log(`[Dodo Webhook] Provisioning ${planId} for user ${userId}`);
+      const normalizedPlanId = normalizePlanId(planId);
+      const audit = extractAuditFields(data);
+      console.log(`[Dodo Webhook] Provisioning ${normalizedPlanId} for user ${userId}`);
       
       const supabaseAdmin = getSupabaseAdmin();
-      const { error } = await supabaseAdmin
-        .from("profiles")
-        .update({ 
-          plan: planId,
-          // Store payment info for audit/support
-          last_payment_id: data.payment_id || data.subscription_id,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", userId);
+      const error = await updateUserPlan(
+        supabaseAdmin,
+        userId,
+        normalizedPlanId,
+        audit
+      );
 
       if (error) {
         console.error(`[Dodo Webhook] Supabase update error:`, error);
@@ -143,10 +204,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Internal database error" }, { status: 500 });
       }
       
-      console.log(`[Dodo Webhook] Successfully updated profile ${userId} to ${planId}`);
+      console.log(`[Dodo Webhook] Successfully updated profile ${userId} to ${normalizedPlanId}`);
     } else if (eventType === "subscription.canceled" || eventType === "subscription.expired") {
        // Optional: Handle cancellation by downgrading to free
-       const userId = data.metadata?.user_id;
+       const userId = extractMetadata(data).user_id;
        if (userId) {
           console.log(`[Dodo Webhook] Downgrading user ${userId} due to ${eventType}`);
           const supabaseAdmin = getSupabaseAdmin();
@@ -164,4 +225,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Webhook processing failed" }, { status: 400 });
   }
 }
-
