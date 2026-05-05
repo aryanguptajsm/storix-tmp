@@ -1,114 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { PLANS, type PlanId } from "@/lib/plans";
 import {
-  Check,
-  ArrowRight,
   ShoppingBag,
-  Sparkles,
-  Crown,
   Zap,
   Star,
   Shield,
-  Loader2,
 } from "lucide-react";
 import DotField from "@/components/ui/DotField";
 import LightPillar from "@/components/ui/LightPillar";
+import { PublicPricingSection } from "@/components/pricing/PublicPricingSection";
 
 export default function PricingPage() {
-  const [annual, setAnnual] = useState(false);
-  const [loadingPlan, setLoadingPlan] = useState<PlanId | null>(null);
-
-  const handleCheckout = async (planId: PlanId) => {
-    const plan = PLANS[planId];
-    if (planId === "free") {
-      window.location.href = "/signup";
-      return;
-    }
-
-    // Securely check auth before attempting checkout
-    const { getUser } = await import("@/lib/auth");
-    const user = await getUser();
-    if (!user) {
-      const { toast } = await import("sonner");
-      toast.info("Please sign in to upgrade your plan.");
-      // Small delay to allow toast to be seen
-      setTimeout(() => {
-        window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
-      }, 1000);
-      return;
-    }
-
-    if ((planId === "pro" || planId === "business") && plan.dodoProductId) {
-      setLoadingPlan(planId);
-      try {
-        // 20s timeout to avoid hung requests
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 20000);
-
-        const res = await fetch("/api/checkout/dodo", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productId: plan.dodoProductId,
-            planId,
-          }),
-          signal: controller.signal,
-        });
-        clearTimeout(timeout);
-
-        const data = await res.json();
-
-        if (data.url) {
-          window.location.href = data.url;
-          return;
-        }
-
-        // Show error via toast (imported from sonner)
-        const { toast } = await import("sonner");
-        toast.error(data.error || "Failed to start checkout. Please try again.");
-      } catch (e: unknown) {
-        const { toast } = await import("sonner");
-        if (e instanceof DOMException && e.name === "AbortError") {
-          toast.error("Checkout timed out. Please check your connection and try again.");
-        } else {
-          toast.error("Failed to initiate checkout. Please try again.");
-        }
-        console.error("Checkout Error:", e);
-      } finally {
-        setLoadingPlan(null);
-      }
-    } else {
-      // Fallback for free plan or missing dodoProductId
-      window.location.href = `/signup?plan=${planId}`;
-    }
-  };
-
-  const plansList: { id: PlanId; icon: React.ReactNode; accent: string; bgHighlight: string; popular?: boolean }[] = [
-    {
-      id: "free",
-      icon: <Zap size={28} />,
-      accent: "text-slate-400",
-      bgHighlight: "from-slate-500/10 to-transparent",
-    },
-    {
-      id: "pro",
-      icon: <Sparkles size={28} />,
-      accent: "text-[var(--store-primary)]",
-      bgHighlight: "from-[var(--store-primary)]/20 to-transparent",
-      popular: true,
-    },
-    {
-      id: "business",
-      icon: <Crown size={28} />,
-      accent: "text-amber-400",
-      bgHighlight: "from-amber-400/10 to-transparent",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-slate-200 selection:bg-[var(--store-primary)]/30 selection:text-white font-sans overflow-hidden">
       {/* ─── Global Background Layers ─── */}
@@ -175,139 +80,14 @@ export default function PricingPage() {
             Build your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-light to-primary animate-gradient-x">Empire</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed font-medium animate-fade-in-up animation-delay-200">
-            Choose the perfect plan to launch and scale your affiliate storefront. Pay securely with Dodo Payments.
+          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up animation-delay-200">
+            Choose the perfect plan to launch and scale your affiliate storefront. Paid upgrades activate automatically after successful checkout.
           </p>
-
-          {/* Billing Toggle */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl animate-fade-in-up animation-delay-300">
-            <button
-              onClick={() => setAnnual(false)}
-              className={`px-6 py-3 rounded-xl text-sm font-black transition-all duration-300 ${
-                !annual 
-                  ? "bg-white text-black shadow-lg scale-100" 
-                  : "text-slate-400 hover:text-white scale-95 hover:scale-100"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setAnnual(true)}
-              className={`px-6 py-3 rounded-xl text-sm font-black transition-all duration-300 flex items-center gap-2 ${
-                annual 
-                  ? "bg-white text-black shadow-lg scale-100" 
-                  : "text-slate-400 hover:text-white scale-95 hover:scale-100"
-              }`}
-            >
-              Annually
-              <span className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                annual ? "bg-black/10 text-black" : "bg-green-500/20 text-green-400"
-              }`}>
-                Save 20%
-              </span>
-            </button>
-          </div>
         </div>
       </section>
 
       {/* Pricing Cards Grid */}
-      <section className="pb-32 px-6 relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {plansList.map(({ id, icon, accent, bgHighlight, popular }) => {
-            const plan = PLANS[id];
-            const displayPrice = id === "free" 
-              ? 0 
-              : annual 
-                ? (plan.price * 0.8) / 100 
-                : plan.price / 100;
-
-            return (
-              <div
-                key={id}
-                className={`group relative flex flex-col rounded-[2.5rem] transition-all duration-500 hover:-translate-y-2 ${
-                  popular 
-                    ? "bg-[#0A0A0A] border-2 border-primary/50 shadow-[0_0_50px_rgba(16,185,129,0.2)] md:-mt-8 md:mb-8" 
-                    : "bg-[#0A0A0A]/50 border border-white/5 hover:border-white/20 backdrop-blur-xl hover:shadow-2xl hover:shadow-white/5"
-                }`}
-              >
-                {/* Glow Background inside card */}
-                <div className={`absolute inset-0 rounded-[2.5rem] bg-gradient-to-b ${bgHighlight} opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
-
-                {popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary-light text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg shadow-primary/30 z-20">
-                    Most Popular Choice
-                  </div>
-                )}
-
-                <div className="p-8 md:p-10 flex-1 flex flex-col relative z-10">
-                  {/* Header */}
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center ${accent} shadow-inner border border-white/5 group-hover:scale-110 transition-transform duration-300`}>
-                      {icon}
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-black text-white leading-none mb-2">{plan.name}</h3>
-                      <p className="text-sm text-slate-400 font-medium">{plan.description}</p>
-                    </div>
-                  </div>
-
-                  {/* Price */}
-                  <div className="mb-8">
-                    <div className="flex items-end gap-2 text-white">
-                      <span className="text-sm font-bold opacity-50 mb-2">{plan.symbol}</span>
-                      <span className="text-6xl font-black tracking-tighter leading-none">{displayPrice.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
-                      {id !== "free" && (
-                        <span className="text-sm font-bold text-slate-500 mb-2">/ month</span>
-                      )}
-                    </div>
-                    {annual && id !== "free" && (
-                      <p className="text-xs text-emerald-400 font-bold mt-2 bg-emerald-400/10 inline-block px-3 py-1.5 rounded-xl border border-emerald-500/10 backdrop-blur-md">
-                        Billed {plan.symbol}{(displayPrice * 12).toLocaleString()} annually
-                      </p>
-                    )}
-                  </div>
-
-                  {/* CTA Button */}
-                  <button
-                     onClick={() => handleCheckout(id)}
-                     disabled={loadingPlan === id}
-                     className={`w-full py-4 rounded-2xl text-base font-black flex items-center justify-center gap-2 transition-all duration-300 mb-10 ${
-                       popular
-                         ? "bg-[var(--store-primary)] hover:bg-[var(--store-primary)]/90 text-white shadow-xl shadow-[var(--store-primary)]/20 hover:shadow-[var(--store-primary)]/40 hover:-translate-y-1"
-                         : "bg-white/10 hover:bg-white text-white hover:text-black border border-white/5"
-                     }`}
-                  >
-                    {loadingPlan === id ? (
-                       <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <>
-                        {id === "free" ? "Start Building Free" : `Upgrade to ${plan.name}`}
-                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                       </>
-                    )}
-                  </button>
-
-                  <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8" />
-
-                  {/* Features */}
-                  <ul className="space-y-4 flex-1">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 group/feature">
-                        <div className={`mt-1 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
-                          popular ? "bg-[var(--store-primary)]/20 text-[var(--store-primary)]" : "bg-white/10 text-slate-300 group-hover/feature:bg-white/20 group-hover/feature:text-white"
-                        } transition-colors`}>
-                          <Check size={12} strokeWidth={3} />
-                        </div>
-                        <span className="text-slate-300 font-medium leading-relaxed group-hover/feature:text-white transition-colors">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <PublicPricingSection className="pb-32 px-6 relative z-10" />
 
       {/* Trust Badges */}
       <section className="pb-32 px-6 relative z-10 border-t border-white/5 pt-20 bg-black">
