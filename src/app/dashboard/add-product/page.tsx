@@ -31,6 +31,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedSection } from "@/components/dashboard/DashboardEntrance";
+import { getProductLimit, isPaidPlan, normalizePlanId } from "@/lib/plans";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -74,7 +75,7 @@ export default function AddProductPage() {
     if (!url) return;
     
     // Plan Guard for Scraping
-    const limit = profile?.plan === "pro" ? 100 : profile?.plan === "business" ? 1000 : 10;
+    const limit = getProductLimit(normalizePlanId(profile?.plan));
     if (productCount >= limit) {
       toast.error(`Operational Capacity Reached (${productCount}/${limit})`, {
         description: "Upgrade your signature to a higher tier for more deployments.",
@@ -110,7 +111,7 @@ export default function AddProductPage() {
   async function handleNeuralForge() {
     if (!productData) return;
     
-    const isPro = profile?.plan && profile?.plan !== "free";
+    const isPro = isPaidPlan(profile?.plan);
     
     setGenerating(true);
     try {
@@ -243,7 +244,7 @@ export default function AddProductPage() {
     }
   }
 
-  const isPro = profile?.plan && profile?.plan !== "free";
+  const isPro = isPaidPlan(profile?.plan);
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-24">

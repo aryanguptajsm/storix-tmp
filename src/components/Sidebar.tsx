@@ -22,6 +22,7 @@ import {
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
 import { ThemeToggle } from "./ui/ThemeToggle";
+import { normalizePlanId } from "@/lib/plans";
 
 const navSections = [
   {
@@ -107,10 +108,8 @@ export function Sidebar() {
             <nav className="space-y-1">
               {section.items.map((item) => {
                 const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-                const isLocked = item.tier === "business" && profile?.plan !== "business";
-                const isPro = profile?.plan && profile?.plan !== "free";
-
-                if (item.tier === "business" && !isPro) return null;
+                const plan = normalizePlanId(profile?.plan);
+                const isLocked = item.tier === "business" && plan !== "business";
 
                 return (
                   <Link
@@ -170,7 +169,9 @@ export function Sidebar() {
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[11px] font-black text-white truncate">{profile?.store_name || user.email}</span>
-                <span className="text-[9px] text-primary font-black uppercase tracking-widest">{profile?.plan || 'Free'} Tier</span>
+                <span className="text-[9px] text-primary font-black uppercase tracking-widest">
+                  {normalizePlanId(profile?.plan)} Tier
+                </span>
               </div>
             </div>
           )}
@@ -264,4 +265,3 @@ export function Sidebar() {
     </>
   );
 }
-

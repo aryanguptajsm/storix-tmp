@@ -69,7 +69,7 @@ export default async function PublicStorePage({ params }: Props) {
   // We also select by email_prefix as a secondary fallback to catch new users who haven't set a username
   let { data: profile } = await supabase
     .from("profiles")
-    .select("id, store_name, store_description, username")
+    .select("id, store_name, store_description, username, theme, store_logo, plan")
     .ilike("username", normalizedUsername)
     .single();
 
@@ -86,7 +86,7 @@ export default async function PublicStorePage({ params }: Props) {
       isPotentialOwner = true;
       const { data: ownProfile } = await supabase
         .from("profiles")
-        .select("id, store_name, store_description, username")
+        .select("id, store_name, store_description, username, theme, store_logo, plan")
         .eq("id", user.id)
         .single();
       
@@ -101,7 +101,7 @@ export default async function PublicStorePage({ params }: Props) {
     const cleanUsername = normalizedUsername.replace(/[^a-z0-9]/g, "");
     const { data: fuzzyProfile } = await supabase
       .from("profiles")
-      .select("id, store_name, store_description, username")
+      .select("id, store_name, store_description, username, theme, store_logo, plan")
       .ilike("username", cleanUsername)
       .limit(1)
       .maybeSingle();

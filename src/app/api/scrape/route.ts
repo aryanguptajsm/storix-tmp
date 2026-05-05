@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { ProductScraper } from "@/lib/agents/product-scraper";
+import { getProductLimit, normalizePlanId } from "@/lib/plans";
 
 
 export async function POST(req: NextRequest) {
@@ -35,8 +36,8 @@ export async function POST(req: NextRequest) {
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id);
     
-    const plan = profile?.plan || "free";
-    const limit = plan === "pro" ? 100 : plan === "business" ? 1000 : 10;
+    const plan = normalizePlanId(profile?.plan);
+    const limit = getProductLimit(plan);
     
     if ((count || 0) >= limit) {
       return NextResponse.json({ 
