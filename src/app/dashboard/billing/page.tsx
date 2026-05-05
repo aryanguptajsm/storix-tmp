@@ -7,7 +7,13 @@ import { PlanBadge } from "@/components/dashboard/PlanBadge";
 import { QuotaBar } from "@/components/dashboard/QuotaBar";
 import { getUser, getProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase";
-import { PLANS, type PlanId } from "@/lib/plans";
+import {
+  PLANS,
+  PLAN_ORDER,
+  isPaidPlan,
+  normalizePlanId,
+  type PlanId,
+} from "@/lib/plans";
 import {
   Check,
   ArrowRight,
@@ -51,7 +57,7 @@ export default function BillingPage() {
           .eq("user_id", user.id);
 
         setUserState({
-          plan: (profile?.plan as PlanId) || "free",
+          plan: normalizePlanId(profile?.plan),
           productCount: count || 0,
           storeName: profile?.store_name || "My Store",
         });
@@ -66,13 +72,28 @@ export default function BillingPage() {
           // Remove the query param to avoid repeated toasts
           window.history.replaceState({}, document.title, window.location.pathname);
           
-          // Refresh the profile after a short delay to see the updated plan
-          setTimeout(async () => {
-             const freshProfile = await getProfile(user.id);
-             if (freshProfile?.plan) {
-               setUserState(prev => prev ? { ...prev, plan: freshProfile.plan as PlanId } : null);
-             }
-          }, 3000);
+          const refreshPlanStatus = async () => {
+            for (let attempt = 0; attempt < 5; attempt += 1) {
+              await new Promise((resolve) => setTimeout(resolve, attempt === 0 ? 1500 : 2500));
+              const freshProfile = await getProfile(user.id);
+              const nextPlan = normalizePlanId(freshProfile?.plan);
+              if (nextPlan !== "free") {
+                setUserState((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        plan: nextPlan,
+                        storeName: freshProfile?.store_name || prev.storeName,
+                      }
+                    : null
+                );
+                toast.success(`Your ${PLANS[nextPlan].name} plan is now active.`);
+                return;
+              }
+            }
+          };
+
+          void refreshPlanStatus();
         }
       } catch {
         toast.error("Failed to load billing data");
@@ -93,13 +114,13 @@ export default function BillingPage() {
       if (freshProfile) {
         setUserState(prev => prev ? { 
           ...prev, 
-          plan: (freshProfile.plan as PlanId) || "free",
+          plan: normalizePlanId(freshProfile.plan),
           storeName: freshProfile.store_name || "My Store"
         } : null);
         
-        if (freshProfile.plan && freshProfile.plan !== "free") {
+        if (isPaidPlan(freshProfile.plan)) {
           toast.success("Subscription Verified!", {
-            description: `Your account is now active on the ${freshProfile.plan.toUpperCase()} plan.`
+            description: `Your account is now active on the ${normalizePlanId(freshProfile.plan).toUpperCase()} plan.`
           });
         } else {
           toast.info("No active subscription found yet. If you just paid, please wait 1-2 minutes for the webhook to process.");
@@ -176,9 +197,8 @@ export default function BillingPage() {
     return <BillingSkeleton />;
   }
 
-  const currentPlan = userState?.plan || "free";
-  const planOrder: PlanId[] = ["free", "pro", "business"];
-  const currentIndex = planOrder.indexOf(currentPlan);
+  const currentPlan = normalizePlanId(userState?.plan);
+  const currentIndex = PLAN_ORDER.indexOf(currentPlan);
 
   const plans: { id: PlanId; icon: React.ReactNode; color: string; bg: string }[] = [
     { id: "free", icon: <Zap size={20} />, color: "text-muted", bg: "bg-surface-light" },
@@ -193,7 +213,7 @@ export default function BillingPage() {
       price: "Included",
       icon: <Sparkles size={18} />,
       desc: "Generate SEO-optimized product descriptions with Claude AI.",
-      included: currentPlan !== "free",
+      included: isPaidPlan(currentPlan),
     },
     {
       id: "bulk_import",
@@ -209,7 +229,7 @@ export default function BillingPage() {
       price: "Included",
       icon: <Star size={18} />,
       desc: "Auto-generate sitemaps, meta tags, and JSON-LD structured data.",
-      included: currentPlan !== "free",
+      included: isPaidPlan(currentPlan),
     },
   ];
 
@@ -285,7 +305,7 @@ export default function BillingPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {plans.map(({ id, icon, color, bg }, i) => {
           const plan = PLANS[id];
-          const planIndex = planOrder.indexOf(id);
+          const planIndex = PLAN_ORDER.indexOf(id);
           const isCurrent = id === currentPlan;
           const isDowngrade = planIndex < currentIndex;
           const isUpgrade = planIndex > currentIndex;
