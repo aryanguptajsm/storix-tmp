@@ -99,7 +99,11 @@ export default function AddProductPage() {
       if (!res.ok) throw new Error(data.error || "Scraping failed");
       
       setProductData(data);
-      toast.success("Product intelligence gathered!");
+      if (data.status === "partial") {
+        toast.info("Partial product intelligence gathered. Review the fields before saving.");
+      } else {
+        toast.success("Product intelligence gathered!");
+      }
     } catch (err: any) {
       console.error("Scrape error:", err);
       toast.error(err.message || "Failed to scrape product.");
