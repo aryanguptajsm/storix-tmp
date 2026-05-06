@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { ProductScraper } from "@/lib/agents/product-scraper";
 import { getProductLimit, normalizePlanId } from "@/lib/plans";
+import { detectPlatformFromUrl } from "@/lib/scraper/contracts";
 
 
 export async function POST(req: NextRequest) {
@@ -22,7 +23,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
-    console.log("URL:", url);
+    let normalizedUrl: string;
+    try {
+      const parsedUrl = new URL(url);
+      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        return NextResponse.json({ error: "Only HTTP and HTTPS URLs are supported" }, { status: 400 });
+      }
+      normalizedUrl = parsedUrl.toString();
+    } catch {
+      return NextResponse.json({ error: "Invalid product URL" }, { status: 400 });
+    }
+
+    console.log("URL:", normalizedUrl);
 
     // ─── Plan Limit Enforcement ───
     const { data: profile } = await supabase
@@ -51,27 +63,22 @@ export async function POST(req: NextRequest) {
 
     // Use the robust ProductScraper Agent
     const scraper = new ProductScraper();
-    const result = await scraper.scrape(url).finally(() => scraper.close());
+    const result = await scraper.scrape(normalizedUrl).finally(() => scraper.close());
 
     console.log("Result:", result);
 
-    if (result.image_status === "error") {
+    if (result.status === "failed") {
        return NextResponse.json({ 
          error: result.error_reason || "Scraping failed",
+         status: result.status,
+         error_type: result.error_type,
          details: result
        }, { status: 500 });
     }
 
     console.log("Image Status:", result.image_status);
 
-    const parsedUrl = new URL(url);
-    let platform = "other";
-    if (/amazon/i.test(parsedUrl.hostname)) platform = "amazon";
-    else if (/flipkart/i.test(parsedUrl.hostname)) platform = "flipkart";
-    else if (/meesho/i.test(parsedUrl.hostname)) platform = "meesho";
-    else if (/myntra/i.test(parsedUrl.hostname)) platform = "myntra";
-    else if (/ajio/i.test(parsedUrl.hostname)) platform = "ajio";
-    else if (/ebay/i.test(parsedUrl.hostname)) platform = "ebay";
+    const platform = detectPlatformFromUrl(normalizedUrl);
 
     console.log("Platform:", platform);
 
@@ -86,11 +93,15 @@ export async function POST(req: NextRequest) {
       discountPercentage: result.discount || "",
       rating: result.rating || "",
       reviewCount: result.review_count || "",
+      review_count: result.review_count || "",
       brand: result.brand || "",
       category: result.category || "",
       features: result.features || [],
       platform,
-      originalUrl: url,
+      originalUrl: normalizedUrl,
+      status: result.status,
+      error_type: result.error_type || null,
+      attempts: result.attempts,
     });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Scraping failed";
