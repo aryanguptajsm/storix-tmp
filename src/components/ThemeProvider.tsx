@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useSyncExternalStore } from "react";
 
 export type Theme = "default" | "midnight" | "minimalist" | "neon" | "amazon" | "flipkart";
 
@@ -32,11 +32,14 @@ export function ThemeProvider({
 
     return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   });
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-    setMounted(true);
   }, [theme]);
 
   useEffect(() => {
