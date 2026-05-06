@@ -9,6 +9,7 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void;
   appMode: "light" | "dark";
   toggleAppMode: (event?: React.MouseEvent | MouseEvent) => void;
+  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -26,6 +27,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     const savedMode = localStorage.getItem("storix-app-mode") as "light" | "dark";
+    document.documentElement.setAttribute("data-theme", theme);
     if (savedMode) {
       setAppMode(savedMode);
     } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
@@ -79,8 +81,8 @@ export function ThemeProvider({
     });
   };
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, appMode, toggleAppMode }}>
-      <div className={`theme-${theme} mode-${appMode} min-h-screen transition-colors duration-500`}>
+    <ThemeContext.Provider value={{ theme, setTheme, appMode, toggleAppMode, mounted }}>
+      <div className={`theme-${theme} mode-${appMode} min-h-screen theme-shell`}>
         {children}
       </div>
     </ThemeContext.Provider>
