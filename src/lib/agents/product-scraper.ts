@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from "axios";
 import * as cheerio from "cheerio";
-import { chromium, Browser } from "playwright";
+import { chromium, Browser, Page, Response } from "playwright";
 import { parseAffiliateUrl } from "../affiliate";
 
 /**
@@ -34,6 +34,12 @@ const UA_POOL = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
 ];
+
+type CapturedApiPayload = {
+  url: string;
+  status: number;
+  body: unknown;
+};
 
 export class ProductScraper {
   private browser: Browser | null = null;
@@ -122,16 +128,7 @@ export class ProductScraper {
             // If cheerio found no image or title, fallback to Playwright
             if (!result.image_url || result.product_title === "Unknown Product") {
               const pwResult = await this.scrapeWithPlaywright(url);
-              // Merge: prefer Playwright data if cheerio was empty
-              if (pwResult.image_url && !result.image_url) result.image_url = pwResult.image_url;
-              if (pwResult.product_title && result.product_title === "Unknown Product") result.product_title = pwResult.product_title;
-              if (pwResult.price && !result.price) result.price = pwResult.price;
-              if (pwResult.original_price && !result.original_price) result.original_price = pwResult.original_price;
-              if (pwResult.discount && !result.discount) result.discount = pwResult.discount;
-              if (pwResult.rating && !result.rating) result.rating = pwResult.rating;
-              if (pwResult.description && !result.description) result.description = pwResult.description;
-              if (pwResult.brand && !result.brand) result.brand = pwResult.brand;
-              if (pwResult.review_count && !result.review_count) result.review_count = pwResult.review_count;
+              result = this.mergeProductData(result, pwResult);
             }
           } else {
             // Non-200 response, try Playwright
@@ -190,6 +187,44 @@ export class ProductScraper {
       error_reason: lastErrorMessage || "Max retries exceeded",
       scraped_at: scrapedAt,
     };
+  }
+
+  private mergeProductData(
+    base: Partial<ProductScrapeResult>,
+    incoming: Partial<ProductScrapeResult>,
+  ): Partial<ProductScrapeResult> {
+    const merged = { ...base };
+    const scalarKeys: (keyof ProductScrapeResult)[] = [
+      "product_title",
+      "image_url",
+      "description",
+      "price",
+      "original_price",
+      "discount",
+      "rating",
+      "review_count",
+      "brand",
+      "category",
+    ];
+
+    for (const key of scalarKeys) {
+      const baseValue = merged[key];
+      const incomingValue = incoming[key];
+      const baseEmpty = !baseValue || baseValue === "Unknown Product";
+      if (incomingValue && baseEmpty) {
+        merged[key] = incomingValue as never;
+      }
+    }
+
+    if ((!merged.features || merged.features.length === 0) && incoming.features?.length) {
+      merged.features = incoming.features;
+    }
+
+    if (!merged.error_reason && incoming.error_reason) {
+      merged.error_reason = incoming.error_reason;
+    }
+
+    return merged;
   }
 
   private isJsHeavy(url: string): boolean {
@@ -606,6 +641,338 @@ export class ProductScraper {
     return largestImg;
   }
 
+  private getPrimarySelectors(targetUrl: string): string[] {
+    if (/amazon/i.test(targetUrl)) {
+      return [
+        "#productTitle",
+        "#landingImage",
+        "#corePrice_feature_div .a-offscreen",
+        "#feature-bullets",
+      ];
+    }
+    if (/flipkart/i.test(targetUrl)) {
+      return [
+        "h1",
+        "img.DByuf4, img._396cs4, img.q6DClP",
+        "div.Nx9bqj, div._30jeq3",
+        "div._1AtVbE",
+      ];
+    }
+    if (/meesho/i.test(targetUrl)) {
+      return [
+        "h1",
+        "img",
+        "[data-testid='price'], h4, h3, h2",
+      ];
+    }
+    return [
+      "h1",
+      "[data-testid='product-title']",
+      "[itemprop='name']",
+      "[itemprop='price']",
+      "img[fetchpriority='high']",
+    ];
+  }
+
+  private async waitForProductSignals(page: Page, targetUrl: string): Promise<void> {
+    const selectors = this.getPrimarySelectors(targetUrl);
+    await Promise.any(
+      selectors.map((selector) =>
+        page.waitForSelector(selector, { state: "visible", timeout: 12000 }),
+      ),
+    ).catch(() => {});
+
+    await page
+      .waitForFunction(
+        () => {
+          const readyStateOk = document.readyState === "complete" || document.readyState === "interactive";
+          const bodyTextLength = document.body?.innerText?.trim().length ?? 0;
+          const hasJsonLd = document.querySelectorAll('script[type="application/ld+json"]').length > 0;
+          return readyStateOk && (bodyTextLength > 200 || hasJsonLd);
+        },
+        { timeout: 10000 },
+      )
+      .catch(() => {});
+  }
+
+  private async autoScroll(page: Page): Promise<void> {
+    await page.evaluate(async () => {
+      await new Promise<void>((resolve) => {
+        let totalHeight = 0;
+        let idleTicks = 0;
+        const maxIdleTicks = 4;
+        const step = Math.max(window.innerHeight * 0.8, 500);
+        let previousHeight = document.body.scrollHeight;
+
+        const timer = setInterval(() => {
+          window.scrollBy(0, step);
+          totalHeight += step;
+
+          const currentHeight = document.body.scrollHeight;
+          if (currentHeight === previousHeight) {
+            idleTicks += 1;
+          } else {
+            idleTicks = 0;
+            previousHeight = currentHeight;
+          }
+
+          const reachedBottom = window.innerHeight + window.scrollY >= currentHeight - 4;
+          const guardReached = totalHeight > 20000;
+
+          if ((reachedBottom && idleTicks >= maxIdleTicks) || guardReached) {
+            clearInterval(timer);
+            window.scrollTo(0, 0);
+            resolve();
+          }
+        }, 350);
+      });
+    });
+  }
+
+  private shouldCaptureApiResponse(response: Response): boolean {
+    const url = response.url();
+    const resourceType = response.request().resourceType();
+    const contentType = response.headers()["content-type"] || "";
+    const isJson = /application\/json|application\/graphql-response\+json|text\/json/i.test(contentType);
+    const looksRelevant = /product|products|pdp|item|sku|details|graphql|api/i.test(url);
+    return response.ok() && ["xhr", "fetch"].includes(resourceType) && isJson && looksRelevant;
+  }
+
+  private async captureApiPayload(response: Response): Promise<CapturedApiPayload | null> {
+    if (!this.shouldCaptureApiResponse(response)) return null;
+
+    try {
+      const text = await response.text();
+      if (!text || text.length > 1_000_000) return null;
+      const body = JSON.parse(text);
+      return {
+        url: response.url(),
+        status: response.status(),
+        body,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private findCandidateProductNode(input: unknown, depth: number = 0): Record<string, any> | null {
+    if (!input || typeof input !== "object" || depth > 6) return null;
+
+    if (Array.isArray(input)) {
+      for (const item of input) {
+        const found = this.findCandidateProductNode(item, depth + 1);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    const obj = input as Record<string, any>;
+    const directType = typeof obj["__typename"] === "string" ? obj["__typename"].toLowerCase() : "";
+    const schemaType = typeof obj["@type"] === "string" ? obj["@type"].toLowerCase() : "";
+    const looksProductLike =
+      directType.includes("product")
+      || schemaType.includes("product")
+      || (("title" in obj || "name" in obj) && ("price" in obj || "offers" in obj || "images" in obj || "image" in obj));
+
+    if (looksProductLike) {
+      return obj;
+    }
+
+    for (const value of Object.values(obj)) {
+      const found = this.findCandidateProductNode(value, depth + 1);
+      if (found) return found;
+    }
+
+    return null;
+  }
+
+  private extractFromApiPayloads(payloads: CapturedApiPayload[]): Partial<ProductScrapeResult> {
+    const result: Partial<ProductScrapeResult> = {};
+
+    for (const payload of payloads) {
+      const product = this.findCandidateProductNode(payload.body);
+      if (!product) continue;
+
+      if (!result.product_title) {
+        result.product_title = String(product.title || product.name || product.productTitle || "").trim();
+      }
+
+      if (!result.description) {
+        result.description = String(
+          product.description || product.shortDescription || product.summary || "",
+        ).trim();
+      }
+
+      if (!result.brand) {
+        result.brand = String(
+          product.brand?.name || product.brand || product.manufacturer || "",
+        ).trim();
+      }
+
+      if (!result.category) {
+        result.category = String(
+          product.category?.name || product.category || product.department || "",
+        ).trim();
+      }
+
+      const priceValue =
+        product.price?.formattedValue
+        || product.price?.displayValue
+        || product.price?.value
+        || product.offerPrice
+        || product.sellingPrice
+        || product.salePrice
+        || product.currentPrice;
+      if (!result.price && priceValue) {
+        result.price = String(priceValue).trim();
+      }
+
+      const originalPriceValue =
+        product.mrp
+        || product.listPrice?.formattedValue
+        || product.listPrice?.value
+        || product.originalPrice
+        || product.strikePrice;
+      if (!result.original_price && originalPriceValue) {
+        result.original_price = String(originalPriceValue).trim();
+      }
+
+      const ratingValue =
+        product.rating?.average
+        || product.rating?.value
+        || product.averageRating
+        || product.rating;
+      if (!result.rating && ratingValue) {
+        result.rating = String(ratingValue).trim();
+      }
+
+      const reviewCountValue =
+        product.rating?.count
+        || product.reviewCount
+        || product.ratingsCount
+        || product.totalReviews;
+      if (!result.review_count && reviewCountValue) {
+        result.review_count = String(reviewCountValue).replace(/[^\d]/g, "");
+      }
+
+      const imageCandidates = [
+        product.image,
+        product.primaryImage,
+        product.images?.[0],
+        product.media?.[0],
+        product.gallery?.[0],
+      ];
+      if (!result.image_url) {
+        for (const candidate of imageCandidates) {
+          const url = typeof candidate === "string" ? candidate : candidate?.url || candidate?.src;
+          if (url && !String(url).startsWith("data:")) {
+            result.image_url = String(url);
+            break;
+          }
+        }
+      }
+
+      if ((!result.features || result.features.length === 0) && Array.isArray(product.features)) {
+        result.features = product.features
+          .map((feature) => String(feature?.text || feature?.value || feature || "").trim())
+          .filter((feature) => feature.length > 4)
+          .slice(0, 8);
+      }
+    }
+
+    return result;
+  }
+
+  private async extractDataFromDom(page: Page, targetUrl: string): Promise<Partial<ProductScrapeResult>> {
+    const domSnapshot = await page.evaluate((url) => {
+      const cleanText = (value?: string | null) => value?.replace(/\s+/g, " ").trim() || "";
+      const firstText = (selectors: string[]) => {
+        for (const selector of selectors) {
+          const text = cleanText(document.querySelector(selector)?.textContent);
+          if (text) return text;
+        }
+        return "";
+      };
+      const firstAttr = (selectors: string[], attr: string) => {
+        for (const selector of selectors) {
+          const value = cleanText(document.querySelector(selector)?.getAttribute(attr));
+          if (value && !value.startsWith("data:")) return value;
+        }
+        return "";
+      };
+      const firstMeta = (selectors: string[]) => {
+        for (const selector of selectors) {
+          const value = cleanText(document.querySelector(selector)?.getAttribute("content"));
+          if (value) return value;
+        }
+        return "";
+      };
+      const collectFeatures = (selectors: string[]) => {
+        const items = new Set<string>();
+        for (const selector of selectors) {
+          for (const el of Array.from(document.querySelectorAll(selector))) {
+            const text = cleanText(el.textContent);
+            if (text.length > 4 && text.length < 300) items.add(text);
+          }
+        }
+        return Array.from(items).slice(0, 8);
+      };
+
+      const titleSelectors = /amazon/i.test(url)
+        ? ["#productTitle", "h1#title span", "h1 span"]
+        : /flipkart/i.test(url)
+          ? ["h1 span.VU-ZEz", "h1.yhB1nd span", "h1._35KyD6", "h1"]
+          : ["[data-testid='product-title']", "[itemprop='name']", "h1"];
+      const priceSelectors = /amazon/i.test(url)
+        ? [".priceToPay .a-offscreen", ".apexPriceToPay .a-offscreen", "#corePrice_feature_div .a-offscreen", ".a-price .a-offscreen"]
+        : /flipkart/i.test(url)
+          ? ["div.Nx9bqj.CxhGGd", "div.Nx9bqj", "div._30jeq3._16Jk6d", "div._30jeq3"]
+          : ["[data-testid='price']", "[itemprop='price']", ".price", ".sale-price"];
+      const originalPriceSelectors = /amazon/i.test(url)
+        ? [".basisPrice .a-offscreen", ".a-price.a-text-price .a-offscreen", ".priceBlockStrikePriceString"]
+        : /flipkart/i.test(url)
+          ? ["div.yRaY8j.A6\\+E6v", "div.yRaY8j", "div._3I9_wc._2p6lqe"]
+          : [".original-price", ".compare-at-price", ".strike-price"];
+      const imageSelectors = /amazon/i.test(url)
+        ? ["#landingImage", "#imgTagWrapperId img", "#main-image-container img"]
+        : /flipkart/i.test(url)
+          ? ["img.DByuf4", "img._396cs4", "img.q6DClP", "div.CXW8mj img"]
+          : ["img[fetchpriority='high']", "main img", "[data-testid='product-image'] img", "img"];
+
+      return {
+        product_title: firstText(titleSelectors),
+        price: firstText(priceSelectors),
+        original_price: firstText(originalPriceSelectors),
+        description: firstText(["#productDescription p", "[data-testid='product-description']", "[itemprop='description']"])
+          || firstMeta(["meta[property='og:description']", "meta[name='description']"]),
+        image_url: firstAttr(imageSelectors, "src")
+          || firstAttr(imageSelectors, "data-src")
+          || firstMeta(["meta[property='og:image']", "meta[name='twitter:image']"]),
+        brand: firstText(["#bylineInfo", "[data-testid='brand']", "[itemprop='brand']", ".brand"]),
+        rating: firstText(["#acrPopover", "span.a-icon-alt", "div.XQDdHH", "div._3LWZlK", "[data-testid='rating']"]),
+        review_count: firstText(["#acrCustomerReviewText", "span.Wphh3N span", "span._2_R_DZ span", "[data-testid='review-count']"]),
+        features: collectFeatures([
+          "#feature-bullets li span.a-list-item",
+          "li._21Ahn- div",
+          "[data-testid='feature-bullet']",
+          "[itemprop='description'] li",
+        ]),
+      };
+    }, targetUrl);
+
+    if (domSnapshot.rating) {
+      const ratingMatch = domSnapshot.rating.match(/([\d.]+)/);
+      domSnapshot.rating = ratingMatch?.[1] || domSnapshot.rating;
+    }
+
+    if (domSnapshot.review_count) {
+      const reviewMatch = domSnapshot.review_count.match(/([\d,]+)/);
+      domSnapshot.review_count = reviewMatch?.[1]?.replace(/,/g, "") || domSnapshot.review_count;
+    }
+
+    return domSnapshot;
+  }
+
   private async scrapeWithPlaywright(targetUrl: string): Promise<Partial<ProductScrapeResult>> {
     const browser = await this.initBrowser();
     const context = await browser.newContext({
@@ -613,32 +980,40 @@ export class ProductScraper {
       viewport: { width: 1920, height: 1080 },
     });
     const page = await context.newPage();
+    const capturedApiPayloads: CapturedApiPayload[] = [];
+    const captureTasks: Promise<void>[] = [];
 
     try {
       if (!targetUrl) throw new Error("Scrape Target URL is undefined");
 
       // Block heavy resources for speed
       await page.route(/\.(woff2?|ttf|eot|mp4|mp3|avi|mov)$/i, (route) => route.abort());
+      page.on("response", (response) => {
+        const task = this.captureApiPayload(response)
+          .then((payload) => {
+            if (payload) capturedApiPayloads.push(payload);
+          })
+          .catch(() => {});
+        captureTasks.push(task);
+      });
 
       await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
+      await page.waitForLoadState("load", { timeout: 15000 }).catch(() => {});
+      await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {});
+      await this.waitForProductSignals(page, targetUrl);
+      await this.autoScroll(page);
+      await page.waitForLoadState("networkidle", { timeout: 6000 }).catch(() => {});
+      await Promise.allSettled(captureTasks);
 
-      // Wait for key content to render based on platform
-      if (/amazon/i.test(targetUrl)) {
-        await page.waitForSelector("#landingImage, #imgTagWrapperId img", { timeout: 8000 }).catch(() => {});
-        await page.waitForSelector("#productTitle, h1#title", { timeout: 5000 }).catch(() => {});
-      } else if (/flipkart/i.test(targetUrl)) {
-        await page.waitForSelector("img.DByuf4, img._396cs4, img.q6DClP", { timeout: 8000 }).catch(() => {});
-        await page.waitForSelector("h1 span", { timeout: 5000 }).catch(() => {});
-      } else {
-        await page.waitForSelector("h1, [data-testid='product-title']", { timeout: 5000 }).catch(() => {});
-      }
-
-      // Give JS frameworks a moment to hydrate
-      await this.sleep(2000);
-
+      const apiExtracted = this.extractFromApiPayloads(capturedApiPayloads);
+      const domExtracted = await this.extractDataFromDom(page, targetUrl);
       const content = await page.content();
       const $ = cheerio.load(content);
-      const extracted = this.extractDataFromCheerio($, targetUrl);
+      const htmlExtracted = this.extractDataFromCheerio($, targetUrl);
+      const extracted = this.mergeProductData(
+        this.mergeProductData(apiExtracted, domExtracted),
+        htmlExtracted,
+      );
 
       await context.close();
       return extracted;
