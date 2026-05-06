@@ -42,17 +42,3 @@ export function ThemeToggle() {
     </motion.button>
   );
 }
-        </div>
-      </div>
-
-      <div className="relative z-10 flex items-center justify-center">
-        <div className="p-2 rounded-xl bg-black/40 border border-white/5 opacity-60 group-hover:opacity-100 group-hover:border-white/15 transition-all">
-          <Sparkles 
-            size={14} 
-            className={`transition-colors duration-500 animate-pulse-breathing ${isLight ? "text-warning" : "text-primary"}`} 
-          />
-        </div>
-      </div>
-    </motion.button>
-  );
-}

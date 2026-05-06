@@ -22,19 +22,22 @@ export function ThemeProvider({
   initialTheme?: Theme;
 }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
-  const [appMode, setAppMode] = useState<"light" | "dark">("dark");
+  const [appMode, setAppMode] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "dark";
+
+    const savedMode = window.localStorage.getItem("storix-app-mode");
+    if (savedMode === "light" || savedMode === "dark") {
+      return savedMode;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const savedMode = localStorage.getItem("storix-app-mode") as "light" | "dark";
     document.documentElement.setAttribute("data-theme", theme);
-    if (savedMode) {
-      setAppMode(savedMode);
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      setAppMode("light");
-    }
     setMounted(true);
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     if (!mounted) return;
