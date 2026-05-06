@@ -407,6 +407,12 @@ export class ProductScraper {
       }
       if (Array.isArray(item)) {
         products.push(...this.findProductsInJson(item));
+        continue;
+      }
+      for (const value of Object.values(item)) {
+        if (value && typeof value === "object") {
+          products.push(...this.findProductsInJson(Array.isArray(value) ? value : [value]));
+        }
       }
     }
     return products;
