@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { chromium, Browser, Page, Response } from "playwright";
-import { OpenAIProductExtractor, type AiProductExtractionResult } from "./openai-product-extractor";
+import { GeminiProductExtractor, type AiProductExtractionResult } from "./gemini-product-extractor";
 import {
   classifyScrapeError,
   deriveScrapeStatus,
@@ -59,11 +59,13 @@ type JsonObject = Record<string, unknown>;
 export class ProductScraper {
   private browser: Browser | null = null;
   private affiliateTag: string;
-  private aiExtractor: OpenAIProductExtractor;
+  private aiExtractor: GeminiProductExtractor;
 
   constructor(affiliateTag: string = "YOUR_TAG") {
     this.affiliateTag = affiliateTag;
-    this.aiExtractor = new OpenAIProductExtractor(process.env.OPENAI_API_KEY);
+    this.aiExtractor = new GeminiProductExtractor(
+      process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+    );
   }
 
   private getRandomUA() {
