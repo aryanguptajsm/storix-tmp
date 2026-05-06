@@ -514,6 +514,10 @@ export class ProductScraper {
     }
   }
 
+  private isRecord(value: unknown): value is JsonObject {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
   private extractDataFromCheerio($: cheerio.CheerioAPI, url: string): Partial<ProductScrapeResult> {
     // 1. Try JSON-LD first — most reliable structured data source
     const jsonLdData = this.extractFromJsonLd($);
@@ -564,12 +568,19 @@ export class ProductScraper {
         }
 
         if (product.image && !result.image_url) {
-          if (Array.isArray(product.image)) {
-            result.image_url = typeof product.image[0] === "string" ? product.image[0] : product.image[0]?.url;
-          } else if (typeof product.image === "string") {
-            result.image_url = product.image;
-          } else if (product.image?.url) {
-            result.image_url = product.image.url;
+          const image = product.image;
+          if (Array.isArray(image)) {
+            const firstImage = image[0];
+            result.image_url =
+              typeof firstImage === "string"
+                ? firstImage
+                : this.isRecord(firstImage) && typeof firstImage.url === "string"
+                  ? firstImage.url
+                  : undefined;
+          } else if (typeof image === "string") {
+            result.image_url = image;
+          } else if (this.isRecord(image) && typeof image.url === "string") {
+            result.image_url = image.url;
           }
         }
 
@@ -578,7 +589,12 @@ export class ProductScraper {
         }
 
         if (product.brand && !result.brand) {
-          result.brand = typeof product.brand === "string" ? product.brand : product.brand?.name || "";
+          result.brand =
+            typeof product.brand === "string"
+              ? product.brand
+              : this.isRecord(product.brand) && typeof product.brand.name === "string"
+                ? product.brand.name
+                : "";
         }
 
         if (product.category && !result.category) {
@@ -589,20 +605,23 @@ export class ProductScraper {
         const offers = product.offers;
         if (offers && !result.price) {
           const offerObj = Array.isArray(offers) ? offers[0] : offers;
-          const curr = offerObj.priceCurrency === "INR" ? "₹" : offerObj.priceCurrency === "USD" ? "$" : offerObj.priceCurrency || "";
-          if (offerObj.price) {
-            result.price = `${curr}${offerObj.price}`;
-          } else if (offerObj.lowPrice) {
-            result.price = `${curr}${offerObj.lowPrice}`;
-          }
-          if (offerObj.highPrice && offerObj.lowPrice) {
-            result.original_price = `${curr}${offerObj.highPrice}`;
+          if (this.isRecord(offerObj)) {
+            const priceCurrency = typeof offerObj.priceCurrency === "string" ? offerObj.priceCurrency : "";
+            const curr = priceCurrency === "INR" ? "₹" : priceCurrency === "USD" ? "$" : priceCurrency;
+            if (offerObj.price) {
+              result.price = `${curr}${String(offerObj.price)}`;
+            } else if (offerObj.lowPrice) {
+              result.price = `${curr}${String(offerObj.lowPrice)}`;
+            }
+            if (offerObj.highPrice && offerObj.lowPrice) {
+              result.original_price = `${curr}${String(offerObj.highPrice)}`;
+            }
           }
         }
 
         // Extract rating
         const aggRating = product.aggregateRating;
-        if (aggRating && !result.rating) {
+        if (this.isRecord(aggRating) && !result.rating) {
           result.rating = String(aggRating.ratingValue || "");
           result.review_count = String(aggRating.reviewCount || aggRating.ratingCount || "");
         }
@@ -619,7 +638,7 @@ export class ProductScraper {
       if (!item || typeof item !== "object") continue;
       const jsonItem = item as JsonObject;
       if (jsonItem["@type"] === "Product" || jsonItem["@type"] === "IndividualProduct") {
-        products.push(item);
+        products.push(jsonItem);
       }
       if (Array.isArray(item)) {
         products.push(...this.findProductsInJson(item));
@@ -1025,22 +1044,25 @@ export class ProductScraper {
         ).trim();
       }
 
+      const brandObject = this.isRecord(product.brand) ? product.brand : null;
       if (!result.brand) {
         result.brand = String(
-          product.brand?.name || product.brand || product.manufacturer || "",
+          (brandObject?.name as string | undefined) || product.brand || product.manufacturer || "",
         ).trim();
       }
 
+      const categoryObject = this.isRecord(product.category) ? product.category : null;
       if (!result.category) {
         result.category = String(
-          product.category?.name || product.category || product.department || "",
+          (categoryObject?.name as string | undefined) || product.category || product.department || "",
         ).trim();
       }
 
+      const priceObject = this.isRecord(product.price) ? product.price : null;
       const priceValue =
-        product.price?.formattedValue
-        || product.price?.displayValue
-        || product.price?.value
+        priceObject?.formattedValue
+        || priceObject?.displayValue
+        || priceObject?.value
         || product.offerPrice
         || product.sellingPrice
         || product.salePrice
@@ -1049,19 +1071,21 @@ export class ProductScraper {
         result.price = String(priceValue).trim();
       }
 
+      const listPriceObject = this.isRecord(product.listPrice) ? product.listPrice : null;
       const originalPriceValue =
         product.mrp
-        || product.listPrice?.formattedValue
-        || product.listPrice?.value
+        || listPriceObject?.formattedValue
+        || listPriceObject?.value
         || product.originalPrice
         || product.strikePrice;
       if (!result.original_price && originalPriceValue) {
         result.original_price = String(originalPriceValue).trim();
       }
 
+      const ratingObject = this.isRecord(product.rating) ? product.rating : null;
       const ratingValue =
-        product.rating?.average
-        || product.rating?.value
+        ratingObject?.average
+        || ratingObject?.value
         || product.averageRating
         || product.rating;
       if (!result.rating && ratingValue) {
@@ -1069,7 +1093,7 @@ export class ProductScraper {
       }
 
       const reviewCountValue =
-        product.rating?.count
+        ratingObject?.count
         || product.reviewCount
         || product.ratingsCount
         || product.totalReviews;
@@ -1080,9 +1104,9 @@ export class ProductScraper {
       const imageCandidates = [
         product.image,
         product.primaryImage,
-        product.images?.[0],
-        product.media?.[0],
-        product.gallery?.[0],
+        Array.isArray(product.images) ? product.images[0] : undefined,
+        Array.isArray(product.media) ? product.media[0] : undefined,
+        Array.isArray(product.gallery) ? product.gallery[0] : undefined,
       ];
       if (!result.image_url) {
         for (const candidate of imageCandidates) {
