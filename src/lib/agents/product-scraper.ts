@@ -1,7 +1,6 @@
-import axios, { type AxiosResponse } from "axios";
+import axios from "axios";
 import * as cheerio from "cheerio";
 import { chromium, Browser, Page, Response } from "playwright";
-import { parseAffiliateUrl } from "../affiliate";
 import { OpenAIProductExtractor, type AiProductExtractionResult } from "./openai-product-extractor";
 import {
   classifyScrapeError,
@@ -54,6 +53,8 @@ type CapturedApiPayload = {
   status: number;
   body: unknown;
 };
+
+type JsonObject = Record<string, unknown>;
 
 export class ProductScraper {
   private browser: Browser | null = null;
@@ -612,18 +613,19 @@ export class ProductScraper {
   }
 
   /** Recursively find Product-type objects in JSON-LD */
-  private findProductsInJson(items: any[]): any[] {
-    const products: any[] = [];
+  private findProductsInJson(items: unknown[]): JsonObject[] {
+    const products: JsonObject[] = [];
     for (const item of items) {
       if (!item || typeof item !== "object") continue;
-      if (item["@type"] === "Product" || item["@type"] === "IndividualProduct") {
+      const jsonItem = item as JsonObject;
+      if (jsonItem["@type"] === "Product" || jsonItem["@type"] === "IndividualProduct") {
         products.push(item);
       }
       if (Array.isArray(item)) {
         products.push(...this.findProductsInJson(item));
         continue;
       }
-      for (const value of Object.values(item)) {
+      for (const value of Object.values(jsonItem)) {
         if (value && typeof value === "object") {
           products.push(...this.findProductsInJson(Array.isArray(value) ? value : [value]));
         }
@@ -975,7 +977,7 @@ export class ProductScraper {
     }
   }
 
-  private findCandidateProductNode(input: unknown, depth: number = 0): Record<string, any> | null {
+  private findCandidateProductNode(input: unknown, depth: number = 0): JsonObject | null {
     if (!input || typeof input !== "object" || depth > 6) return null;
 
     if (Array.isArray(input)) {
@@ -986,7 +988,7 @@ export class ProductScraper {
       return null;
     }
 
-    const obj = input as Record<string, any>;
+    const obj = input as JsonObject;
     const directType = typeof obj["__typename"] === "string" ? obj["__typename"].toLowerCase() : "";
     const schemaType = typeof obj["@type"] === "string" ? obj["@type"].toLowerCase() : "";
     const looksProductLike =
@@ -1237,7 +1239,7 @@ export class ProductScraper {
 
       await context.close();
       return { data: extracted, html: content };
-    } catch (e: any) {
+    } catch (e: unknown) {
       await context.close();
       const msg = e instanceof Error ? e.message : String(e);
       return { data: { error_reason: `Playwright error: ${msg}` }, html: "" };
