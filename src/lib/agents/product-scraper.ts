@@ -2,6 +2,16 @@ import axios, { type AxiosResponse } from "axios";
 import * as cheerio from "cheerio";
 import { chromium, Browser, Page, Response } from "playwright";
 import { parseAffiliateUrl } from "../affiliate";
+import { OpenAIProductExtractor, type AiProductExtractionResult } from "./openai-product-extractor";
+import {
+  classifyScrapeError,
+  deriveScrapeStatus,
+  detectPlatformFromUrl,
+  type ScrapeAttemptLog,
+  type ScrapeErrorType,
+  type ScrapePlatform,
+  type ScrapeStatus,
+} from "@/lib/scraper/contracts";
 
 /**
  * ProductScraper Agent
@@ -24,6 +34,10 @@ export interface ProductScrapeResult {
   image_status: "ok" | "not_found" | "error";
   http_code: number;
   error_reason?: string;
+  error_type?: ScrapeErrorType;
+  status: ScrapeStatus;
+  platform: ScrapePlatform;
+  attempts: ScrapeAttemptLog[];
   scraped_at: string;
 }
 
@@ -44,9 +58,11 @@ type CapturedApiPayload = {
 export class ProductScraper {
   private browser: Browser | null = null;
   private affiliateTag: string;
+  private aiExtractor: OpenAIProductExtractor;
 
   constructor(affiliateTag: string = "YOUR_TAG") {
     this.affiliateTag = affiliateTag;
+    this.aiExtractor = new OpenAIProductExtractor(process.env.OPENAI_API_KEY);
   }
 
   private getRandomUA() {
@@ -59,7 +75,14 @@ export class ProductScraper {
 
   private async initBrowser() {
     if (!this.browser) {
-      this.browser = await chromium.launch({ headless: true });
+      this.browser = await chromium.launch({
+        headless: true,
+        args: [
+          "--disable-blink-features=AutomationControlled",
+          "--disable-dev-shm-usage",
+          "--no-sandbox",
+        ],
+      });
     }
     return this.browser;
   }
@@ -80,25 +103,42 @@ export class ProductScraper {
     let delay = 2000 + Math.random() * 2000; // 2-4s initial delay
     let lastHttpCode = 0;
     let lastErrorMessage = "Scraping failed";
+    const platform = detectPlatformFromUrl(url);
+    const attempts: ScrapeAttemptLog[] = [];
 
     const finalUrl = this.appendAffiliateTag(url);
 
     while (attempt <= retryCount) {
       try {
         await this.sleep(delay);
+        const currentAttempt = attempt + 1;
 
         let result: Partial<ProductScrapeResult> = {
           product_url: finalUrl,
           scraped_at: scrapedAt,
         };
+        let capturedHtml = "";
 
         // JS-heavy sites go straight to Playwright for best results
         if (this.isJsHeavy(url)) {
+          attempts.push({
+            attempt: currentAttempt,
+            strategy: "playwright",
+            message: `Playwright extraction started for ${platform}`,
+            at: new Date().toISOString(),
+          });
           const pwResult = await this.scrapeWithPlaywright(url);
-          result = { ...result, ...pwResult, http_code: 200 };
+          capturedHtml = pwResult.html;
+          result = { ...result, ...pwResult.data, http_code: 200 };
           lastHttpCode = 200;
         } else {
           // Try standard fetch first (fast)
+          attempts.push({
+            attempt: currentAttempt,
+            strategy: "http",
+            message: `HTTP extraction started for ${platform}`,
+            at: new Date().toISOString(),
+          });
           const response = await axios.get(url, {
             headers: {
               "User-Agent": this.getRandomUA(),
@@ -108,9 +148,17 @@ export class ProductScraper {
             timeout: 15000,
             validateStatus: (status) => status < 500,
           });
+          capturedHtml = typeof response.data === "string" ? response.data : "";
 
           if (response.status === 429) {
             console.warn(`429 Too Many Requests for ${url}. Pausing 30s...`);
+            attempts.push({
+              attempt: currentAttempt,
+              strategy: "http",
+              message: "Remote site returned 429 rate limit",
+              error_type: "blocked",
+              at: new Date().toISOString(),
+            });
             await this.sleep(30000);
             attempt++;
             delay *= 2;
@@ -127,15 +175,39 @@ export class ProductScraper {
 
             // If cheerio found no image or title, fallback to Playwright
             if (!result.image_url || result.product_title === "Unknown Product") {
+              attempts.push({
+                attempt: currentAttempt,
+                strategy: "playwright",
+                message: "Fallback to Playwright after incomplete HTTP extraction",
+                at: new Date().toISOString(),
+              });
               const pwResult = await this.scrapeWithPlaywright(url);
-              result = this.mergeProductData(result, pwResult);
+              if (pwResult.html) capturedHtml = pwResult.html;
+              result = this.mergeProductData(result, pwResult.data);
             }
           } else {
             // Non-200 response, try Playwright
+            attempts.push({
+              attempt: currentAttempt,
+              strategy: "playwright",
+              message: `Fallback to Playwright after HTTP ${response.status}`,
+              at: new Date().toISOString(),
+            });
             const pwResult = await this.scrapeWithPlaywright(url);
-            result = { ...result, ...pwResult };
+            if (pwResult.html) capturedHtml = pwResult.html;
+            result = { ...result, ...pwResult.data };
           }
         }
+
+        const aiFallbackResult = await this.runAiFallback({
+          url,
+          platform,
+          html: capturedHtml,
+          result,
+          currentAttempt,
+          attempts,
+        });
+        result = aiFallbackResult.result;
 
         // Validate image URL
         if (result.image_url) {
@@ -158,11 +230,48 @@ export class ProductScraper {
           result.discount = this.calculateDiscount(result.price, result.original_price);
         }
 
-        return result as ProductScrapeResult;
+        const status = deriveScrapeStatus({
+          title: result.product_title,
+          price: result.price,
+          image: result.image_url,
+          rating: result.rating,
+          review_count: result.review_count,
+          brand: result.brand,
+        });
+
+        return {
+          product_title: result.product_title || "Unknown Product",
+          product_url: result.product_url || finalUrl,
+          image_url: result.image_url || null,
+          description: result.description,
+          price: result.price,
+          original_price: result.original_price,
+          discount: result.discount,
+          rating: result.rating,
+          review_count: result.review_count,
+          brand: result.brand,
+          category: result.category,
+          features: result.features,
+          image_status: result.image_status || "not_found",
+          http_code: result.http_code || lastHttpCode,
+          error_reason: result.error_reason,
+          error_type: result.error_reason ? classifyScrapeError(result.error_reason) : undefined,
+          status,
+          platform,
+          attempts,
+          scraped_at: scrapedAt,
+        };
       } catch (error: unknown) {
         attempt++;
         const errorMessage = error instanceof Error ? error.message : String(error);
         lastErrorMessage = errorMessage;
+        attempts.push({
+          attempt,
+          strategy: this.isJsHeavy(url) ? "playwright" : "http",
+          message: errorMessage,
+          error_type: classifyScrapeError(errorMessage),
+          at: new Date().toISOString(),
+        });
         if (attempt > retryCount) {
           return {
             product_title: "Error",
@@ -171,6 +280,10 @@ export class ProductScraper {
             image_status: "error",
             http_code: lastHttpCode,
             error_reason: lastErrorMessage,
+            error_type: classifyScrapeError(lastErrorMessage),
+            status: "failed",
+            platform,
+            attempts,
             scraped_at: scrapedAt,
           };
         }
@@ -185,6 +298,10 @@ export class ProductScraper {
       image_status: "error",
       http_code: lastHttpCode,
       error_reason: lastErrorMessage || "Max retries exceeded",
+      error_type: classifyScrapeError(lastErrorMessage || "Max retries exceeded"),
+      status: "failed",
+      platform,
+      attempts,
       scraped_at: scrapedAt,
     };
   }
@@ -230,6 +347,103 @@ export class ProductScraper {
   private isJsHeavy(url: string): boolean {
     const jsHeavyDomains = [/amazon/i, /flipkart/i, /ebay/i, /meesho/i, /myntra/i, /ajio/i];
     return jsHeavyDomains.some((d) => d.test(url));
+  }
+
+  private shouldUseAiFallback(result: Partial<ProductScrapeResult>): boolean {
+    const missingCoreFields = [
+      !result.product_title || result.product_title === "Unknown Product",
+      !result.price,
+      !result.image_url,
+      !result.brand,
+      !result.rating,
+      !result.review_count,
+    ].filter(Boolean).length;
+
+    return missingCoreFields >= 2;
+  }
+
+  private mapAiResult(aiResult: AiProductExtractionResult): Partial<ProductScrapeResult> {
+    return {
+      product_title: aiResult.title || undefined,
+      price: aiResult.price || undefined,
+      image_url: aiResult.image || undefined,
+      rating: aiResult.rating || undefined,
+      review_count: aiResult.review_count || undefined,
+      brand: aiResult.brand || undefined,
+    };
+  }
+
+  private async runAiFallback(params: {
+    url: string;
+    platform: ScrapePlatform;
+    html: string;
+    result: Partial<ProductScrapeResult>;
+    currentAttempt: number;
+    attempts: ScrapeAttemptLog[];
+  }): Promise<{ result: Partial<ProductScrapeResult> }> {
+    const { url, platform, html, result, currentAttempt, attempts } = params;
+
+    if (!html || !this.shouldUseAiFallback(result) || !this.aiExtractor.isConfigured()) {
+      return { result };
+    }
+
+    attempts.push({
+      attempt: currentAttempt,
+      strategy: "ai_fallback",
+      message: "AI fallback started for missing fields",
+      at: new Date().toISOString(),
+    });
+
+    try {
+      const aiResult = await this.aiExtractor.extractFromHtml({
+        url,
+        platform,
+        html,
+        existing: {
+          title: result.product_title || null,
+          price: result.price || null,
+          image: result.image_url || null,
+          rating: result.rating || null,
+          review_count: result.review_count || null,
+          brand: result.brand || null,
+        },
+      });
+
+      if (!aiResult) {
+        attempts.push({
+          attempt: currentAttempt,
+          strategy: "ai_fallback",
+          message: "AI fallback skipped or returned no structured payload",
+          error_type: "ai_error",
+          at: new Date().toISOString(),
+        });
+        return { result };
+      }
+
+      attempts.push({
+        attempt: currentAttempt,
+        strategy: "ai_fallback",
+        message: "AI fallback returned structured fields",
+        at: new Date().toISOString(),
+      });
+
+      return { result: this.mergeProductData(result, this.mapAiResult(aiResult)) };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      attempts.push({
+        attempt: currentAttempt,
+        strategy: "ai_fallback",
+        message,
+        error_type: "ai_error",
+        at: new Date().toISOString(),
+      });
+
+      if (!result.error_reason) {
+        result.error_reason = `AI fallback error: ${message}`;
+      }
+
+      return { result };
+    }
   }
 
   private appendAffiliateTag(url: string): string {
@@ -979,7 +1193,7 @@ export class ProductScraper {
     return domSnapshot;
   }
 
-  private async scrapeWithPlaywright(targetUrl: string): Promise<Partial<ProductScrapeResult>> {
+  private async scrapeWithPlaywright(targetUrl: string): Promise<{ data: Partial<ProductScrapeResult>; html: string }> {
     const browser = await this.initBrowser();
     const context = await browser.newContext({
       userAgent: this.getRandomUA(),
@@ -1022,11 +1236,11 @@ export class ProductScraper {
       );
 
       await context.close();
-      return extracted;
+      return { data: extracted, html: content };
     } catch (e: any) {
       await context.close();
       const msg = e instanceof Error ? e.message : String(e);
-      return { error_reason: `Playwright error: ${msg}` };
+      return { data: { error_reason: `Playwright error: ${msg}` }, html: "" };
     }
   }
 }
