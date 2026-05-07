@@ -220,7 +220,7 @@ export default async function DashboardPage() {
             </CardHeader>
             <CardContent className="px-0 pb-0 pt-4 relative z-10">
               <div className="dashboard-title text-4xl lg:text-5xl font-black tracking-tighter">
-                $0.00
+                $0
               </div>
               <div className="flex items-center gap-2 mt-2">
                  <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
