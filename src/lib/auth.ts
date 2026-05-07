@@ -5,10 +5,31 @@ import type { UserProfile } from "./types";
 
 let userPromise: Promise<User | null> | null = null;
 
-export async function signUp(email: string, password: string) {
+export async function signUp(
+  email: string,
+  password: string,
+  profile: { username: string; storeName?: string }
+) {
   userPromise = null;
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
+  const response = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      username: profile.username,
+      storeName: profile.storeName,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Signup failed.");
+  }
+
   return data;
 }
 

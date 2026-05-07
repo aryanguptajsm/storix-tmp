@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { signUp, updateProfile, signInWithGoogle } from "@/lib/auth";
+import { useSearchParams } from "next/navigation";
+import { signUp, signInWithGoogle } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -33,9 +33,8 @@ export function SignupClient() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
   const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
-  
-  const router = useRouter();
   const searchParams = useSearchParams();
   const urlError = searchParams.get("error");
   
@@ -78,16 +77,13 @@ export function SignupClient() {
     setError(null);
 
     try {
-      const { user } = await signUp(formData.email, formData.password);
-      if (user) {
-        // Update profile with username and store name
-        await updateProfile(user.id, {
-          username: formData.username.toLowerCase().replace(/\s+/g, ""),
-          store_name: formData.storeName || `${formData.username}'s Store`,
-        });
-        toast.success("Account created!");
-        router.push("/dashboard");
-      }
+      const response = await signUp(formData.email, formData.password, {
+        username: formData.username,
+        storeName: formData.storeName,
+      });
+
+      setVerificationEmail(response.email || formData.email);
+      toast.success("Verification email sent.");
     } catch (err: any) {
       const msg = err.message || "Signup failed. Please try again.";
       setError(msg);
@@ -164,6 +160,30 @@ export function SignupClient() {
           <ScrollReveal variant="zoom-in" delay={0.4}>
             <Card size="medium" variant="glass" className="overflow-hidden border-white/5 shadow-3xl glass-premium-animated">
             <CardContent className="space-y-6 pt-10">
+              {verificationEmail ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6 text-center"
+                >
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                    <Mail className="h-7 w-7 text-primary" />
+                  </div>
+                  <div className="space-y-3">
+                    <h2 className="text-2xl font-black text-white">Check your inbox</h2>
+                    <p className="text-sm leading-6 text-white/60">
+                      We sent a verification link to <span className="text-white">{verificationEmail}</span>.
+                      Open the email, confirm your account, then you&apos;ll land in your dashboard.
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-xs font-bold uppercase tracking-[0.2em] text-white/40">
+                    If you do not see it, check spam or promotions.
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                    Already verified? <Link href="/login" className="text-primary hover:text-primary-light transition-colors ml-2">Sign in</Link>
+                  </p>
+                </motion.div>
+              ) : (
               <form onSubmit={handleSignup} className="space-y-6">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
@@ -288,6 +308,8 @@ export function SignupClient() {
                   Already have an account? <Link href="/login" className="text-primary hover:text-primary-light transition-colors ml-2">Sign in</Link>
                 </p>
               </div>
+              </form>
+              )}
             </CardContent>
           </Card>
           </ScrollReveal>
