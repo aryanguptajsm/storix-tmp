@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase-server";
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+  const tokenHash = requestUrl.searchParams.get("token_hash");
+  const type = requestUrl.searchParams.get("type");
   const next = requestUrl.searchParams.get("next") ?? "/dashboard";
   const error = requestUrl.searchParams.get("error");
   const error_description = requestUrl.searchParams.get("error_description");
@@ -12,9 +14,11 @@ export async function GET(request: Request) {
   // Priority: X-Forwarded-Host > requestUrl.origin > NEXT_PUBLIC_SITE_URL
   const forwardedHost = request.headers.get("x-forwarded-host");
   const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  const origin = forwardedHost 
-    ? `${forwardedProto}://${forwardedHost}` 
-    : requestUrl.origin || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const origin = process.env.NEXT_PUBLIC_SITE_URL
+    ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
+    : forwardedHost
+      ? `${forwardedProto}://${forwardedHost}`
+      : requestUrl.origin || "http://localhost:3000";
 
   // Handle common OAuth/Supabase errors early
   if (error) {
@@ -34,6 +38,22 @@ export async function GET(request: Request) {
     
     console.error("Supabase Auth Code Exchange Error:", exchangeError);
     return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(exchangeError.message)}`);
+  }
+
+  if (tokenHash && type) {
+    const supabase = await createClient();
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: type as "signup" | "magiclink" | "recovery" | "invite" | "email_change" | "email",
+    });
+
+    if (!verifyError) {
+      const redirectUrl = next.startsWith("/") ? `${origin}${next}` : next;
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    console.error("Supabase OTP Verification Error:", verifyError);
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(verifyError.message)}`);
   }
 
   // Handle cases where no code is present

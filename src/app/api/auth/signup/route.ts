@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as SignupPayload;
     const email = body.email?.trim().toLowerCase();
-    const password = body.password?.trim();
+    const password = body.password;
     const normalizedUsername = body.username ? normalizeUsername(body.username) : "";
     const storeName = body.storeName?.trim() || `${body.username?.trim() || "My"} Store`;
 
