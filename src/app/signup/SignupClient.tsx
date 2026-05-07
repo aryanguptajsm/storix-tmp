@@ -184,6 +184,7 @@ export function SignupClient() {
                   </p>
                 </motion.div>
               ) : (
+              <>
               <form onSubmit={handleSignup} className="space-y-6">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
@@ -308,7 +309,7 @@ export function SignupClient() {
                   Already have an account? <Link href="/login" className="text-primary hover:text-primary-light transition-colors ml-2">Sign in</Link>
                 </p>
               </div>
-              </form>
+              </>
               )}
             </CardContent>
           </Card>
