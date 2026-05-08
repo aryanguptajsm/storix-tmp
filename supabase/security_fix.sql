@@ -46,6 +46,11 @@ USING (auth.uid() = id);
 -- 3. Enable RLS on Clicks table
 ALTER TABLE public.clicks ENABLE ROW LEVEL SECURITY;
 
+-- Click Policies:
+-- Clicks are public to insert (anonymous visitors track clicks)
+CREATE POLICY "Anyone can insert clicks" 
+ON public.clicks FOR INSERT 
+WITH CHECK (auth.role() IN ('anon', 'authenticated'));
 
 -- Only developers/owners can view their own clicks
 CREATE POLICY "Users can view their own products clicks" 
