@@ -17,7 +17,7 @@ import {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30 overflow-x-hidden relative">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-emerald-500/30 overflow-x-hidden relative">
       {/* Background Layers */}
       <div className="fixed inset-0 grid-bg-low-vis opacity-30 pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />

@@ -51,7 +51,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-black selection:bg-emerald-500/30 selection:text-white overflow-x-hidden relative">
+    <div className="flex flex-col min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-emerald-500/30 selection:text-[var(--foreground)] overflow-x-hidden relative">
       {/* ─── Global Background Layers ─── */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {/* LightPillar (Base Layer) */}
@@ -356,7 +356,7 @@ export default function LandingPage() {
       </main>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="py-24 md:py-32 px-8 border-t border-white/[0.04] bg-black relative overflow-hidden">
+      <footer className="py-24 md:py-32 px-8 border-t border-[var(--border)] bg-[var(--background)] relative overflow-hidden">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-20 relative z-10">
