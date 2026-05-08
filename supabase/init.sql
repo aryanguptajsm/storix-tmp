@@ -73,7 +73,7 @@ CREATE POLICY "Users can update their own products" ON public.products FOR UPDAT
 CREATE POLICY "Users can delete their own products" ON public.products FOR DELETE USING (auth.uid() = user_id);
 
 -- Clicks (Public insert, owner view)
-CREATE POLICY "Anyone can insert clicks" ON public.clicks FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can insert clicks" ON public.clicks FOR INSERT WITH CHECK (auth.role() IN ('anon', 'authenticated'));
 CREATE POLICY "Users can view their own products clicks" ON public.clicks FOR SELECT USING (
   product_id IN (SELECT id FROM products WHERE user_id = auth.uid())
 );
@@ -94,7 +94,11 @@ BEGIN
   VALUES (new.id, LOWER(split_part(new.email, '@', 1)), split_part(new.email, '@', 1));
   RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM public;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
