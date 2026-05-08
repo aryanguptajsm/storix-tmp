@@ -47,8 +47,6 @@ USING (auth.uid() = id);
 ALTER TABLE public.clicks ENABLE ROW LEVEL SECURITY;
 
 
-
-
 -- Only developers/owners can view their own clicks
 CREATE POLICY "Users can view their own products clicks" 
 ON public.clicks FOR SELECT 
