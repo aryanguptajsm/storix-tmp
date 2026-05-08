@@ -9,36 +9,39 @@ export function ThemeToggle() {
   const { appMode, toggleAppMode, mounted } = useTheme();
   const isLight = appMode === "light";
 
+  if (!mounted) return <div className="w-10 h-10" />;
+
   return (
     <motion.button
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       onClick={(e) => toggleAppMode(e)}
-      className="theme-toggle group"
+      className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[var(--background)] border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow overflow-hidden"
       aria-label="Toggle App Theme"
       type="button"
     >
-      <div className="theme-toggle__beam" />
-      <div className="theme-toggle__copy">
-        <span className="theme-toggle__eyebrow">Interface</span>
-        <span className="theme-toggle__value">
-          {mounted ? (isLight ? "Light Mode" : "Dark Mode") : "Theme"}
-        </span>
-      </div>
-      <div className="theme-toggle__track" aria-hidden="true">
-        <span className={`theme-toggle__label ${isLight ? "is-active" : ""}`}>Light</span>
-        <span className={`theme-toggle__label ${!isLight ? "is-active" : ""}`}>Dark</span>
-        <motion.span
-          className="theme-toggle__thumb"
-          initial={false}
-          animate={{ x: isLight ? 0 : 44 }}
-          transition={{ type: "spring", stiffness: 320, damping: 28, mass: 0.9 }}
-        >
-          <span className="theme-toggle__thumb-icon">
-            {isLight ? <Sun size={15} strokeWidth={2.25} /> : <Moon size={15} strokeWidth={2.25} />}
-          </span>
-        </motion.span>
-      </div>
+      <motion.div
+        initial={false}
+        animate={{
+          rotate: isLight ? -90 : 0,
+          opacity: isLight ? 0 : 1,
+        }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="absolute inset-0 flex items-center justify-center text-[var(--foreground)]"
+      >
+        <Moon size={18} strokeWidth={2} />
+      </motion.div>
+      <motion.div
+        initial={false}
+        animate={{
+          rotate: isLight ? 0 : 90,
+          opacity: isLight ? 1 : 0,
+        }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="absolute inset-0 flex items-center justify-center text-[var(--foreground)]"
+      >
+        <Sun size={18} strokeWidth={2} />
+      </motion.div>
     </motion.button>
   );
 }
