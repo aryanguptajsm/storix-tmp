@@ -12,17 +12,7 @@
   --font-outfit: Arial, Helvetica, sans-serif;
   
   /* Responsive Spacing & Padding */
-  --space-unit: clamp(0.5rem, 1vw, 1rem);
-  --screen-padding: clamp(1rem, 5vw, 2.5rem);
-}
 
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-light: var(--primary-light);
-  --color-primary-dark: #059669;
-  --color-secondary: #00CEC9;
   --color-secondary-light: #55EFC4;
   --color-accent: var(--accent);
   --color-accent-light: #34D399;
