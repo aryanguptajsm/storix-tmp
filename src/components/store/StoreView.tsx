@@ -165,7 +165,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                         key={tab} 
                         onClick={() => setActiveTab(tab)}
                         className={`text-xs font-bold text-left transition-colors ${
-                          activeTab === tab ? 'text-[var(--store-primary)]' : 'text-white/40 hover:text-white'
+                          activeTab === tab ? 'text-[var(--store-primary)]' : 'text-[var(--store-foreground)]/40 hover:text-[var(--store-foreground)]'
                         }`}
                       >
                         {tab}
@@ -180,8 +180,8 @@ export function StoreView({ profile, products }: StoreViewProps) {
                   <div className="flex flex-col gap-4">
                     {['Amazon', 'Flipkart', 'AliExpress'].map((plat) => (
                       <label key={plat} className="flex items-center gap-3 cursor-pointer group">
-                        <div className="w-4 h-4 rounded-sm border border-white/10 group-hover:border-[var(--store-primary)]/40 transition-colors" />
-                        <span className="text-xs font-bold text-white/40 group-hover:text-white transition-colors">{plat}</span>
+                        <div className="w-4 h-4 rounded-sm border border-[var(--store-foreground)]/10 group-hover:border-[var(--store-primary)]/40 transition-colors" />
+                        <span className="text-xs font-bold text-[var(--store-foreground)]/40 group-hover:text-[var(--store-foreground)] transition-colors">{plat}</span>
                       </label>
                     ))}
                   </div>
@@ -205,7 +205,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                       className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap px-6 py-2.5 rounded-full border transition-all snap-center ${
                         activeTab === tab 
                           ? 'bg-[var(--store-primary)] border-[var(--store-primary)] text-white shadow-lg shadow-primary/20' 
-                          : 'bg-white/5 border-white/5 text-white/40 hover:bg-white/10'
+                          : 'bg-[var(--store-foreground)]/5 border-[var(--store-foreground)]/5 text-[var(--store-foreground)]/40 hover:bg-[var(--store-foreground)]/10'
                       }`}
                     >
                       {tab}
