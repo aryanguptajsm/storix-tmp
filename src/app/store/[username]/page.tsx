@@ -146,7 +146,7 @@ export default async function PublicStorePage({ params }: Props) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-start py-12 md:py-20 p-6 text-center relative overflow-hidden">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col items-center justify-start py-12 md:py-20 p-6 text-center relative overflow-hidden">
         {/* Sub-grid background for the error page */}
         <div className="absolute inset-0 grid-bg-subtle opacity-20 pointer-events-none" />
         
