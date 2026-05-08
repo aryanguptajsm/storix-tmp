@@ -16,7 +16,7 @@ import {
 
 export default function StorixProductPage() {
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-primary/30">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-primary/30">
       <nav className="h-20 border-b border-white/5 px-6 flex items-center justify-between glass sticky top-0 z-50">
         <Link href="/" className="flex items-center gap-2 group">
           <ChevronLeft className="w-5 h-5 text-muted group-hover:text-white transition-colors" />
