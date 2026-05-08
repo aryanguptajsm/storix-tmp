@@ -53,7 +53,7 @@ export function StoreHeader({ storeName, storeLogo, searchValue, onSearchChange 
             value={searchValue}
             onChange={(e) => onSearchChange?.(e.target.value)}
             placeholder={`Search in ${storeName}...`}
-            className="w-full h-10 md:h-11 bg-white/[0.03] border border-white/5 rounded-md pl-10 md:pl-12 pr-10 md:pr-12 text-sm font-medium text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[var(--store-primary)]/20 focus:border-[var(--store-primary)] transition-all"
+            className="w-full h-10 md:h-11 bg-white/[0.03] border border-white/5 rounded-md pl-10 md:pl-12 pr-10 md:pr-12 text-sm font-medium text-[var(--store-foreground)] placeholder:text-[var(--store-foreground)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--store-primary)]/20 focus:border-[var(--store-primary)] transition-all"
           />
           {searchValue && (
             <button 
@@ -71,7 +71,7 @@ export function StoreHeader({ storeName, storeLogo, searchValue, onSearchChange 
             variant="ghost" 
             size="icon" 
             onClick={handleShare}
-            className="w-10 h-10 rounded-md text-white/40 hover:text-[var(--store-primary)] hover:bg-[var(--store-primary)]/10 transition-all border border-transparent hover:border-[var(--store-primary)]/20"
+            className="w-10 h-10 rounded-md text-[var(--store-foreground)]/40 hover:text-[var(--store-primary)] hover:bg-[var(--store-primary)]/10 transition-all border border-transparent hover:border-[var(--store-primary)]/20"
           >
             <Share2 size={16} />
           </Button>
@@ -101,7 +101,7 @@ export function StoreHeader({ storeName, storeLogo, searchValue, onSearchChange 
           </div>
           <div className="w-px h-4 bg-white/5 shrink-0" />
           {['Electronics', 'Fashion', 'Home', 'Beauty', 'Offers'].map((cat) => (
-            <button key={cat} className="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors whitespace-nowrap">
+            <button key={cat} className="text-[10px] font-bold uppercase tracking-widest text-[var(--store-foreground)]/40 hover:text-[var(--store-foreground)] transition-colors whitespace-nowrap">
               {cat}
             </button>
           ))}

@@ -130,7 +130,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 0.5 }}
                       transition={{ delay: 0.2 }}
-                      className="text-xs md:text-lg text-white mb-6 md:mb-10 font-medium"
+                      className="text-xs md:text-lg text-[var(--store-foreground)] mb-6 md:mb-10 font-medium"
                     >
                       {profile.store_description || "Premium products curated for quality and price."}
                     </motion.p>
@@ -216,8 +216,8 @@ export function StoreView({ profile, products }: StoreViewProps) {
                 {filteredProducts.length === 0 ? (
                   <div className="text-center py-32 rounded-lg border-2 border-dashed border-white/5">
                     <Package className="w-12 h-12 text-white/10 mx-auto mb-6" />
-                    <h3 className="text-2xl font-black mb-2 tracking-tight">No match found</h3>
-                    <p className="text-white/30 text-sm font-medium">Try adjusting your search or filters.</p>
+                    <h3 className="text-2xl font-black mb-2 tracking-tight text-[var(--store-foreground)]">No match found</h3>
+                    <p className="text-[var(--store-foreground)]/30 text-sm font-medium">Try adjusting your search or filters.</p>
                   </div>
                 ) : (
                   <motion.div layout className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
@@ -269,18 +269,18 @@ export function StoreView({ profile, products }: StoreViewProps) {
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
                   <ShoppingBag className="w-6 h-6 text-[var(--store-primary)]" />
-                  <span className="text-xl font-black tracking-tighter text-white">{profile.store_name}</span>
+                  <span className="text-xl font-black tracking-tighter text-[var(--store-foreground)]">{profile.store_name}</span>
                 </div>
-                <p className="text-white/30 text-xs leading-relaxed font-medium">
+                <p className="text-[var(--store-foreground)]/30 text-xs leading-relaxed font-medium">
                   Professional affiliate storefront powered by Storix AI protocols.
                 </p>
               </div>
               <div>
-                <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-6">Store</h6>
-                <div className="flex flex-col gap-4 text-xs font-bold text-white/40">
-                   <Link href="#products" className="hover:text-white transition-colors">All Products</Link>
-                   <Link href="#products" className="hover:text-white transition-colors">Daily Deals</Link>
-                   <Link href="#products" className="hover:text-white transition-colors">Platform Specials</Link>
+                <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--store-foreground)]/20 mb-6">Store</h6>
+                <div className="flex flex-col gap-4 text-xs font-bold text-[var(--store-foreground)]/40">
+                   <Link href="#products" className="hover:text-[var(--store-foreground)] transition-colors">All Products</Link>
+                   <Link href="#products" className="hover:text-[var(--store-foreground)] transition-colors">Daily Deals</Link>
+                   <Link href="#products" className="hover:text-[var(--store-foreground)] transition-colors">Platform Specials</Link>
                 </div>
               </div>
               <div>

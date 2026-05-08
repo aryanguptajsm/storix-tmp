@@ -22,6 +22,11 @@ export function ThemeProvider({
   initialTheme?: Theme;
 }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
+
+  useEffect(() => {
+    setTheme(initialTheme);
+  }, [initialTheme]);
+
   const [appMode, setAppMode] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "dark";
 
@@ -32,6 +37,7 @@ export function ThemeProvider({
 
     return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   });
+
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -86,6 +92,7 @@ export function ThemeProvider({
       );
     });
   };
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme, appMode, toggleAppMode, mounted }}>
       <div className={`theme-${theme} mode-${appMode} min-h-screen theme-shell`}>

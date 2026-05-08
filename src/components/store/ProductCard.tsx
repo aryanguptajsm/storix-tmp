@@ -59,11 +59,11 @@ function StarRating({ rating, reviewCount }: { rating?: string; reviewCount?: st
           );
         })}
       </div>
-      <span className="text-[10px] font-bold text-white/30">
+      <span className="text-[10px] font-bold text-[var(--store-foreground)]/30">
         {numRating.toFixed(1)}
       </span>
       {reviewCount && (
-        <span className="text-[10px] font-medium text-white/20">
+        <span className="text-[10px] font-medium text-[var(--store-foreground)]/20">
           ({Number(reviewCount).toLocaleString()})
         </span>
       )}
@@ -126,7 +126,7 @@ export function ProductCard({ product, onBuyNow, priority = false, index = 0 }: 
         {/* Real Rating from scraped data */}
         <StarRating rating={product.rating} reviewCount={product.review_count} />
 
-        <h3 className="font-bold text-sm leading-snug line-clamp-2 mb-3 text-white group-hover:text-[var(--store-primary)] transition-colors min-h-[2.5rem]">
+        <h3 className="font-bold text-sm leading-snug line-clamp-2 mb-3 text-[var(--store-foreground)] group-hover:text-[var(--store-primary)] transition-colors min-h-[2.5rem]">
           {product.title}
         </h3>
 
@@ -143,9 +143,9 @@ export function ProductCard({ product, onBuyNow, priority = false, index = 0 }: 
             )}
             <div className="flex items-baseline gap-1">
               {symbol && (
-                <span className="text-[10px] font-bold text-white/40 uppercase mb-0.5">{symbol}</span>
+                <span className="text-[10px] font-bold text-[var(--store-foreground)]/40 uppercase mb-0.5">{symbol}</span>
               )}
-              <span className="text-2xl font-black text-white tracking-tight leading-none">
+              <span className="text-2xl font-black text-[var(--store-foreground)] tracking-tight leading-none">
                 {amount}
               </span>
             </div>
