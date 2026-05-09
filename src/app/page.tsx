@@ -317,16 +317,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ═══════ PRICING ═══════ */}
-        <section className="py-32 md:py-48 px-6 relative overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] -z-10" />
-          <PublicPricingSection
-            id="pricing"
-            eyebrow="Strategic Investment"
-            title="Pick Your Strategy"
-            description="Scale your affiliate empire with precision. Choose the plan that fits your current mission parameters."
-          />
-        </section>
+
 
         {/* ═══════ HOW IT WORKS ═════ */}
         <section id="how-it-works" className="py-24 md:py-40 px-6 relative">
@@ -352,6 +343,17 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* ═══════ PRICING ═══════ */}
+        <section className="py-32 md:py-48 px-6 relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] -z-10" />
+          <PublicPricingSection
+            id="pricing"
+            eyebrow="Strategic Investment"
+            title="Pick Your Strategy"
+            description="Scale your affiliate empire with precision. Choose the plan that fits your current mission parameters."
+          />
         </section>
       </main>
 
