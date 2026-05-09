@@ -6,10 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, signInWithGoogle } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +31,6 @@ export function LoginClient() {
   const searchParams = useSearchParams();
   const urlError = searchParams.get("error");
 
-  // Sync URL error with local state
   useEffect(() => {
     if (urlError) {
       setError(urlError);
@@ -69,198 +69,161 @@ export function LoginClient() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
-      
-      {/* Mesh Background */}
-      <div className="absolute inset-0 mesh-primary opacity-20 pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#020205] relative overflow-hidden">
+      {/* Animated Background Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[150px] animate-pulse-breathing" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/5 rounded-full blur-[150px] animate-pulse-breathing" style={{ animationDelay: '3s' }} />
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+      {/* Grid + Noise overlays */}
+      <div className="absolute inset-0 grid-bg-premium opacity-10 pointer-events-none" />
+      <div className="absolute inset-0 noise-subtle opacity-30 pointer-events-none" />
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="text-center mb-8">
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="inline-block p-3 rounded-2xl bg-surface-light border border-border mb-4 animate-bounce-subtle"
+        {/* Header */}
+        <div className="text-center mb-10">
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex justify-center mb-6"
           >
-            <h1 className="text-4xl font-black bg-gradient-to-r from-primary via-primary-light to-secondary bg-clip-text text-transparent tracking-tighter font-display">
-              Storix
-            </h1>
+            <div className="p-4 rounded-[2rem] bg-black/60 border border-white/5 backdrop-blur-2xl shadow-2xl relative group overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ShieldCheck className="text-primary w-10 h-10 group-hover:scale-110 transition-transform duration-500" />
+            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.2 }}
+            className="space-y-2"
           >
-            <p className="text-white text-2xl font-black tracking-tight font-display italic">Welcome back</p>
-            <p className="text-muted/60 text-sm mt-2 font-medium">Sign in to manage your affiliate store</p>
+            <h1 className="text-5xl font-black bg-gradient-to-r from-primary-light via-white to-secondary-light bg-clip-text text-transparent tracking-tighter uppercase italic">Storix</h1>
+            <p className="text-white/40 text-sm font-bold tracking-[0.3em] uppercase">Welcome back</p>
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <Card className="glass-premium border-white/5 shadow-2xl overflow-hidden hover:border-primary/20 transition-all duration-500 glass-premium-animated">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-primary-light to-secondary opacity-80" />
-            
-            <CardHeader className="pb-2">
-              <CardTitle className="text-2xl font-black font-display flex items-center gap-2">
-                <ShieldCheck className="text-primary w-6 h-6" />
-                Sign In
-              </CardTitle>
-            </CardHeader>
-            
-            <CardContent>
-              <form onSubmit={handleLogin} className="space-y-5">
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <Input
-                    label="Email Address"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    icon={<Mail size={18} />}
-                    className="w-full bg-white/5 border-white/5 focus:glow-primary transition-all"
-                    required
-                  />
-                </motion.div>
+        {/* Card */}
+        <div className="relative">
+          <ScrollReveal variant="zoom-in" delay={0.4}>
+            <Card size="medium" variant="glass" className="overflow-hidden border-white/5 shadow-3xl glass-premium-animated">
+              <CardContent className="space-y-6 pt-10">
+                <form onSubmit={handleLogin} className="space-y-6">
+                  <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
+                    <Input
+                      label="Email Address"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      icon={<Mail size={18} />}
+                      className="bg-white/[0.02] border-white/5 h-14"
+                      required
+                    />
+                  </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <Input
-                    label="Password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    icon={<Lock size={18} />}
-                    className="w-full bg-white/5 border-white/5 focus:glow-primary transition-all"
-                    required
-                  />
-                </motion.div>
+                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
+                    <Input
+                      label="Password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      icon={<Lock size={18} />}
+                      className="bg-white/[0.02] border-white/5 h-14"
+                      required
+                    />
+                  </motion.div>
 
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                  className="flex justify-end"
-                >
-                  <Link href="/auth/forgot-password" title="Recover your password" className="text-[10px] font-black text-primary hover:text-primary-light transition-all uppercase tracking-widest hover:underline decoration-2 underline-offset-4">
-                    Forgot password?
-                  </Link>
-                </motion.div>
-
-                <AnimatePresence mode="wait">
-                  {error && (
-                    <motion.div 
-                      initial={{ opacity: 0, height: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, height: "auto", scale: 1 }}
-                      exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                      className="p-4 rounded-2xl bg-danger/10 border border-danger/20 text-danger text-xs font-bold flex items-start gap-3"
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="flex justify-end"
+                  >
+                    <Link
+                      href="/auth/forgot-password"
+                      className="text-[10px] font-black text-primary hover:text-primary-light transition-all uppercase tracking-widest hover:underline decoration-2 underline-offset-4"
                     >
-                      <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                      <div className="space-y-1">
-                         <p className="uppercase tracking-wider text-[10px] opacity-70">Sign in failed</p>
-                         <p className="leading-relaxed">
-                           {error.includes("Provider not enabled") 
-                             ? "Google Authentication is not yet activated on this station. Please use your credentials or contact command."
-                             : error}
-                         </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      Forgot password?
+                    </Link>
+                  </motion.div>
+
+                  <AnimatePresence mode="wait">
+                    {error && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="p-5 rounded-2xl bg-danger/5 border border-danger/10 text-danger text-[11px] font-black uppercase tracking-widest flex items-center gap-4"
+                      >
+                        <AlertCircle size={20} className="shrink-0" />
+                        <p>
+                          {error.includes("Provider not enabled")
+                            ? "Google Authentication is not yet activated. Please use your credentials."
+                            : error}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <Button type="submit" className="w-full h-16 group shadow-2xl shadow-primary/10" loading={loading}>
+                      <span>Sign In</span>
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform ml-1" />
+                    </Button>
+                  </motion.div>
+                </form>
+
+                {/* Divider */}
+                <div className="relative py-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/5" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-[#020205] px-4 text-[9px] font-black uppercase tracking-[0.4em] text-white/20">Or</span>
+                  </div>
+                </div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
+                  transition={{ delay: 0.7 }}
                 >
-                  <Button type="submit" className="w-full h-16 group text-base font-black shadow-2xl shadow-primary/20" loading={loading}>
-                    <span>Sign In</span>
-                    <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="w-full h-16"
+                    onClick={handleGoogleLogin}
+                    loading={googleLoading}
+                  >
+                    <GoogleIcon />
+                    <span className="ml-3">Continue with Google</span>
                   </Button>
                 </motion.div>
-              </form>
 
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 }}
-                className="relative my-10"
-              >
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/5"></div>
+                <div className="text-center pt-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                    Don&apos;t have an account?{" "}
+                    <Link href="/signup" className="text-primary hover:text-primary-light transition-colors ml-2">
+                      Sign up
+                    </Link>
+                  </p>
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-4 text-muted/30 font-black uppercase tracking-widest text-[9px]">Or continue with</span>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.0 }}
-              >
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="w-full h-16"
-                  onClick={handleGoogleLogin}
-                  loading={googleLoading}
-                >
-                  <div className="mr-3">
-                    <GoogleIcon />
-                  </div>
-                  <span>Continue with Google</span>
-                </Button>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.1 }}
-                className="mt-10 text-center text-sm"
-              >
-                <span className="text-muted/40 font-medium">Don't have an account? </span>
-                <Link
-                  href="/signup"
-                  className="text-primary hover:text-primary-light font-black transition-all hover:underline decoration-2 underline-offset-4"
-                >
-                  Sign up
-                </Link>
-              </motion.div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
+              </CardContent>
+            </Card>
+          </ScrollReveal>
+        </div>
       </motion.div>
-
-      <style jsx global>{`
-        @keyframes bounce-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-subtle {
-          animation: bounce-subtle 4s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }
