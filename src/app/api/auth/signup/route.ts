@@ -117,39 +117,62 @@ export async function POST(request: Request) {
       );
     }
 
-    const resend = getResendClient();
-    const emailResult = await resend.emails.send({
-      from: getResendFromEmail(),
-      to: email,
-      subject: "Verify your Storix account",
-      html: `
-        <div style="font-family: Arial, sans-serif; background: #020205; color: #f5f5f5; padding: 32px;">
-          <div style="max-width: 560px; margin: 0 auto; background: #0b0b10; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 32px;">
-            <p style="margin: 0 0 12px; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: #7dd3fc;">Storix</p>
-            <h1 style="margin: 0 0 16px; font-size: 28px; line-height: 1.2;">Confirm your email</h1>
-            <p style="margin: 0 0 24px; color: rgba(255,255,255,0.72); line-height: 1.6;">
-              Click the button below to verify your email address and finish setting up your Storix account.
-            </p>
-            <a href="${actionLink}" style="display: inline-block; padding: 14px 22px; border-radius: 999px; background: #10b981; color: #020205; text-decoration: none; font-weight: 700;">
-              Verify email
-            </a>
-            <p style="margin: 24px 0 0; color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.6;">
-              If the button does not work, copy and paste this link into your browser:
-            </p>
-            <p style="margin: 8px 0 0; color: rgba(255,255,255,0.72); font-size: 13px; line-height: 1.6; word-break: break-all;">
-              ${actionLink}
-            </p>
-          </div>
-        </div>
-      `,
-    });
+    if (process.env.NODE_ENV === "development") {
+      console.log("\n=============================================");
+      console.log("🛠️ LOCAL DEVELOPMENT VERIFICATION LINK:");
+      console.log(actionLink);
+      console.log("=============================================\n");
+    }
 
-    if (emailResult.error) {
-      await supabaseAdmin.auth.admin.deleteUser(userId);
-      return NextResponse.json(
-        { error: emailResult.error.message || "Could not send verification email." },
-        { status: 502 }
-      );
+    try {
+      const resend = getResendClient();
+      const emailResult = await resend.emails.send({
+        from: getResendFromEmail(),
+        to: email,
+        subject: "Verify your Storix account",
+        html: `
+          <div style="font-family: Arial, sans-serif; background: #020205; color: #f5f5f5; padding: 32px;">
+            <div style="max-width: 560px; margin: 0 auto; background: #0b0b10; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 32px;">
+              <p style="margin: 0 0 12px; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: #7dd3fc;">Storix</p>
+              <h1 style="margin: 0 0 16px; font-size: 28px; line-height: 1.2;">Confirm your email</h1>
+              <p style="margin: 0 0 24px; color: rgba(255,255,255,0.72); line-height: 1.6;">
+                Click the button below to verify your email address and finish setting up your Storix account.
+              </p>
+              <a href="${actionLink}" style="display: inline-block; padding: 14px 22px; border-radius: 999px; background: #10b981; color: #020205; text-decoration: none; font-weight: 700;">
+                Verify email
+              </a>
+              <p style="margin: 24px 0 0; color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.6;">
+                If the button does not work, copy and paste this link into your browser:
+              </p>
+              <p style="margin: 8px 0 0; color: rgba(255,255,255,0.72); font-size: 13px; line-height: 1.6; word-break: break-all;">
+                ${actionLink}
+              </p>
+            </div>
+          </div>
+        `,
+      });
+
+      if (emailResult.error) {
+        if (process.env.NODE_ENV !== "development") {
+          await supabaseAdmin.auth.admin.deleteUser(userId);
+          return NextResponse.json(
+            { error: emailResult.error.message || "Could not send verification email." },
+            { status: 502 }
+          );
+        } else {
+          console.warn("⚠️ Bypassing Resend error in local development.");
+        }
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== "development") {
+        await supabaseAdmin.auth.admin.deleteUser(userId);
+        return NextResponse.json(
+          { error: "Could not send verification email." },
+          { status: 502 }
+        );
+      } else {
+        console.warn("⚠️ Bypassing Resend exception in local development.");
+      }
     }
 
     return NextResponse.json({
