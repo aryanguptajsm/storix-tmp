@@ -353,10 +353,13 @@ export class ProductScraper {
   }
 
   private shouldUseAiFallback(result: Partial<ProductScrapeResult>): boolean {
+    // Strictly enforce price and image
+    if (!result.price || !result.image_url) {
+      return true;
+    }
+
     const missingCoreFields = [
       !result.product_title || result.product_title === "Unknown Product",
-      !result.price,
-      !result.image_url,
       !result.brand,
       !result.rating,
       !result.review_count,
