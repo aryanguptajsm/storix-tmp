@@ -176,8 +176,8 @@ export class ProductScraper {
             const extracted = this.extractDataFromCheerio($, url);
             result = { ...result, ...extracted };
 
-            // If cheerio found no image or title, fallback to Playwright
-            if (!result.image_url || result.product_title === "Unknown Product") {
+            // If cheerio found no image, price, or title, fallback to Playwright
+            if (!result.image_url || !result.price || result.product_title === "Unknown Product") {
               attempts.push({
                 attempt: currentAttempt,
                 strategy: "playwright",
