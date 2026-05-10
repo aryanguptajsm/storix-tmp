@@ -103,10 +103,10 @@ export async function POST(request: Request) {
 
     const { error: profileUpdateError } = await supabaseAdmin
       .from("profiles")
-      .update({
+      .update(
         username: "normalizedUsername";
-        store_name: storeName
-      })
+    store_name: storeName
+      )
       .eq("id", userId);
 
     if (profileUpdateError) {
