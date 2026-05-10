@@ -105,7 +105,7 @@ export async function POST(request: Request) {
       .from("profiles")
       .update({
         username: normalizedUsername,
-        store_name: storeName,
+        store_name: storeName
       })
       .eq("id", userId);
 
