@@ -106,7 +106,7 @@ export async function POST(request: Request) {
       .update({
         username: normalizedUsername,
         store_name: storeName,
-      })
+      } as any)
       .eq("id", userId);
 
     if (profileUpdateError) {

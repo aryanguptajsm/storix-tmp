@@ -95,7 +95,7 @@ export function Sidebar() {
           <span className="text-2xl font-black tracking-tighter leading-none bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
             Storix
           </span>
-          <span className="text-[10px] text-primary/60 font-black uppercase tracking-[0.3em] mt-1">Admin Panel</span>
+          <span className="text-[10px] text-primary/60 font-black uppercase tracking-[0.3em] mt-1">Dashboard</span>
         </div>
       </div>
 
@@ -225,7 +225,7 @@ export function Sidebar() {
            </div>
            <div className="flex flex-col">
               <span className="font-black text-2xl tracking-tighter text-white leading-none">Storix</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Admin Panel</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Dashboard</span>
            </div>
         </div>
         <button
