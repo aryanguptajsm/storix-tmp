@@ -123,10 +123,8 @@ export function Sidebar() {
                       }`}
                   >
                     {isActive && (
-                      <motion.div
-                        layoutId="active-pill"
+                      <div
                         className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-2xl z-0"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
 
@@ -191,7 +189,7 @@ export function Sidebar() {
             <button
               onClick={handleSignOut}
               disabled={isLoggingOut}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-bla ck uppercase tracking-widest text-red-400/60 hover:text-red-400 hover:bg-red-400/10 w-full transition-all group/out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest text-red-400/60 hover:text-red-400 hover:bg-red-400/10 w-full transition-all group/out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoggingOut ? (
                 <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
