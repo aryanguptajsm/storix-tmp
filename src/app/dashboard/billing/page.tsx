@@ -60,41 +60,6 @@ export default function BillingPage() {
           plan: normalizePlanId(profile?.plan),
           productCount: count || 0,
           storeName: profile?.store_name || "My Store",
-        });
-
-        // Check for success query parameter from Dodo redirect
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("success") === "true") {
-          toast.success("Payment Received! Your account is being upgraded.", {
-            description: "It may take a few moments for your plan to update.",
-            duration: 6000,
-          });
-          // Remove the query param to avoid repeated toasts
-          window.history.replaceState({}, document.title, window.location.pathname);
-          
-          const refreshPlanStatus = async () => {
-            for (let attempt = 0; attempt < 5; attempt += 1) {
-              await new Promise((resolve) => setTimeout(resolve, attempt === 0 ? 1500 : 2500));
-              const freshProfile = await getProfile(user.id);
-              const nextPlan = normalizePlanId(freshProfile?.plan);
-              if (nextPlan !== "free") {
-                setUserState((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        plan: nextPlan,
-                        storeName: freshProfile?.store_name || prev.storeName,
-                      }
-                    : null
-                );
-                toast.success(`Your ${PLANS[nextPlan].name} plan is now active.`);
-                return;
-              }
-            }
-          };
-
-          void refreshPlanStatus();
-        }
       } catch {
         toast.error("Failed to load billing data");
       } finally {
