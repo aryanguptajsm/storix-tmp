@@ -17,7 +17,9 @@ import {
   ExternalLink,
   Info,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Upload,
+  Trash2
 } from "lucide-react";
 import { SettingsSkeleton } from "@/components/ui/SettingsSkeleton";
 import Link from "next/link";
@@ -38,6 +40,60 @@ export default function StoreManagementPage() {
     store_logo: "",
     theme: "default",
   });
+  
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file.");
+      return;
+    }
+
+    setUploadingLogo(true);
+    try {
+      const user = await getUser();
+      if (!user) throw new Error("Authentication failed.");
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `logos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+
+      setFormData(prev => ({ ...prev, store_logo: publicUrl }));
+      toast.success("Station logo uploaded successfully!");
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      toast.error(err.message || "Failed to upload image.");
+    } finally {
+      setUploadingLogo(false);
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      const fakeEvent = { target: { files: [file] } } as unknown as React.ChangeEvent<HTMLInputElement>;
+      handleFileUpload(fakeEvent);
+    }
+  };
 
   useEffect(() => {
     async function loadStoreSettings() {
@@ -250,28 +306,65 @@ export default function StoreManagementPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <Input
-                    label="Station Logo (Direct URL)"
-                    name="store_logo"
-                    placeholder="https://imgur.com/logo.png"
-                    value={formData.store_logo}
-                    onChange={handleChange}
-                    icon={<ShoppingBag size={18} />}
-                    className="bg-white/[0.03] border-white/10 h-14 rounded-2xl focus:bg-white/[0.05] transition-all"
-                  />
-                  <div className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.01] border border-white/5 backdrop-blur-sm group hover:bg-white/[0.03] transition-all">
-                    <div className="w-16 h-16 rounded-2xl bg-white/[0.02] border-2 border-dashed border-white/10 flex items-center justify-center overflow-hidden transition-all group-hover:border-primary/30">
-                      {formData.store_logo ? (
-                        <img src={formData.store_logo} alt="Logo" className="max-w-full max-h-full object-contain p-2" />
-                      ) : (
-                        <ShoppingBag className="w-6 h-6 text-white/10" />
-                      )}
-                    </div>
+                <div className="space-y-4 border-t border-white/5 pt-8">
+                  <div className="flex items-center justify-between">
                     <div>
-                       <p className="text-[11px] font-black text-white/60 uppercase tracking-[0.2em]">Transmission Logo</p>
-                       <p className="text-[10px] text-white/20 font-medium italic mt-0.5">Optimized for high-fidelity displays.</p>
+                      <h4 className="text-sm font-bold text-white">Transmission Logo</h4>
+                      <p className="text-[10px] text-white/40 font-medium mt-0.5">Optimized for high-fidelity displays. Max 5MB.</p>
                     </div>
+                    {formData.store_logo && (
+                      <Button 
+                        type="button"
+                        variant="danger" 
+                        size="sm" 
+                        className="h-8 px-4 gap-2 text-[10px] rounded-lg"
+                        onClick={() => setFormData({ ...formData, store_logo: "" })}
+                      >
+                        <Trash2 size={12} /> Remove
+                      </Button>
+                    )}
+                  </div>
+
+                  <div 
+                    className={`relative w-full h-40 rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center cursor-pointer group overflow-hidden ${
+                      uploadingLogo 
+                        ? "border-primary/50 bg-primary/5" 
+                        : "border-white/10 bg-white/[0.02] hover:border-primary/40 hover:bg-white/[0.04]"
+                    }`}
+                    onClick={() => !uploadingLogo && fileInputRef.current?.click()}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                  >
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={handleFileUpload} 
+                    />
+                    
+                    {uploadingLogo ? (
+                      <div className="flex flex-col items-center gap-3 text-primary">
+                        <Loader2 className="w-8 h-8 animate-spin" />
+                        <span className="text-xs font-black uppercase tracking-widest">Uploading Asset...</span>
+                      </div>
+                    ) : formData.store_logo ? (
+                      <div className="relative w-full h-full p-4 flex items-center justify-center">
+                        <img src={formData.store_logo} alt="Logo" className="max-w-full max-h-full object-contain" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                          <span className="text-xs font-black text-white flex items-center gap-2">
+                            <Upload size={14} /> Update Logo
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-3 text-white/40 group-hover:text-primary transition-colors">
+                        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+                          <Upload className="w-5 h-5" />
+                        </div>
+                        <span className="text-xs font-black uppercase tracking-widest">Drag & Drop or Click</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
