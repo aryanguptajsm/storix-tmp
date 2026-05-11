@@ -78,8 +78,9 @@ export default async function DashboardPage() {
   const recentProducts = recentRes.data || [];
 
   return (
-    <div className="space-y-6 pb-20 relative min-h-screen">
-      <div className="fixed inset-0 pointer-events-none -z-20 bg-gradient-to-br from-black/55 via-black/35 to-primary/5" />
+    <div className="space-y-6 pb-20 relative min-h-screen bg-[#060608]">
+      <div className="fixed inset-0 pointer-events-none -z-20 bg-[#060608]" />
+      <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/[0.04] via-transparent to-transparent" />
       
       <DashboardEntrance />
 
@@ -166,7 +167,7 @@ export default async function DashboardPage() {
         </div>
 
         <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-          <Card variant="glass" className="dashboard-surface relative overflow-hidden group hover:border-primary/30 transition-all duration-500 h-full p-6 lg:p-8">
+          <Card variant="solid" className="dashboard-surface relative overflow-hidden group hover:border-primary/30 transition-all duration-500 h-full p-6 lg:p-8">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
             <CardHeader className="flex flex-row items-center justify-between pb-2 px-0 pt-0">
               <CardTitle className="dashboard-faint text-[11px] font-black uppercase tracking-[0.3em]">
@@ -187,7 +188,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="dashboard-surface relative overflow-hidden group hover:border-secondary/30 transition-all duration-500 h-full p-6 lg:p-8">
+          <Card variant="solid" className="dashboard-surface relative overflow-hidden group hover:border-secondary/30 transition-all duration-500 h-full p-6 lg:p-8">
             <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-secondary/10 transition-colors" />
             <CardHeader className="flex flex-row items-center justify-between pb-2 px-0 pt-0">
               <CardTitle className="dashboard-faint text-[11px] font-black uppercase tracking-[0.3em]">
@@ -208,7 +209,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="dashboard-surface relative overflow-hidden group hover:border-accent/30 transition-all duration-500 h-full p-6 lg:p-8 sm:col-span-2 lg:col-span-1">
+          <Card variant="solid" className="dashboard-surface relative overflow-hidden group hover:border-accent/30 transition-all duration-500 h-full p-6 lg:p-8 sm:col-span-2 lg:col-span-1">
             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-[50px] -mr-16 -mt-16 group-hover:bg-accent/10 transition-colors" />
             <CardHeader className="flex flex-row items-center justify-between pb-2 px-0 pt-0">
               <CardTitle className="dashboard-faint text-[11px] font-black uppercase tracking-[0.3em]">
@@ -270,7 +271,7 @@ export default async function DashboardPage() {
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <Card variant="glass" className="dashboard-surface lg:col-span-3 hover:border-white/10 transition-all duration-500 overflow-hidden group h-full p-0">
+          <Card variant="solid" className="dashboard-surface lg:col-span-3 hover:border-white/10 transition-all duration-500 overflow-hidden group h-full p-0">
             <CardHeader className="border-b border-white/[0.03] flex flex-row items-center justify-between py-6 px-8 bg-white/[0.01]">
               <div className="flex items-center gap-3">
                  <Package className="w-4 h-4 text-primary" />
@@ -320,7 +321,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card variant="glass" className="dashboard-surface lg:col-span-2 hover:border-white/10 transition-all duration-500 h-full group p-0">
+          <Card variant="solid" className="dashboard-surface lg:col-span-2 hover:border-white/10 transition-all duration-500 h-full group p-0">
             <CardHeader className="border-b border-white/[0.03] py-6 px-8 bg-white/[0.01]">
               <div className="flex items-center gap-3">
                  <Sparkles className="w-4 h-4 text-secondary" />
