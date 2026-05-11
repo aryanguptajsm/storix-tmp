@@ -84,7 +84,7 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      return_url: `${origin}/dashboard/billing?success=true`,
+      return_url: `${origin}/dashboard/pro-success?plan=${planId}`,
       cancel_url: `${origin}/pricing`,
     };
 
