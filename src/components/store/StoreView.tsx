@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { useTheme, type Theme } from "@/components/ThemeProvider";
 import { ProductCard } from "@/components/store/ProductCard";
 import { StoreHeader } from "@/components/store/StoreHeader";
 import { EmailCaptureWidget } from "@/components/store/EmailCaptureWidget";
@@ -17,7 +17,7 @@ import { PoweredByBadge } from "@/components/store/PoweredByBadge";
 import { WhatsAppButton } from "@/components/store/WhatsAppButton";
 import { Button } from "@/components/ui/Button";
 import { Product } from "@/lib/types";
-import type { Theme } from "@/components/ThemeProvider";
+import { Product } from "@/lib/types";
 import {
   hasPlanFeature,
   isPaidPlan,
@@ -53,6 +53,16 @@ export function StoreView({ profile, products }: StoreViewProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const plan = normalizePlanId(profile.plan);
+  const isPro = isPaidPlan(plan);
+  const finalTheme = !isPro && isPremiumTheme(profile.theme || "default") ? "default" : (profile.theme || "default");
+  
+  const { setTheme } = useTheme();
+  
+  React.useEffect(() => {
+    setTheme(finalTheme as Theme);
+  }, [finalTheme, setTheme]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -70,9 +80,6 @@ export function StoreView({ profile, products }: StoreViewProps) {
     }).catch(() => {});
   };
 
-  const plan = normalizePlanId(profile.plan);
-  const isPro = isPaidPlan(plan);
-  const finalTheme = !isPro && isPremiumTheme(profile.theme || "default") ? "default" : (profile.theme || "default");
   const canShowEmailCapture = hasPlanFeature(plan, "emailCapture");
   const canShowWhatsApp = hasPlanFeature(plan, "whatsappSync");
   const canRemoveBranding = hasPlanFeature(plan, "removeBranding");
@@ -91,7 +98,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
   });
 
   return (
-    <ThemeProvider initialTheme={finalTheme as Theme}>
+    <>
       <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
         
         <StoreHeader 
@@ -312,6 +319,6 @@ export function StoreView({ profile, products }: StoreViewProps) {
         )}
         {!canRemoveBranding && <PoweredByBadge />}
       </div>
-    </ThemeProvider>
+    </>
   );
 }
