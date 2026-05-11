@@ -60,6 +60,7 @@ export default function BillingPage() {
           plan: normalizePlanId(profile?.plan),
           productCount: count || 0,
           storeName: profile?.store_name || "My Store",
+        });
       } catch {
         toast.error("Failed to load billing data");
       } finally {
@@ -209,7 +210,7 @@ export default function BillingPage() {
         ease: "easeOut"
       }
     })
-  };
+  } as const;
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
