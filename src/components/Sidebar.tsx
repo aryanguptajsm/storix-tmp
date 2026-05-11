@@ -174,8 +174,8 @@ export function Sidebar() {
             </div>
           )}
 
-          <div className="space-y-1">
-            <ThemeToggle />
+          <div className="space-y-2">
+            <ThemeToggle className="w-full" />
             {profile?.username && (
               <Link
                 href={`/store/${profile.username}`}
@@ -252,9 +252,10 @@ export function Sidebar() {
         className={`fixed lg:sticky top-0 left-0 z-[120] h-full lg:h-screen w-[300px] lg:w-[320px] transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           }`}
       >
-        <div className="h-full lg:m-4 lg:my-6 lg:rounded-[3rem] bg-[#0A0A0E] border-r lg:border border-white/5 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 mesh-primary opacity-20" />
-          <div className="relative h-full">
+        <div className="h-full bg-[#060608] border-r border-white/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.03),transparent_40%)]" />
+          <div className="absolute inset-0 mesh-primary opacity-10" />
+          <div className="relative h-full flex flex-col">
             {nav}
           </div>
         </div>
