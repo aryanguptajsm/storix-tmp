@@ -93,7 +93,7 @@ export default function StorixProductPage() {
               </p>
               <div className="flex gap-4">
                 <Link href="/dashboard">
-                  <Button className="px-8 py-4 text-lg font-bold">Admin Console</Button>
+                  <Button className="px-8 py-4 text-lg font-bold">Dashboard</Button>
                 </Link>
                 <Link href="/dashboard/add-product">
                   <Button variant="secondary" className="px-8 py-4 text-lg font-bold">Launch a Product</Button>
