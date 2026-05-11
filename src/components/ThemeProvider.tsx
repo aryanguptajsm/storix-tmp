@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useSyncExternalStore } from "react";
+import { flushSync } from "react-dom";
 
 export type Theme = "default" | "midnight" | "minimalist" | "neon" | "amazon" | "flipkart";
 
@@ -72,7 +73,14 @@ export function ThemeProvider({
     );
 
     const transition = document.startViewTransition(() => {
-      setAppMode(prev => prev === "light" ? "dark" : "light");
+      flushSync(() => {
+        setAppMode(prev => {
+          const nextMode = prev === "light" ? "dark" : "light";
+          document.documentElement.setAttribute("data-app-theme", nextMode);
+          localStorage.setItem("storix-app-mode", nextMode);
+          return nextMode;
+        });
+      });
     });
 
     transition.ready.then(() => {
