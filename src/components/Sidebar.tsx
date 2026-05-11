@@ -117,20 +117,19 @@ export function Sidebar() {
                     key={item.href}
                     href={isLocked ? "/dashboard/billing" : item.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`relative flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-500 group ${
-                      isActive
+                    className={`relative flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-500 group ${isActive
                         ? "text-white"
                         : "text-white/40 hover:text-white hover:bg-white/[0.03]"
-                    }`}
+                      }`}
                   >
                     {isActive && (
-                      <motion.div 
+                      <motion.div
                         layoutId="active-pill"
                         className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-2xl z-0"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
-                    
+
                     <div className="relative z-10 flex items-center gap-3">
                       <div className={`transition-all duration-500 ${isActive ? "text-primary scale-110 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "group-hover:text-white"}`}>
                         <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
@@ -157,7 +156,7 @@ export function Sidebar() {
       <div className="p-4 mt-auto">
         <div className="glass-premium rounded-[2rem] p-4 border border-white/5 shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-          
+
           {user && (
             <div className="flex items-center gap-3 mb-4 p-2">
               <div className="relative shrink-0">
@@ -192,7 +191,7 @@ export function Sidebar() {
             <button
               onClick={handleSignOut}
               disabled={isLoggingOut}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest text-red-400/60 hover:text-red-400 hover:bg-red-400/10 w-full transition-all group/out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-bla ck uppercase tracking-widest text-red-400/60 hover:text-red-400 hover:bg-red-400/10 w-full transition-all group/out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoggingOut ? (
                 <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
@@ -215,18 +214,18 @@ export function Sidebar() {
         <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl z-[-1]" />
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent z-[-1]" />
         <div className="absolute -top-[50%] -left-[10%] w-[40%] h-[100%] bg-primary/10 blur-[80px] z-[-1] animate-pulse" />
-        
+
         <div className="flex items-center gap-4">
-           <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity" />
-              <div className="relative w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg border border-white/20">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-           </div>
-           <div className="flex flex-col">
-              <span className="font-black text-2xl tracking-tighter text-white leading-none">Storix</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Dashboard</span>
-           </div>
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity" />
+            <div className="relative w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg border border-white/20">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-black text-2xl tracking-tighter text-white leading-none">Storix</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60 mt-1">Dashboard</span>
+          </div>
         </div>
         <button
           className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer relative group overflow-hidden"
@@ -252,15 +251,14 @@ export function Sidebar() {
 
       {/* Sidebar Architecture */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 z-[120] h-full lg:h-screen w-[300px] lg:w-[320px] transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
+        className={`fixed lg:sticky top-0 left-0 z-[120] h-full lg:h-screen w-[300px] lg:w-[320px] transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          }`}
       >
         <div className="h-full lg:m-4 lg:my-6 lg:rounded-[3rem] bg-[#0A0A0E] border-r lg:border border-white/5 shadow-2xl relative overflow-hidden">
-           <div className="absolute inset-0 mesh-primary opacity-20" />
-           <div className="relative h-full">
-              {nav}
-           </div>
+          <div className="absolute inset-0 mesh-primary opacity-20" />
+          <div className="relative h-full">
+            {nav}
+          </div>
         </div>
       </aside>
     </>
