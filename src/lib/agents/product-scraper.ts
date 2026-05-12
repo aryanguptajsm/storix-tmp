@@ -26,7 +26,7 @@ import {
   normalizeImages,
   type ExtractionAccumulator,
 } from "./utils";
-import { extractFromCheerio } from "./extractors";
+import { extractFromCheerio } from "extractors";
 import { BrowserManager, scrapeWithPlaywright, assembleResult } from "./playwright-engine";
 import { classifyScrapeError } from "./contracts";
 
