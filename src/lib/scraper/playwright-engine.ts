@@ -60,7 +60,7 @@ async function validateImageUrl(url: string): Promise<boolean> {
         timeout: 6000,
         responseType: "stream",
       });
-      (res.data as NodeJS.ReadableStream).destroy();
+      (res.data as any).destroy?.();
       return res.status < 400;
     } catch {
       return false;
