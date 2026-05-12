@@ -16,7 +16,7 @@
 
 import axios from "axios";
 import * as cheerio from "cheerio";
-import type { ScrapedProduct, ScrapeAttemptLog } from "../scraper/types";
+import type { ScrapedProduct, ScrapeAttemptLog, ExtractionAccumulator } from "../scraper/types";
 import {
   detectPlatform,
   sleep,
@@ -24,7 +24,6 @@ import {
   mergeAccumulators,
   deriveScrapeStatus,
   normalizeImages,
-  type ExtractionAccumulator,
 } from "../scraper/utils";
 import { extractFromCheerio } from "../scraper/extractors";
 import { BrowserManager, scrapeWithPlaywright, assembleResult } from "../scraper/playwright-engine";
