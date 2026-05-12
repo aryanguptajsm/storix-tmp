@@ -17,7 +17,6 @@ import { PoweredByBadge } from "@/components/store/PoweredByBadge";
 import { WhatsAppButton } from "@/components/store/WhatsAppButton";
 import { Button } from "@/components/ui/Button";
 import { Product } from "@/lib/types";
-import { Product } from "@/lib/types";
 import {
   hasPlanFeature,
   isPaidPlan,
