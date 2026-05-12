@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { BillingSkeleton } from "@/components/ui/BillingSkeleton";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 interface UserState {
   plan: PlanId;
@@ -199,7 +199,7 @@ export default function BillingPage() {
     },
   ];
 
-  const variants = {
+  const variants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -210,7 +210,7 @@ export default function BillingPage() {
         ease: "easeOut"
       }
     })
-  } as const;
+  };
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">

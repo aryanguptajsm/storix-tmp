@@ -24,7 +24,7 @@ import {
   mergeAccumulators,
   deriveScrapeStatus,
   normalizeImages,
-  type ExtractionAccumulator,
+  ExtractionAccumulator,
 } from "../scraper/utils";
 import { extractFromCheerio } from "../scraper/extractors";
 import { BrowserManager, scrapeWithPlaywright, assembleResult } from "../scraper/playwright-engine";
