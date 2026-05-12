@@ -16,7 +16,7 @@
 
 import axios from "axios";
 import * as cheerio from "cheerio";
-import type { ScrapedProduct, ScrapeAttemptLog } from "./types";
+import type { ScrapedProduct, ScrapeAttemptLog } from "../scraper/types";
 import {
   detectPlatform,
   sleep,
@@ -25,13 +25,13 @@ import {
   deriveScrapeStatus,
   normalizeImages,
   type ExtractionAccumulator,
-} from "./utils";
-import { extractFromCheerio } from "extractors";
-import { BrowserManager, scrapeWithPlaywright, assembleResult } from "./playwright-engine";
-import { classifyScrapeError } from "./contracts";
+} from "../scraper/utils";
+import { extractFromCheerio } from "../scraper/extractors";
+import { BrowserManager, scrapeWithPlaywright, assembleResult } from "../scraper/playwright-engine";
+import { classifyScrapeError } from "../scraper/contracts";
 
 // Keep contracts.ts working for existing code
-export { classifyScrapeError, detectPlatformFromUrl, deriveScrapeStatus as deriveScrapeStatusLegacy, type ScrapeAttemptLog, type ScrapePlatform, type ScrapeStatus, type ScrapeErrorType } from "./contracts";
+export { classifyScrapeError, detectPlatformFromUrl, deriveScrapeStatus as deriveScrapeStatusLegacy, type ScrapeAttemptLog, type ScrapePlatform, type ScrapeStatus, type ScrapeErrorType } from "../scraper/contracts";
 export type { ScrapedProduct };
 
 // ─────────────────────────────────────────────────────────────────────────────
