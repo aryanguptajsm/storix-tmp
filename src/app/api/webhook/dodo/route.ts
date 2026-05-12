@@ -192,8 +192,8 @@ export async function POST(req: Request) {
     if (relevantEvents.includes(eventType)) {
       // Extract metadata (passed during checkout creation)
       const metadata = extractMetadata(data);
-      const userId = metadata.user_id;
-      let planId = metadata.plan_id;
+      const userId = typeof metadata.user_id === "string" ? metadata.user_id : undefined;
+      let planId = typeof metadata.plan_id === "string" ? metadata.plan_id : undefined;
 
       // Validate userId
       if (!userId) {
@@ -208,7 +208,7 @@ export async function POST(req: Request) {
       }
 
       // Validate planId against our PLANS definition
-      if (!(planId in PLANS)) {
+      if (typeof planId !== "string" || !(planId in PLANS)) {
          console.error(`[Dodo Webhook] Received invalid planId: ${planId}`);
          return NextResponse.json({ error: "Invalid planId" }, { status: 400 });
       }
