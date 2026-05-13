@@ -15,16 +15,11 @@ import {
   Loader2, 
   ExternalLink,
   Package,
-  Globe,
-  DollarSign,
-  Type,
-  Zap,
-  ArrowRight,
   Upload,
-  Image as ImageIcon,
   Trash2,
-  Link as LinkIcon,
-  Plus
+  Plus,
+  Wand2,
+  Image as ImageIcon
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -44,6 +39,7 @@ export default function AddProductPage() {
   const [productData, setProductData] = useState<any>(null);
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [profile, setProfile] = useState<any>(null);
   const [productCount, setProductCount] = useState(0);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -74,11 +70,10 @@ export default function AddProductPage() {
   async function handleScrape() {
     if (!url) return;
     
-    // Plan Guard for Scraping
     const limit = getProductLimit(normalizePlanId(profile?.plan));
     if (productCount >= limit) {
-      toast.error(`Operational Capacity Reached (${productCount}/${limit})`, {
-        description: "Upgrade your signature to a higher tier for more deployments.",
+      toast.error(`Product limit reached (${productCount}/${limit})`, {
+        description: "Upgrade your plan to add more products.",
         duration: 5000,
       });
       return;
@@ -96,23 +91,23 @@ export default function AddProductPage() {
       });
       
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Scraping failed");
+      if (!res.ok) throw new Error(data.error || "Failed to extract product");
       
       setProductData(data);
       if (data.status === "partial") {
-        toast.info("Partial product intelligence gathered. Review the fields before saving.");
+        toast.info("Partial details extracted. Please verify missing fields.");
       } else {
-        toast.success("Product intelligence gathered!");
+        toast.success("Product details extracted successfully!");
       }
     } catch (err: any) {
-      console.error("Scrape error:", err);
-      toast.error(err.message || "Failed to scrape product.");
+      console.error("Extraction error:", err);
+      toast.error(err.message || "Failed to extract product details.");
     } finally {
       setScraping(false);
     }
   }
 
-  async function handleNeuralForge() {
+  async function handleEnhanceWithAI() {
     if (!productData) return;
     
     const isPro = isPaidPlan(profile?.plan);
@@ -134,15 +129,14 @@ export default function AddProductPage() {
       if (data.titles && data.titles.length > 0) {
         setAiSuggestions(data.titles);
         
-        // Pro Perk: Auto-update description
         if (isPro && data.description) {
           setProductData((prev: any) => ({ ...prev, description: data.description }));
-          toast.success("AI variants generated & description forged!");
+          toast.success("AI generated title variants and enhanced description!");
         } else {
-          toast.success("AI variants generated!");
+          toast.success("AI generated title variants!");
           if (!isPro) {
-            toast.info("Pro Perk: Upgrade to auto-forge descriptions.", {
-              icon: <Sparkles className="text-secondary" />
+            toast.info("Pro Perk: Upgrade to auto-enhance descriptions.", {
+              icon: <Wand2 className="text-primary" />
             });
           }
         }
@@ -160,7 +154,7 @@ export default function AddProductPage() {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image file.");
+      toast.error("Please upload a valid image file.");
       return;
     }
 
@@ -168,7 +162,7 @@ export default function AddProductPage() {
     const supabase = createClient();
     try {
       const user = await getUser();
-      if (!user) throw new Error("Authentication failed.");
+      if (!user) throw new Error("Authentication required.");
 
       const fileExt = file.name.split(".").pop();
       const fileName = `${user.id}/${Math.random().toString(36).substring(2)}.${fileExt}`;
@@ -185,7 +179,7 @@ export default function AddProductPage() {
         .getPublicUrl(filePath);
 
       setProductData({ ...productData, image: publicUrl });
-      toast.success("High-fidelity asset uploaded!");
+      toast.success("Product image uploaded successfully!");
     } catch (err: any) {
       console.error("Upload error:", err);
       toast.error(err.message || "Failed to upload image.");
@@ -202,7 +196,7 @@ export default function AddProductPage() {
 
   async function handleSave() {
     if (!productData) {
-      toast.error("No product data detected.");
+      toast.error("No product details to save.");
       return;
     }
     
@@ -210,7 +204,7 @@ export default function AddProductPage() {
     const supabase = createClient();
     try {
       const user = await getUser();
-      if (!user) throw new Error("Authentication failed. Please sign in again.");
+      if (!user) throw new Error("Authentication required.");
       
       const insertData = {
         user_id: user.id,
@@ -231,18 +225,15 @@ export default function AddProductPage() {
         .from("products")
         .insert(insertData);
       
-      // Cache invalidation trigger to ensure client bundle reloads
       if (error) {
-        console.error("Supabase Deployment Error:", error);
-        const errorMessage = error.message || error.details || error.hint || (typeof error === 'string' ? error : JSON.stringify(error));
-        throw new Error(errorMessage || "Failed to save product.");
+        throw new Error(error.message || "Failed to save product.");
       }
       
-      toast.success("Product successfully deployed to your hangar!");
+      toast.success("Product added successfully!");
       router.push("/dashboard/products");
     } catch (err: any) {
-      console.error("Deployment failure:", err);
-      toast.error(err.message || "A critical error occurred during deployment.");
+      console.error("Save error:", err);
+      toast.error(err.message || "Failed to add product.");
     } finally {
       setSaving(false);
     }
@@ -251,64 +242,52 @@ export default function AddProductPage() {
   const isPro = isPaidPlan(profile?.plan);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-24">
+    <div className="max-w-6xl mx-auto space-y-10 animate-fade-in pb-24">
+      {/* Header */}
       <AnimatedSection delay={0.1}>
-        <div className="flex items-center justify-between">
-          <Link href="/dashboard/products" className="group">
-            <Button variant="ghost" size="sm" className="gap-2 text-muted hover:text-white transition-all font-black uppercase tracking-widest">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Inventory Control
-            </Button>
-          </Link>
-          <div className="flex items-center gap-3">
-             <div className="p-2 rounded-xl bg-secondary/10 text-secondary animate-pulse-glow border border-secondary/20">
-                <Zap size={20} />
-             </div>
-             <h1 className="text-3xl font-black tracking-tight italic">Launch Unit</h1>
+        <div className="flex flex-col gap-6 md:flex-row md:items-end justify-between">
+          <div className="space-y-4">
+            <Link href="/dashboard/products" className="inline-flex">
+              <Button variant="ghost" size="sm" className="gap-2 text-muted hover:text-foreground hover:bg-white/5 transition-all rounded-xl pl-0 hover:pl-3">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Products
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Add New Product</h1>
+              <p className="text-muted mt-2">Import product details instantly via URL or configure manually.</p>
+            </div>
           </div>
         </div>
       </AnimatedSection>
 
+      {/* URL Extractor */}
       <AnimatedSection delay={0.2}>
-        <Card className="glass relative overflow-hidden group hover:border-primary/20 transition-all duration-500 glass-premium-animated">
-          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-             <Globe size={160} />
-          </div>
-          <CardHeader className="p-10 pb-4">
-            <CardTitle className="text-2xl font-black flex items-center gap-4 italic uppercase tracking-tight">
-              <div className="p-3 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-lg shadow-primary/10">
-                <Globe className="w-8 h-8" />
-              </div>
-              Universal Importer
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-10 pt-0 space-y-8">
-            <p className="text-lg text-muted/80 font-medium max-w-2xl leading-relaxed">
-              Define target coordinates (URL) from any affiliate platform. Our AI will intercept high-fidelity metadata.
-            </p>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1 group/input">
-                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-muted/30 group-focus-within/input:text-primary transition-all duration-300">
+        <Card className="glass border-white/5 bg-white/[0.02] shadow-xl overflow-hidden rounded-[2rem]">
+          <CardContent className="p-8">
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              <div className="relative flex-1 w-full group/input">
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-primary transition-colors">
                   <Search size={20} />
                 </div>
                 <input
-                  placeholder="Paste link (Amazon, Etsy, Flipkart...)"
+                  placeholder="Paste URL from Amazon, Shopify, Flipkart, Etsy..."
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  className="w-full pl-14 pr-6 py-4 rounded-2xl bg-white/5 border border-white/5 text-foreground font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted/20 text-lg shadow-inner"
+                  className="w-full pl-14 pr-6 py-5 rounded-[1.5rem] bg-white/[0.03] border border-white/5 text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all placeholder:text-muted/30 text-base"
                 />
               </div>
               <Button 
                 onClick={handleScrape} 
                 disabled={scraping || !url}
-                className="gap-3 px-10 h-auto py-4 shadow-2xl shadow-primary/20 relative overflow-hidden group/btn min-w-[200px] rounded-2xl hover-lift"
+                className="w-full md:w-auto h-[60px] px-8 rounded-[1.5rem] gap-3 bg-white text-black hover:bg-white/90 font-bold shadow-lg transition-transform active:scale-95"
               >
                 {scraping ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    <Sparkles size={20} className="group-hover/btn:rotate-12 transition-transform" />
-                    <span className="font-black uppercase tracking-widest text-base font-display">Gather Intel</span>
+                    <Sparkles size={18} />
+                    Extract Details
                   </>
                 )}
               </Button>
@@ -317,58 +296,58 @@ export default function AddProductPage() {
         </Card>
       </AnimatedSection>
 
+      {/* Editor Section */}
       <AnimatePresence mode="wait">
         {productData && (
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-10"
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8"
           >
+            {/* Left Column - Image & Actions */}
             <div className="lg:col-span-4 space-y-6">
-              <Card className="glass overflow-hidden border-white/10 group/preview hover:border-primary/30 transition-all glass-morphism-premium">
+              <Card className="glass border-white/5 rounded-[2rem] overflow-hidden group/preview bg-white/[0.01]">
                 <CardContent className="p-0">
-                  <div className="relative aspect-square bg-white flex items-center justify-center p-12 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/5" />
+                  <div className="relative aspect-[4/5] bg-white flex items-center justify-center p-8 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-black/10 pointer-events-none" />
+                    
                     {productData.image ? (
-                      <motion.div
-                        layoutId="productImage"
-                        className="w-full h-full relative z-10"
-                      >
+                      <motion.div layoutId="productImage" className="relative w-full h-full z-10 drop-shadow-xl">
                         <Image
                           src={productData.image}
-                          alt="Intelligence preview"
+                          alt="Product Preview"
                           fill
                           className="object-contain p-4"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                          sizes="(max-width: 768px) 100vw, 400px"
                         />
                       </motion.div>
                     ) : (
-                      <div className="flex flex-col items-center gap-6 text-muted/20">
-                        <Package className="w-24 h-24" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">No Asset Detected</span>
+                      <div className="flex flex-col items-center gap-4 text-muted/30">
+                        <ImageIcon className="w-16 h-16" />
+                        <span className="text-sm font-medium">No Image Uploaded</span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-black/0 group-hover/preview:bg-black/60 transition-all duration-300 flex flex-col items-center justify-center gap-3 opacity-0 group-hover/preview:opacity-100 z-20">
+
+                    {/* Image Actions Overlay */}
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-4 opacity-0 group-hover/preview:opacity-100 transition-all duration-300 z-20">
                       <Button 
                         variant="secondary" 
-                        size="sm" 
-                        className="gap-2 rounded-xl h-11 px-6 font-bold"
+                        className="rounded-xl px-6 font-medium bg-white text-black hover:bg-white/90"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
                       >
-                        {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
-                        Update Source Asset
+                        {uploading ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Upload size={16} className="mr-2" />}
+                        Upload Image
                       </Button>
                       {productData.image && (
                         <Button 
                           variant="danger" 
-                          size="sm" 
-                          className="h-11 px-6 gap-2 rounded-xl font-bold"
+                          className="rounded-xl px-6 font-medium bg-red-500/20 text-red-500 hover:bg-red-500/30 border-0"
                           onClick={handleImageReset}
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={16} className="mr-2" />
                           Remove
                         </Button>
                       )}
@@ -380,219 +359,170 @@ export default function AddProductPage() {
                       accept="image/*" 
                       onChange={handleFileUpload} 
                     />
-                    <div className="absolute top-6 left-6 px-4 py-1.5 rounded-xl glass border-white/10 text-[10px] font-black text-foreground uppercase tracking-widest z-20 shadow-2xl">
-                      {productData.platform}
-                    </div>
+                    
+                    {/* Platform Badge */}
+                    {productData.platform && (
+                      <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-bold text-white uppercase tracking-wider z-20">
+                        {productData.platform}
+                      </div>
+                    )}
                   </div>
-                  <div className="p-8 space-y-8">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Unit Status</span>
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-success bg-success/10 px-3 py-1 rounded-full border border-success/20 animate-pulse">Detected & Ready</span>
-                    </div>
-                    <div className="space-y-6">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Intercept Price</span>
-                        <span className="text-3xl font-black text-[#FF4D67] tracking-tighter text-shadow-glow">{productData.price || "N/A"}</span>
+
+                  <div className="p-6 border-t border-white/5 bg-[#0A0A0A]">
+                    <div className="space-y-4">
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-muted/60 tracking-wider block mb-1">Selling Price</span>
+                          <span className="text-3xl font-bold text-foreground">{productData.price || "$0.00"}</span>
+                        </div>
+                        {productData.discountPercentage && (
+                          <div className="px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
+                            {productData.discountPercentage}% OFF
+                          </div>
+                        )}
                       </div>
                       {productData.originalPrice && (
-                        <div className="flex items-center justify-between opacity-50">
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Baseline Price</span>
-                          <span className="text-base font-bold text-slate-400 line-through">{productData.originalPrice}</span>
-                        </div>
-                      )}
-                      {productData.discountPercentage && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Tactical Savings</span>
-                          <span className="text-xs font-black text-green-400 bg-green-500/10 px-3 py-1.5 rounded-xl border border-green-500/20">-{productData.discountPercentage}% OFF</span>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted/60">Original Price</span>
+                          <span className="text-muted line-through">{productData.originalPrice}</span>
                         </div>
                       )}
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              
-              <Link href={productData.originalUrl || url} target="_blank" className="block group/link">
-                <div className="flex items-center justify-center gap-3 p-5 rounded-3xl glass border-white/5 hover:border-primary/40 transition-all text-xs font-black uppercase tracking-widest text-muted group-hover/link:text-foreground hover:glow-primary">
-                  <ExternalLink size={16} className="group-hover/link:rotate-12 transition-transform" />
-                  Verify Encryption Source
-                </div>
+
+              {/* External Link */}
+              <Link href={productData.originalUrl || url} target="_blank" className="block">
+                <Button variant="outline" className="w-full rounded-2xl h-14 border-white/5 bg-white/[0.02] hover:bg-white/[0.04] text-muted hover:text-foreground">
+                  <ExternalLink size={16} className="mr-2" />
+                  View Original Page
+                </Button>
               </Link>
             </div>
   
-            <div className="lg:col-span-8 space-y-8">
-              <Card className="glass overflow-hidden border-white/10 glass-premium-animated">
-                <CardHeader className="p-8 pb-2 border-b border-white/5 bg-white/[0.02]">
-                  <CardTitle className="text-xl font-black flex items-center gap-4 italic uppercase tracking-tight">
-                    <div className="p-2 rounded-xl bg-secondary/10 text-secondary border border-secondary/20 shadow-lg shadow-secondary/10">
-                      <Zap className="w-6 h-6" />
-                    </div>
-                    Neural Expansion
-                  </CardTitle>
+            {/* Right Column - Editor */}
+            <div className="lg:col-span-8 space-y-6">
+              <Card className="glass border-white/5 rounded-[2rem] bg-white/[0.01]">
+                <CardHeader className="p-8 border-b border-white/5">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl font-bold">Product Details</CardTitle>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleEnhanceWithAI}
+                      disabled={generating}
+                      className="rounded-xl border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 hover:border-primary/30 font-medium"
+                    >
+                      {generating ? (
+                        <Loader2 size={14} className="mr-2 animate-spin" />
+                      ) : (
+                        <Wand2 size={14} className="mr-2" />
+                      )}
+                      {isPro ? "AI Enhance All" : "AI Enhance Title"}
+                    </Button>
+                  </div>
                 </CardHeader>
-                <CardContent className="p-10 space-y-10">
-                  <motion.div 
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Display Signal (Title)</label>
-                      <button
-                        onClick={handleNeuralForge}
-                        disabled={generating}
-                        className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-secondary hover:text-secondary-light transition-all group/ai py-1.5 px-3.5 rounded-xl bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 shadow-lg shadow-secondary/5"
-                      >
-                        {generating ? (
-                          <Loader2 size={12} className="animate-spin" />
-                        ) : (
-                          <Sparkles size={12} className="group-hover/ai:rotate-12 transition-transform" />
-                        )}
-                        {isPro ? "Neural Forge Master" : "Neural Forge (Free)"}
-                        {!isPro && <div className="ml-1 w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />}
-                      </button>
-                    </div>
+                <CardContent className="p-8 space-y-8">
+                  {/* Title */}
+                  <div className="space-y-3">
+                    <label className="text-xs font-semibold text-muted uppercase tracking-wider">Product Title</label>
                     <Input
                       value={productData.title}
                       onChange={(e) => setProductData({ ...productData, title: e.target.value })}
-                      className="bg-white/5 border-white/5 focus:glow-primary transition-all font-black text-lg p-6 rounded-2xl"
+                      className="bg-white/[0.03] border-white/5 focus:border-primary/30 transition-all font-medium text-lg px-5 py-6 rounded-2xl"
                     />
-                  </motion.div>
-  
-                  <motion.div 
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Asset Origin (URL)</label>
-                      <div className="flex items-center gap-2 text-[10px] font-black text-muted/40 uppercase tracking-widest">
-                        <LinkIcon size={12} />
-                        Direct Link
-                      </div>
-                    </div>
-                    <Input
-                      value={productData.image}
-                      onChange={(e) => setProductData({ ...productData, image: e.target.value })}
-                      placeholder="https://example.com/image.jpg"
-                      className="bg-white/5 border-white/5 focus:glow-primary transition-all font-mono text-sm p-6 rounded-2xl"
-                    />
-                    <p className="text-[10px] text-muted/60 italic font-medium">Tactical Advice: PNG assets with transparency provide the highest conversion rates.</p>
-                  </motion.div>
-  
+                  </div>
+
+                  {/* AI Suggestions Panel */}
                   <AnimatePresence>
                     {aiSuggestions.length > 0 && (
                       <motion.div 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="p-8 bg-secondary/5 rounded-[2.5rem] border border-secondary/20 space-y-6 relative overflow-hidden shadow-inner"
+                        initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                        animate={{ opacity: 1, height: "auto", marginBottom: 32 }}
+                        exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                        className="overflow-hidden"
                       >
-                        <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 pointer-events-none">
-                           <Sparkles size={60} className="text-secondary" />
-                        </div>
-                        <div className="text-[10px] font-black text-secondary uppercase tracking-[0.3em] flex items-center gap-3 relative z-10">
-                          <Zap size={14} fill="currentColor" /> Neural Resonance Variants
-                        </div>
-                        <div className="grid grid-cols-1 gap-3 relative z-10">
-                          {aiSuggestions.map((title, i) => (
-                            <motion.button
-                              key={i}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: i * 0.1 }}
-                              onClick={() => {
-                                setProductData({ ...productData, title });
-                                toast.success("Signal updated.");
-                              }}
-                              className={`text-sm text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between group/suggestion ${
-                                productData.title === title 
-                                  ? "bg-secondary/20 border-secondary text-white shadow-xl shadow-secondary/20" 
-                                  : "border-white/5 bg-black/40 text-muted/60 hover:border-secondary/50 hover:text-white"
-                              }`}
-                            >
-                              <span className="font-black italic line-clamp-1">{title}</span>
-                              <div className={`p-1.5 rounded-lg bg-secondary/20 opacity-0 group-hover/suggestion:opacity-100 transition-all ${productData.title === title ? 'opacity-100' : ''}`}>
-                                 <Plus size={14} className="text-secondary" />
-                              </div>
-                            </motion.button>
-                          ))}
+                        <div className="p-6 rounded-[1.5rem] bg-primary/5 border border-primary/10 space-y-4">
+                          <div className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                            <Sparkles size={14} /> AI Suggested Titles
+                          </div>
+                          <div className="grid grid-cols-1 gap-2">
+                            {aiSuggestions.map((title, i) => (
+                              <button
+                                key={i}
+                                onClick={() => {
+                                  setProductData({ ...productData, title });
+                                  toast.success("Title applied!");
+                                }}
+                                className={`text-sm text-left px-5 py-4 rounded-xl border transition-all flex items-center justify-between group ${
+                                  productData.title === title 
+                                    ? "bg-primary/10 border-primary/30 text-foreground" 
+                                    : "bg-black/20 border-white/5 text-muted hover:bg-white/5 hover:text-foreground"
+                                }`}
+                              >
+                                <span className="font-medium">{title}</span>
+                                <Plus size={16} className={`opacity-0 group-hover:opacity-100 transition-opacity ${productData.title === title ? 'text-primary opacity-100' : 'text-muted'}`} />
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="space-y-4"
-                    >
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Final Intercept Price</label>
+                  {/* Prices */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <label className="text-xs font-semibold text-muted uppercase tracking-wider">Selling Price</label>
                       <Input
                         value={productData.price}
                         onChange={(e) => setProductData({ ...productData, price: e.target.value })}
-                        className="bg-white/5 border-white/5 focus:glow-primary transition-all font-black text-2xl p-6 rounded-2xl text-secondary-light"
+                        className="bg-white/[0.03] border-white/5 focus:border-primary/30 transition-all font-medium text-lg px-5 py-6 rounded-2xl"
                       />
-                    </motion.div>
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
-                      className="space-y-4"
-                    >
-                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Baseline Market Price</label>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-xs font-semibold text-muted uppercase tracking-wider">Original Price</label>
                       <Input
                         value={productData.originalPrice}
                         onChange={(e) => setProductData({ ...productData, originalPrice: e.target.value })}
-                        className="bg-white/5 border-white/5 focus:glow-primary transition-all font-black text-2xl p-6 rounded-2xl text-muted/40"
+                        className="bg-white/[0.03] border-white/5 focus:border-primary/30 transition-all font-medium text-lg px-5 py-6 rounded-2xl"
                       />
-                    </motion.div>
+                    </div>
                   </div>
   
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="space-y-4"
-                  >
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted/60">Operational Description</label>
+                  {/* Description */}
+                  <div className="space-y-3">
+                    <label className="text-xs font-semibold text-muted uppercase tracking-wider">Description</label>
                     <textarea
-                      rows={5}
+                      rows={6}
                       value={productData.description}
                       onChange={(e) => setProductData({ ...productData, description: e.target.value })}
-                      className="w-full rounded-[2rem] bg-white/5 border border-white/5 p-8 text-base font-medium text-foreground focus:ring-4 focus:ring-primary/10 focus:border-primary/40 outline-none transition-all resize-none leading-relaxed shadow-inner"
+                      className="w-full rounded-[1.5rem] bg-white/[0.03] border border-white/5 px-5 py-5 text-base font-medium text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary/40 outline-none transition-all resize-none leading-relaxed"
                     />
-                  </motion.div>
+                  </div>
   
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="pt-6"
-                  >
-                    <Button 
-                      className="w-full gap-4 h-20 text-xl font-black uppercase tracking-[0.3em] shadow-2xl shadow-primary/30 group/save relative overflow-hidden rounded-[2.5rem] hover-lift"
-                      onClick={handleSave}
-                      disabled={saving}
-                    >
-                       <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary-light to-primary-dark opacity-0 group-hover/save:opacity-20 transition-opacity" />
-                       
-                      {saving ? (
-                        <Loader2 size={32} className="animate-spin" />
-                      ) : (
-                        <>
-                          <Save size={24} className="group-hover/save:scale-110 transition-transform" />
-                          <span>Initiate Deployment</span>
-                          <ArrowRight size={24} className="group-hover/save:translate-x-3 transition-transform" />
-                        </>
-                      )}
-                    </Button>
-                  </motion.div>
                 </CardContent>
               </Card>
+              
+              {/* Save Action */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Button 
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="w-full h-16 rounded-[2rem] text-lg font-bold bg-foreground text-background hover:bg-foreground/90 shadow-2xl active:scale-[0.98] transition-all"
+                >
+                  {saving ? (
+                    <><Loader2 size={24} className="mr-3 animate-spin" /> Saving Product...</>
+                  ) : (
+                    <><Save size={20} className="mr-3" /> Save Product</>
+                  )}
+                </Button>
+              </motion.div>
             </div>
           </motion.div>
         )}
