@@ -178,7 +178,7 @@ export default function BillingPage() {
       name: "AI Description Writer",
       price: "Included",
       icon: <Sparkles size={18} />,
-      desc: "Generate SEO-optimized product descriptions with Claude AI.",
+      desc: "Generate SEO-optimized product descriptions with Gemini AI.",
       included: isPaidPlan(currentPlan),
     },
     {
