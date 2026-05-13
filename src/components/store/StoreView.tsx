@@ -58,9 +58,8 @@ export function StoreView({ profile, products }: StoreViewProps) {
   
   const { setTheme } = useTheme();
   
-  React.useEffect(() => {
-    setTheme(finalTheme as Theme);
-  }, [finalTheme, setTheme]);
+  // Removed global setTheme to prevent flashing and dashboard overrides.
+  // We now apply data-theme locally to the StoreView wrapper.
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -98,7 +97,7 @@ export function StoreView({ profile, products }: StoreViewProps) {
 
   return (
     <>
-      <div className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
+      <div data-theme={finalTheme} className="min-h-screen bg-[var(--store-background)] text-[var(--store-foreground)] font-sans selection:bg-[var(--store-primary)]/30 selection:text-white scroll-smooth overflow-x-hidden">
         
         <StoreHeader 
           storeName={profile.store_name} 
