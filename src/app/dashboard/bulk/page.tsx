@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase";
@@ -9,24 +9,25 @@ import { Button } from "@/components/ui/Button";
 import { 
   ArrowLeft, 
   Layers, 
-  Zap, 
   Loader2, 
   CheckCircle2, 
   AlertCircle,
   Play,
-  Pause,
   RotateCcw,
-  Plus
+  Plus,
+  Upload
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { AnimatedSection } from "@/components/dashboard/DashboardEntrance";
+import { isPaidPlan, normalizePlanId } from "@/lib/plans";
 
 interface ImportTask {
   url: string;
   status: "pending" | "processing" | "success" | "error";
   error?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result?: any;
 }
 
@@ -36,10 +37,54 @@ export default function BulkImportPage() {
   const [tasks, setTasks] = useState<ImportTask[]>([]);
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const supabase = createClient();
+      const user = await getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      const { data: profile } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
+      const plan = normalizePlanId(profile?.plan);
+      
+      // We only allow paid plans to use bulk upload
+      if (!isPaidPlan(plan)) {
+        toast.error("Pro feature: Bulk Deployment requires a premium plan.");
+        router.push("/dashboard/billing");
+      } else {
+        setIsAuthorized(true);
+      }
+    }
+    checkAuth();
+  }, [router]);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        // Append to existing input, handling both commas and newlines
+        const newUrls = text.split(/[\n,]+/).map(u => u.trim()).filter(u => u.startsWith("http")).join("\n");
+        setUrlInput(prev => prev ? prev + "\n" + newUrls : newUrls);
+        toast.success("CSV/Text file loaded successfully!");
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleAddTasks = () => {
     const urls = urlInput
-      .split("\n")
+      .split(/[\n,]+/)
       .map(u => u.trim())
       .filter(u => u.startsWith("http"));
     
@@ -81,16 +126,16 @@ export default function BulkImportPage() {
       const { error: saveError } = await supabase.from("products").insert({
         user_id: user.id,
         title: data.title,
-        description: data.description,
-        price: data.price,
+        description: data.description || null,
+        price: data.price || null,
         original_price: data.originalPrice || null,
         discount_percentage: data.discountPercentage || null,
         rating: data.rating || null,
         review_count: data.reviewCount || null,
         brand: data.brand || null,
-        image_url: data.image,
-        platform: data.platform,
-        original_url: data.originalUrl,
+        image_url: data.image || null,
+        platform: data.platform || "other",
+        original_url: data.originalUrl || tasks[index].url,
       });
 
       if (saveError) throw saveError;
@@ -110,6 +155,14 @@ export default function BulkImportPage() {
     setProgress(0);
     processNextTask(0);
   };
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-24">
@@ -134,14 +187,32 @@ export default function BulkImportPage() {
         <div className="lg:col-span-12">
           <Card className="glass overflow-hidden glass-premium-animated">
             <CardHeader className="p-10 pb-4">
-              <CardTitle className="text-xl font-black italic uppercase tracking-tight flex items-center gap-3">
-                <Plus className="text-secondary" />
-                Initialize Vector Queue
+              <CardTitle className="text-xl font-black italic uppercase tracking-tight flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <Plus className="text-secondary" />
+                  Initialize Vector Queue
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="gap-2 border-white/10 hover:bg-white/5"
+                >
+                  <Upload size={14} />
+                  Upload CSV
+                </Button>
+                <input 
+                  type="file" 
+                  accept=".csv,.txt" 
+                  ref={fileInputRef} 
+                  onChange={handleFileUpload} 
+                  className="hidden" 
+                />
               </CardTitle>
             </CardHeader>
             <CardContent className="p-10 pt-0 space-y-6">
               <textarea
-                placeholder="Paste product URLs (one per line)..."
+                placeholder="Paste product URLs (one per line, or comma-separated)..."
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 className="w-full h-48 rounded-2xl bg-white/5 border border-white/5 p-6 text-foreground font-medium focus:ring-2 focus:ring-secondary/20 focus:border-secondary/40 outline-none transition-all resize-none shadow-inner"
