@@ -1,6 +1,6 @@
 -- Storix Core Schema Definition
 
--- 1. Profiles Table (Acts as Store wrapper + User Profile)
+-- 1. Profiles Table (Acts as Store wrapper + User Profile
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
     username TEXT UNIQUE, -- Used for subdomain routing (e.g., username.storix.in)
