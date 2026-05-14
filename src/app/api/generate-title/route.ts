@@ -5,6 +5,14 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
 
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "AI configuration error: API key missing" },
+        { status: 500 }
+      );
+    }
+
     const { title, description, tone } = await req.json();
 
     if (!title) {
