@@ -296,6 +296,7 @@ export function PublicPricingSection({
                       </button>
                     )}
                   </div>
+                </div>
               </motion.div>
             );
           })}
