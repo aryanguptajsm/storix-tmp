@@ -363,41 +363,85 @@ export default function LandingPage() {
       </main>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="py-24 md:py-32 px-8 border-t border-[var(--border)] bg-[var(--background)] relative overflow-hidden">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-20 relative z-10">
-          <div className="space-y-8">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-[1.5rem] bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/40">
-                <ShoppingBag className="w-6 h-6 text-white" />
+      <footer className="group py-24 md:py-32 px-8 border-t border-white/5 bg-[#030305] relative overflow-hidden">
+        {/* Dynamic Background Glows */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.03),transparent_50%)]" />
+        <div className="absolute -bottom-24 -left-24 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] opacity-0 group-hover:opacity-100 transition-all duration-1000 pointer-events-none" />
+        <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px] opacity-0 group-hover:opacity-100 transition-all duration-1000 pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-between gap-20 relative z-10">
+          <div className="space-y-10 max-w-md">
+            <Link href="/" className="flex items-center gap-4 group/logo">
+              <div className="w-14 h-14 rounded-[1.8rem] bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/20 group-hover/logo:scale-110 transition-transform duration-500">
+                <ShoppingBag className="w-7 h-7 text-white" />
               </div>
-              <span className="text-3xl font-black text-white tracking-tighter">Storix</span>
-            </div>
-            <p className="text-white/30 text-lg max-w-sm font-medium leading-relaxed">
-              The easiest way to build and manage your affiliate storefront. Powered by AI and optimized for conversion.
+              <div className="flex flex-col">
+                <span className="text-3xl font-black text-white tracking-tighter leading-none">Storix</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500/50 mt-1">Affiliate Engine</span>
+              </div>
+            </Link>
+            <p className="text-white/30 text-lg font-medium leading-relaxed">
+              The world's most advanced affiliate terminal. <br className="hidden md:block" />
+              Engineered for conversion, powered by AI protocols.
             </p>
+            <div className="flex items-center gap-4">
+              {['Twitter', 'Discord', 'GitHub'].map((social) => (
+                <button key={social} className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-white/20 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+                  <div className="w-1 h-1 rounded-full bg-current" />
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24">
-            <div className="space-y-6">
-              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.3em]">Product</h6>
-              <div className="flex flex-col gap-4 text-sm text-white/30 font-medium">
-                <Link href="#features" className="hover:text-white transition-colors">Features</Link>
-                <Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link>
-                <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-16 lg:gap-24">
+            <div className="space-y-8">
+              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.4em] opacity-20">Navigation</h6>
+              <div className="flex flex-col gap-5 text-sm text-white/30 font-bold">
+                <Link href="#features" className="hover:text-emerald-400 transition-colors inline-flex items-center gap-2 group/link">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                  Features
+                </Link>
+                <Link href="#how-it-works" className="hover:text-emerald-400 transition-colors inline-flex items-center gap-2 group/link">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                  Operations
+                </Link>
+                <Link href="#pricing" className="hover:text-emerald-400 transition-colors inline-flex items-center gap-2 group/link">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                  Pricing
+                </Link>
               </div>
             </div>
-            <div className="space-y-6">
-              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.3em]">Legal</h6>
-              <div className="flex flex-col gap-4 text-sm text-white/30 font-medium">
-                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <div className="space-y-8">
+              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.4em] opacity-20">Legal</h6>
+              <div className="flex flex-col gap-5 text-sm text-white/30 font-bold">
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                <Link href="/cookies" className="hover:text-white transition-colors">Cookie Protocol</Link>
+              </div>
+            </div>
+            <div className="space-y-8 col-span-2 sm:col-span-1">
+              <h6 className="text-[11px] font-black text-white uppercase tracking-[0.4em] opacity-20">Status</h6>
+              <div className="p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 backdrop-blur-md">
+                 <div className="flex items-center gap-2 text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    All Systems Nominal
+                 </div>
+                 <p className="text-[10px] text-white/30 font-bold leading-relaxed">
+                   Global delivery network operating at peak efficiency.
+                 </p>
               </div>
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-sm text-white/20 relative z-10">
-          <p>© 2026 Storix. All rights reserved.</p>
+        
+        <div className="max-w-7xl mx-auto mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.5em]">
+            © 2026 STORIX CORE. ESTABLISHED 2024.
+          </p>
+          <div className="flex items-center gap-8 text-[10px] font-black text-white/20 uppercase tracking-widest">
+             <span>Security Verified</span>
+             <span>Encrypted Tunnel</span>
+          </div>
         </div>
       </footer>
     </div>
