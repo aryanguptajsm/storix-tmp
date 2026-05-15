@@ -244,9 +244,9 @@ export default function LandingPage() {
 
                         <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-2 gap-4 flex-1 h-full min-h-[400px]">
                           {[
-                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop", image: "/demo/macbook.jpg", className: "col-span-2 row-span-2", imgClass: "scale-100 group-hover:scale-105" },
-                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio", image: "/demo/headphones.jpg", className: "col-span-1 row-span-1 hidden md:flex", imgClass: "scale-90 group-hover:scale-100" },
-                            { title: "DJI Osmo Pocket 3", price: "$519.00", badge: "Camera", image: "/demo/camera.jpg", className: "col-span-1 row-span-1 hidden md:flex", imgClass: "scale-90 group-hover:scale-100" }
+                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop", image: "/demo/macbook.jpg", className: "col-span-2 md:col-span-2 row-span-2", imgClass: "scale-100 group-hover:scale-105" },
+                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio", image: "/demo/headphones.jpg", className: "col-span-1 md:col-span-1 row-span-1", imgClass: "scale-90 group-hover:scale-100" },
+                            { title: "DJI Osmo Pocket 3", price: "$519.00", badge: "Camera", image: "/demo/camera.jpg", className: "col-span-1 md:col-span-1 row-span-1", imgClass: "scale-90 group-hover:scale-100" }
                           ].map((item, i) => (
                             <motion.div
                               key={i}
