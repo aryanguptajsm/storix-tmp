@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import {
   ArrowRight,
@@ -47,7 +48,7 @@ const planStyles: Record<
 > = {
   free: {
     accent: "text-slate-300",
-    card: "bg-[#07090C]/80 border border-white/8",
+    card: "bg-[#07090C]/80",
     badge: "border-white/20 text-white/80",
     icon: "bg-white/5 border-white/8",
     button: "bg-white/8 text-white hover:bg-white hover:text-black border border-white/10",
@@ -55,7 +56,7 @@ const planStyles: Record<
   },
   pro: {
     accent: "text-white",
-    card: "bg-[#060708] border border-white/10 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.45)]",
+    card: "bg-[#060708]",
     badge: "border-white/70 text-white",
     icon: "bg-white/[0.02] border-white/10",
     button: "bg-white text-black hover:bg-white/90",
@@ -63,7 +64,7 @@ const planStyles: Record<
   },
   business: {
     accent: "text-white",
-    card: "bg-[#050607] border border-white/10 shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.45)]",
+    card: "bg-[#050607]",
     badge: "border-white/70 text-white",
     icon: "bg-white/[0.02] border-white/10",
     button: "bg-white text-black hover:bg-white/90",
@@ -145,9 +146,15 @@ export function PublicPricingSection({
     <section id={id} className={className}>
       <div className="max-w-7xl mx-auto">
         {(eyebrow || title || description) && (
-          <div className="max-w-3xl mx-auto text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-3xl mx-auto text-center mb-16"
+          >
             {eyebrow && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 mb-6 shadow-xl backdrop-blur-sm">
                 <Shield size={14} className="text-white/70" />
                 <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/50">
                   {eyebrow}
@@ -164,26 +171,37 @@ export function PublicPricingSection({
                 {description}
               </p>
             )}
-          </div>
+          </motion.div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-[0.84fr_1fr_1fr] gap-8 items-stretch">
-          {(["free", "pro", "business"] as PlanId[]).map((planId) => {
+          {(["free", "pro", "business"] as PlanId[]).map((planId, index) => {
             const plan = PLANS[planId];
             const meta = PLAN_PRESENTATION[planId];
             const style = planStyles[planId];
             const isPaid = planId !== "free";
 
             return (
-              <div
+              <motion.div
                 key={planId}
-                className={`group relative overflow-hidden rounded-[2.4rem] ${style.card} ${
-                  planId === "free" ? "lg:scale-[0.96] lg:origin-bottom" : ""
-                }`}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: planId === "free" ? 0.96 : 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className={`group relative overflow-hidden rounded-[2.4rem] p-[1px] bg-gradient-to-b from-white/20 to-white/5 ${
+                  planId === "free" ? "lg:origin-bottom" : ""
+                } hover:-translate-y-2 transition-transform duration-500 hover:shadow-[0_20px_80px_rgba(16,185,129,0.15)]`}
               >
-                <div
-                  className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${style.panel} opacity-80`}
-                />
+                {/* Animated Cool Border (Conic Spin) for paid plans */}
+                {isPaid && (
+                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(16,185,129,0.8)_360deg)] animate-[spin_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                )}
+
+                {/* Inner Card content container to act as the mask for the border */}
+                <div className={`relative h-full w-full rounded-[calc(2.4rem-1px)] overflow-hidden flex flex-col ${style.card} ${isPaid ? 'shadow-[inset_0_0_40px_rgba(255,255,255,0.02)]' : ''}`}>
+                  <div
+                    className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${style.panel} opacity-80 z-0`}
+                  />
 
                 {meta.badge && (
                   <div className="absolute right-8 top-7 z-20">
@@ -279,7 +297,7 @@ export function PublicPricingSection({
                     </button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
