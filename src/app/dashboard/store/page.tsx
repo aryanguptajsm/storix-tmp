@@ -39,10 +39,13 @@ export default function StoreManagementPage() {
     store_description: "",
     store_logo: "",
     theme: "default",
+    store_banners: [] as string[],
   });
   
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const bannerInputRef = React.useRef<HTMLInputElement>(null);
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -82,6 +85,62 @@ export default function StoreManagementPage() {
     }
   }
 
+  async function handleBannerUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (formData.store_banners.length + files.length > 10) {
+      toast.error("You can only upload up to 10 banner items.");
+      return;
+    }
+
+    setUploadingBanner(true);
+    try {
+      const user = await getUser();
+      if (!user) throw new Error("Authentication failed.");
+
+      const newBanners = [...formData.store_banners];
+      
+      // Upload sequentially for simplicity, could do Promise.all
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+           toast.error(`File ${file.name} is not an image or video.`);
+           continue;
+        }
+        if (file.type.startsWith("video/") && file.size > 20 * 1024 * 1024) {
+           toast.error(`Video ${file.name} exceeds 20MB limit.`);
+           continue;
+        }
+
+        const fileExt = file.name.split(".").pop();
+        const fileName = `${user.id}/banners/${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `banners/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("product-images")
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from("product-images")
+          .getPublicUrl(filePath);
+
+        newBanners.push(publicUrl);
+      }
+
+      setFormData(prev => ({ ...prev, store_banners: newBanners }));
+      toast.success("Banner media uploaded successfully!");
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      toast.error(err.message || "Failed to upload banner.");
+    } finally {
+      setUploadingBanner(false);
+      if (bannerInputRef.current) bannerInputRef.current.value = "";
+    }
+  }
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
@@ -112,6 +171,7 @@ export default function StoreManagementPage() {
             store_description: profile.store_description || "",
             store_logo: profile.store_logo || "",
             theme: (profile.theme as any) || "default",
+            store_banners: profile.store_banners || [],
           });
         }
       } catch (err) {
@@ -180,6 +240,7 @@ export default function StoreManagementPage() {
         store_description: formData.store_description.trim(),
         store_logo: formData.store_logo.trim(),
         theme: formData.theme,
+        store_banners: formData.store_banners,
       });
       
       // Update local state to reflect new username
@@ -363,6 +424,67 @@ export default function StoreManagementPage() {
                           <Upload className="w-5 h-5" />
                         </div>
                         <span className="text-xs font-black uppercase tracking-widest">Drag & Drop or Click</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Banner Media Section */}
+                <div className="space-y-4 border-t border-white/5 pt-8">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-white">Banner Media</h4>
+                      <p className="text-[10px] text-white/40 font-medium mt-0.5">Upload up to 10 images or videos for your storefront carousel. (Max 20MB for video)</p>
+                    </div>
+                    <span className="text-xs font-bold text-white/30">{formData.store_banners.length} / 10</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {formData.store_banners.map((url, idx) => {
+                      const isVideo = url.match(/\.(mp4|webm|ogg)(\?|$)/i);
+                      return (
+                        <div key={idx} className="relative aspect-[16/9] md:aspect-[4/3] rounded-xl overflow-hidden border border-white/10 group bg-white/5">
+                          {isVideo ? (
+                            <video src={url} className="w-full h-full object-cover" muted playsInline />
+                          ) : (
+                            <img src={url} alt={`Banner ${idx}`} className="w-full h-full object-cover" />
+                          )}
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button
+                              type="button"
+                              onClick={() => setFormData(prev => ({ ...prev, store_banners: prev.store_banners.filter((_, i) => i !== idx) }))}
+                              className="p-2 bg-danger/20 text-danger rounded-lg hover:bg-danger hover:text-white transition-colors"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {formData.store_banners.length < 10 && (
+                      <div
+                        onClick={() => !uploadingBanner && bannerInputRef.current?.click()}
+                        className={`relative aspect-[16/9] md:aspect-[4/3] rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-colors ${
+                          uploadingBanner ? "border-primary/50 bg-primary/5 text-primary" : "border-white/10 bg-white/[0.02] hover:border-primary/40 hover:bg-white/[0.04] text-white/40 hover:text-primary"
+                        }`}
+                      >
+                        <input
+                          type="file"
+                          ref={bannerInputRef}
+                          className="hidden"
+                          accept="image/*,video/mp4,video/webm"
+                          multiple
+                          onChange={handleBannerUpload}
+                        />
+                        {uploadingBanner ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>
+                            <Upload className="w-5 h-5 mb-2" />
+                            <span className="text-[10px] font-black uppercase">Add Media</span>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
