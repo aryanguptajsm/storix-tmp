@@ -146,7 +146,7 @@ export function PublicPricingSection({
     <section id={id} className={className}>
       <div className="max-w-7xl mx-auto">
         {(eyebrow || title || description) && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -188,115 +188,114 @@ export function PublicPricingSection({
                 whileInView={{ opacity: 1, y: 0, scale: planId === "free" ? 0.96 : 1 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className={`group relative overflow-hidden rounded-[2.4rem] p-[1px] bg-gradient-to-b from-white/20 to-white/5 ${
-                  planId === "free" ? "lg:origin-bottom" : ""
-                } hover:-translate-y-2 transition-transform duration-500 hover:shadow-[0_20px_80px_rgba(16,185,129,0.15)]`}
+                className={`group relative overflow-hidden rounded-[2.4rem] p-[1px] bg-gradient-to-b from-white/20 to-white/5 ${planId === "free" ? "lg:origin-bottom" : ""
+                  } hover:-translate-y-2 transition-transform duration-500 hover:shadow-[0_20px_80px_rgba(16,185,129,0.15)]`}
               >
                 {/* Animated Cool Border (Conic Spin) for paid plans */}
                 {isPaid && (
-                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(16,185,129,0.8)_360deg)] animate-[spin_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(16,185,129,0.8)_360deg)] animate-[spin_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 )}
 
                 {/* Inner Card content container to act as the mask for the border */}
                 <div className={`relative h-full w-full rounded-[calc(2.4rem-1px)] overflow-hidden flex flex-col ${style.card} ${isPaid ? 'shadow-[inset_0_0_40px_rgba(255,255,255,0.02)]' : ''}`}>
-                  <div
-                    className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${style.panel} opacity-80 z-0`}
+
+                  <div className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${style.panel} opacity-80 z-0`}
                   />
 
-                {meta.badge && (
-                  <div className="absolute right-8 top-7 z-20">
-                    <span
-                      className={`inline-flex items-center rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] ${style.badge}`}
-                    >
-                      {meta.badge}
-                    </span>
-                  </div>
-                )}
-
-                <div className="relative z-10 flex h-full flex-col p-8 md:p-10">
-                  <div className="mb-10 flex items-start gap-4 pr-28">
-                    <div
-                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border ${style.icon} ${style.accent}`}
-                    >
-                      {planIcons[planId]}
+                  {meta.badge && (
+                    <div className="absolute right-8 top-7 z-20">
+                      <span
+                        className={`inline-flex items-center rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] ${style.badge}`}
+                      >
+                        {meta.badge}
+                      </span>
                     </div>
-                    <div>
-                      <h3 className="text-3xl font-black tracking-tight text-white">
-                        {plan.name}
-                      </h3>
-                      <p className="mt-1 text-[11px] font-black uppercase tracking-[0.22em] text-white/35">
-                        {meta.tier}
+                  )}
+
+                  <div className="relative z-10 flex h-full flex-col p-8 md:p-10">
+                    <div className="mb-10 flex items-start gap-4 pr-28">
+                      <div
+                        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border ${style.icon} ${style.accent}`}
+                      >
+                        {planIcons[planId]}
+                      </div>
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight text-white">
+                          {plan.name}
+                        </h3>
+                        <p className="mt-1 text-[11px] font-black uppercase tracking-[0.22em] text-white/35">
+                          {meta.tier}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mb-4 flex items-end gap-1 text-white">
+                      <span className="text-2xl font-black tracking-tight">
+                        {plan.symbol}
+                      </span>
+                      <span className="text-6xl md:text-7xl font-black tracking-[-0.06em] leading-none">
+                        {plan.priceDisplay.replace(plan.symbol, "")}
+                      </span>
+                      {isPaid && (
+                        <span className="mb-2 ml-1 text-2xl font-bold text-white/45">
+                          /mo
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="mb-10 max-w-sm text-base text-white/32 leading-relaxed">
+                      {plan.description}
+                    </p>
+
+                    <div className="mb-7">
+                      <p className="text-[11px] font-black uppercase tracking-[0.28em] text-white/28">
+                        Includes:
                       </p>
                     </div>
-                  </div>
 
-                  <div className="mb-4 flex items-end gap-1 text-white">
-                    <span className="text-2xl font-black tracking-tight">
-                      {plan.symbol}
-                    </span>
-                    <span className="text-6xl md:text-7xl font-black tracking-[-0.06em] leading-none">
-                      {plan.priceDisplay.replace(plan.symbol, "")}
-                    </span>
-                    {isPaid && (
-                      <span className="mb-2 ml-1 text-2xl font-bold text-white/45">
-                        /mo
-                      </span>
-                    )}
-                  </div>
+                    <ul className="mb-10 space-y-4 flex-1">
+                      {plan.features.map((feature) => (
+                        <li
+                          key={feature}
+                          className="flex items-start gap-3 text-sm text-white/65"
+                        >
+                          <Check
+                            size={14}
+                            className="mt-1 shrink-0 text-white/80"
+                            strokeWidth={3}
+                          />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
 
-                  <p className="mb-10 max-w-sm text-base text-white/32 leading-relaxed">
-                    {plan.description}
-                  </p>
-
-                  <div className="mb-7">
-                    <p className="text-[11px] font-black uppercase tracking-[0.28em] text-white/28">
-                      Includes:
-                    </p>
-                  </div>
-
-                  <ul className="mb-10 space-y-4 flex-1">
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-start gap-3 text-sm text-white/65"
-                      >
-                        <Check
-                          size={14}
-                          className="mt-1 shrink-0 text-white/80"
-                          strokeWidth={3}
-                        />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {planId === "free" ? (
-                    <Link href="/signup" className="mt-auto">
-                      <Button
-                        className={`h-14 w-full rounded-2xl text-[11px] font-black uppercase tracking-[0.22em] ${style.button}`}
-                      >
-                        {meta.cta}
-                        <ArrowRight size={16} className="ml-2" />
-                      </Button>
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => handleCheckout(planId)}
-                      disabled={loadingPlan === planId}
-                      className={`mt-auto flex h-14 w-full items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-[0.22em] transition-all ${style.button} disabled:opacity-70`}
-                    >
-                      {loadingPlan === planId ? (
-                        <Loader2 size={18} className="animate-spin" />
-                      ) : (
-                        <>
+                    {planId === "free" ? (
+                      <Link href="/signup" className="mt-auto">
+                        <Button
+                          className={`h-14 w-full rounded-2xl text-[11px] font-black uppercase tracking-[0.22em] ${style.button}`}
+                        >
                           {meta.cta}
                           <ArrowRight size={16} className="ml-2" />
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
+                        </Button>
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleCheckout(planId)}
+                        disabled={loadingPlan === planId}
+                        className={`mt-auto flex h-14 w-full items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-[0.22em] transition-all ${style.button} disabled:opacity-70`}
+                      >
+                        {loadingPlan === planId ? (
+                          <Loader2 size={18} className="animate-spin" />
+                        ) : (
+                          <>
+                            {meta.cta}
+                            <ArrowRight size={16} className="ml-2" />
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
               </motion.div>
             );
           })}
