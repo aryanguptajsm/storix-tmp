@@ -5,6 +5,7 @@ export interface UserProfile {
   store_name: string;
   store_description?: string;
   store_logo?: string | null;
+  store_banners?: string[];
 
   avatar_url?: string | null;
   theme?: string;
