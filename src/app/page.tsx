@@ -242,28 +242,33 @@ export default function LandingPage() {
                           <Zap className="text-emerald-400/40" size={20} />
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4 flex-1">
+                        <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-2 gap-4 flex-1 h-full min-h-[400px]">
                           {[
-                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio", image: "/demo/headphones.jpg" },
-                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop", image: "/demo/macbook.jpg" },
-                            { title: "DJI Osmo Pocket 3", price: "$519.00", badge: "Camera", image: "/demo/camera.jpg" }
+                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop", image: "/demo/macbook.jpg", className: "col-span-2 row-span-2", imgClass: "scale-100 group-hover:scale-105" },
+                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio", image: "/demo/headphones.jpg", className: "col-span-1 row-span-1 hidden md:flex", imgClass: "scale-90 group-hover:scale-100" },
+                            { title: "DJI Osmo Pocket 3", price: "$519.00", badge: "Camera", image: "/demo/camera.jpg", className: "col-span-1 row-span-1 hidden md:flex", imgClass: "scale-90 group-hover:scale-100" }
                           ].map((item, i) => (
                             <motion.div
                               key={i}
-                              className="relative rounded-3xl bg-[#0A0A0E] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all duration-500 cursor-pointer"
+                              className={`relative rounded-3xl bg-[#0A0A0E] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all duration-500 cursor-pointer ${item.className}`}
                             >
-                              <div className="relative aspect-square p-6 overflow-hidden flex items-center justify-center bg-gradient-to-br from-white/[0.03] to-transparent border-b border-white/[0.05]">
-                                <img src={item.image} alt={item.title} className="object-contain w-full h-full drop-shadow-2xl group-hover:scale-110 group-hover:rotate-2 transition-transform duration-700 ease-out" />
-                                <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md border border-white/10">
-                                  <span className="text-[8px] font-black uppercase tracking-widest text-white/70">{item.badge}</span>
+                              <div className="relative flex-1 overflow-hidden flex items-center justify-center bg-zinc-100 border-b border-white/[0.05] p-6">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-0" />
+                                <img 
+                                  src={item.image} 
+                                  alt={item.title} 
+                                  className={`object-contain w-full h-full mix-blend-multiply drop-shadow-xl transition-transform duration-700 ease-out relative z-10 ${item.imgClass}`} 
+                                />
+                                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-white/10 z-20 shadow-xl">
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-white/90">{item.badge}</span>
                                 </div>
                               </div>
-                              <div className="relative z-20 space-y-3 bg-[#0A0A0E] p-4">
-                                <h5 className="font-bold text-white text-sm tracking-tight">{item.title}</h5>
+                              <div className="relative z-20 flex flex-col justify-end bg-[#0A0A0E] p-4 md:p-5">
+                                <h5 className="font-bold text-white text-sm md:text-base tracking-tight mb-1">{item.title}</h5>
                                 <div className="flex items-center justify-between">
-                                  <div className="text-[11px] text-emerald-400 font-bold">{item.price}</div>
-                                  <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-emerald-500/20 group-hover:text-emerald-400 transition-colors">
-                                    <ArrowUpRight size={12} className="text-white/40 group-hover:text-emerald-400 transition-colors" />
+                                  <div className="text-xs md:text-sm text-emerald-400 font-bold">{item.price}</div>
+                                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-emerald-500/20 group-hover:text-emerald-400 transition-colors">
+                                    <ArrowUpRight size={14} className="text-white/40 group-hover:text-emerald-400 transition-colors" />
                                   </div>
                                 </div>
                               </div>
