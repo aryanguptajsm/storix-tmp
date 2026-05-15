@@ -84,36 +84,62 @@ export function Sidebar() {
   const nav = (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Brand Header */}
-      <div className="p-8 pb-6 flex items-center gap-4">
-        <div className="relative group">
-          <div className="absolute -inset-2 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
-          <div className="relative w-11 h-11 rounded-2xl gradient-primary flex items-center justify-center shadow-xl shadow-primary/20 border border-white/20">
-            <Sparkles className="w-6 h-6 text-white animate-pulse" />
+      <div className="p-8 pb-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="relative group">
+            <div className="absolute -inset-2 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
+            <div className="relative w-11 h-11 rounded-2xl gradient-primary flex items-center justify-center shadow-xl shadow-primary/20 border border-white/20">
+              <Sparkles className="w-6 h-6 text-white animate-pulse" />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-2xl font-black tracking-tighter leading-none bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+              Storix
+            </span>
+            <span className="text-[10px] text-primary/60 font-black uppercase tracking-[0.3em] mt-1">Dashboard</span>
           </div>
         </div>
-        <div className="flex flex-col">
-          <span className="text-2xl font-black tracking-tighter leading-none bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-            Storix
-          </span>
-          <span className="text-[10px] text-primary/60 font-black uppercase tracking-[0.3em] mt-1">Dashboard</span>
-        </div>
+        
+        {/* Small Close Button (Mobile Only) */}
+        <button 
+          onClick={() => setMobileOpen(false)}
+          className="lg:hidden w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+        >
+          <X size={14} />
+        </button>
       </div>
 
       {/* Nav Sections */}
       <div className="flex-1 px-4 space-y-8 overflow-y-auto no-scrollbar py-4">
-        {navSections.map((section) => (
-          <div key={section.title}>
+        {navSections.map((section, sectionIdx) => (
+          <motion.div 
+            key={section.title}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: sectionIdx * 0.1, duration: 0.5, ease: "easeOut" }}
+          >
             <h4 className="px-4 text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-4">
               {section.title}
             </h4>
             <nav className="space-y-1">
-              {section.items.map((item) => {
+              {section.items.map((item, itemIdx) => {
                 const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
                 const plan = normalizePlanId(profile?.plan);
                 const isLocked = item.tier === "business" && plan !== "business";
+                
+                // Hide Global Bulk entirely for free users
+                if (item.label === "Global Bulk" && plan === "free") {
+                  return null;
+                }
 
                 return (
-                  <Link
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: sectionIdx * 0.1 + itemIdx * 0.05 + 0.2, duration: 0.4 }}
+                  >
+                    <Link
                     key={item.href}
                     href={isLocked ? "/dashboard/billing" : item.href}
                     onClick={() => setMobileOpen(false)}
@@ -142,11 +168,12 @@ export function Sidebar() {
                     ) : (
                       isActive && <ChevronRight size={14} className="relative z-10 text-primary/40" />
                     )}
-                  </Link>
+                    </Link>
+                  </motion.div>
                 );
               })}
             </nav>
-          </div>
+          </motion.div>
         ))}
       </div>
 
