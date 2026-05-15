@@ -52,7 +52,7 @@ export function safeCompare(a: string, b: string): boolean {
  * Returns true if request is allowed; false if rate-limited.
  */
 export async function checkRateLimit(
-  supabaseAdmin: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+  supabaseAdmin: any,
   identifier: string,
   action: string,
   maxAttempts: number,
@@ -93,7 +93,7 @@ export async function checkRateLimit(
  * Writes an audit log entry.
  */
 export async function writeAuditLog(
-  supabaseAdmin: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+  supabaseAdmin: any,
   params: {
     userId?: string;
     action: string;

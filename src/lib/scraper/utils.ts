@@ -242,7 +242,7 @@ export function mergeAccumulators(
 
 export function deriveScrapeStatus(acc: ExtractionAccumulator): "success" | "partial" | "failed" {
   const hasTitle = Boolean(acc.product_title && acc.product_title !== "Unknown Product");
-  const hasImage = Boolean(acc.thumbnail || (acc.images && acc.images.length > 0));
+  const hasImage = Boolean(acc.image_url || (acc.images && acc.images.length > 0));
   const hasPrice = Boolean(acc.price);
 
   if (hasTitle && hasImage && hasPrice) return "success";
