@@ -6,6 +6,8 @@ import {
   ArrowUp,
   ShieldCheck,
   Zap,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,6 +34,7 @@ interface Profile {
   theme?: string | null;
   store_logo?: string | null;
   plan?: string | null;
+  store_banners?: string[] | null;
 }
 
 interface StoreViewProps {
@@ -43,6 +46,16 @@ export function StoreView({ profile, products }: StoreViewProps) {
   const [showBackToTop, setShowBackToTop] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("All Items");
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [currentBannerIndex, setCurrentBannerIndex] = React.useState(0);
+  const banners = profile.store_banners || [];
+
+  React.useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [banners.length]);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -108,53 +121,131 @@ export function StoreView({ profile, products }: StoreViewProps) {
 
         <main className="pt-28 md:pt-36">
           {/* ─── Retail Banner Section ─── */}
-          <section className="px-3 md:px-8 mb-8 md:mb-12">
-            <div className="max-w-[1400px] mx-auto">
-               <div className="relative h-[260px] sm:h-[300px] md:h-[450px] rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0E] border border-white/10 group shadow-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-10" />
-                  <div className="absolute inset-0 mesh-layered opacity-30" />
-                  
-                  {/* Banner Content */}
-                  <div className="relative z-20 h-full flex flex-col justify-center px-6 sm:px-10 md:px-16 max-w-2xl">
-                    <motion.div 
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="bg-[var(--store-primary)] text-white text-[10px] md:text-xs font-black uppercase tracking-[0.3em] px-3 py-1 rounded-sm w-fit mb-4"
-                    >
-                      Featured Collection
-                    </motion.div>
-                    <motion.h1 
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 }}
-                      className="text-2xl sm:text-4xl md:text-7xl font-black text-white tracking-tighter mb-3 md:mb-6 leading-[0.95]"
-                    >
-                      Premier <br className="sm:hidden" />Selection.
-                    </motion.h1>
-                    <motion.p 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.5 }}
-                      transition={{ delay: 0.2 }}
-                      className="text-xs md:text-lg text-[var(--store-foreground)] mb-6 md:mb-10 font-medium"
-                    >
-                      {profile.store_description || "Premium products curated for quality and price."}
-                    </motion.p>
-                    <Link href="#products">
-                      <Button className="h-10 md:h-12 px-8 rounded-sm bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-white/90">
-                        Shop Now
-                      </Button>
-                    </Link>
-                  </div>
+           <section className="px-3 md:px-8 mb-8 md:mb-12">
+             <div className="max-w-[1400px] mx-auto">
+                <div className="relative h-[260px] sm:h-[300px] md:h-[450px] rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0E] border border-white/10 group shadow-2xl">
+                  {banners.length > 0 ? (
+                    <>
+                      {banners.map((url, idx) => {
+                        const isVideo = url.match(/\.(mp4|webm|ogg)(\?|$)/i);
+                        return (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: currentBannerIndex === idx ? 1 : 0 }}
+                            transition={{ duration: 0.8 }}
+                            className="absolute inset-0 z-0"
+                            style={{ pointerEvents: currentBannerIndex === idx ? "auto" : "none" }}
+                          >
+                            {isVideo ? (
+                              <video src={url} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+                            ) : (
+                              <img src={url} alt="Store Banner" className="w-full h-full object-cover" />
+                            )}
+                          </motion.div>
+                        );
+                      })}
+                      {/* Gradient overlay to ensure text is always legible */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                      
+                      {banners.length > 1 && (
+                        <>
+                          <button
+                            onClick={(e) => { e.preventDefault(); setCurrentBannerIndex((prev) => (prev - 1 + banners.length) % banners.length); }}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 border border-white/10 text-white flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60"
+                          >
+                            <ChevronLeft size={20} />
+                          </button>
+                          <button
+                            onClick={(e) => { e.preventDefault(); setCurrentBannerIndex((prev) => (prev + 1) % banners.length); }}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 border border-white/10 text-white flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60"
+                          >
+                            <ChevronRight size={20} />
+                          </button>
+                          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+                            {banners.map((_, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => setCurrentBannerIndex(idx)}
+                                className={`w-2 h-2 rounded-full transition-all ${currentBannerIndex === idx ? "bg-white w-6" : "bg-white/40 hover:bg-white/60"}`}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                      
+                      {/* Store Details Overlay on Banner */}
+                      <div className="absolute bottom-0 left-0 w-full z-20 p-6 md:p-10 md:px-16 max-w-3xl">
+                        <motion.h1 
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tighter mb-2 md:mb-4 leading-tight drop-shadow-xl"
+                        >
+                          {profile.store_name}
+                        </motion.h1>
+                        <motion.p 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 0.9 }}
+                          transition={{ delay: 0.1 }}
+                          className="text-xs md:text-base text-white/90 mb-4 md:mb-6 font-medium line-clamp-2 drop-shadow-md"
+                        >
+                          {profile.store_description || "Welcome to our premium storefront."}
+                        </motion.p>
+                        <Link href="#products">
+                          <Button className="h-10 px-8 rounded-sm bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-white/90 shadow-2xl">
+                            Shop Collection
+                          </Button>
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-10" />
+                      <div className="absolute inset-0 mesh-layered opacity-30" />
+                      
+                      {/* Banner Content */}
+                      <div className="relative z-20 h-full flex flex-col justify-center px-6 sm:px-10 md:px-16 max-w-2xl">
+                        <motion.div 
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="bg-[var(--store-primary)] text-white text-[10px] md:text-xs font-black uppercase tracking-[0.3em] px-3 py-1 rounded-sm w-fit mb-4"
+                        >
+                          Featured Collection
+                        </motion.div>
+                        <motion.h1 
+                          initial={{ opacity: 0, x: -30 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 }}
+                          className="text-2xl sm:text-4xl md:text-7xl font-black text-white tracking-tighter mb-3 md:mb-6 leading-[0.95]"
+                        >
+                          Premier <br className="sm:hidden" />Selection.
+                        </motion.h1>
+                        <motion.p 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 0.5 }}
+                          transition={{ delay: 0.2 }}
+                          className="text-xs md:text-lg text-[var(--store-foreground)] mb-6 md:mb-10 font-medium"
+                        >
+                          {profile.store_description || "Premium products curated for quality and price."}
+                        </motion.p>
+                        <Link href="#products">
+                          <Button className="h-10 md:h-12 px-8 rounded-sm bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-white/90">
+                            Shop Now
+                          </Button>
+                        </Link>
+                      </div>
 
-                  {/* Visual Element */}
-                  <div className="absolute top-0 right-0 w-1/2 h-full hidden md:block">
-                     <div className="absolute inset-0 bg-gradient-to-l from-black to-transparent z-10" />
-                     <div className="absolute bottom-0 right-10 w-64 h-64 bg-[var(--store-primary)]/20 rounded-full blur-[100px]" />
-                     <ShoppingBag size={300} className="absolute top-1/2 right-10 -translate-y-1/2 text-white/[0.03] rotate-12" />
-                  </div>
-               </div>
-            </div>
-          </section>
+                      {/* Visual Element */}
+                      <div className="absolute top-0 right-0 w-1/2 h-full hidden md:block">
+                         <div className="absolute inset-0 bg-gradient-to-l from-black to-transparent z-10" />
+                         <div className="absolute bottom-0 right-10 w-64 h-64 bg-[var(--store-primary)]/20 rounded-full blur-[100px]" />
+                         <ShoppingBag size={300} className="absolute top-1/2 right-10 -translate-y-1/2 text-white/[0.03] rotate-12" />
+                      </div>
+                    </>
+                  )}
+                </div>
+             </div>
+           </section>
 
           {/* ─── Main Content Grid ─── */}
           <section id="products" className="px-3 md:px-8 pb-32">
