@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     theme TEXT DEFAULT 'default',
     plan TEXT DEFAULT 'free',
     subscription_id TEXT,
+    store_banners TEXT[] DEFAULT '{}',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
