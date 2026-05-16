@@ -84,7 +84,7 @@ export function Sidebar() {
   const nav = (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Brand Header */}
-      <div className="p-8 pb-6 flex items-center justify-between">
+      <div className="p-8 pb-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
           <div className="relative group">
             <div className="absolute -inset-2 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
@@ -110,7 +110,7 @@ export function Sidebar() {
       </div>
 
       {/* Nav Sections */}
-      <div className="flex-1 px-4 space-y-8 overflow-y-auto no-scrollbar py-4">
+      <div className="flex-1 min-h-0 px-4 space-y-8 overflow-y-auto no-scrollbar py-4">
         {navSections.map((section, sectionIdx) => (
           <motion.div 
             key={section.title}
@@ -178,7 +178,7 @@ export function Sidebar() {
       </div>
 
       {/* Footer Widget */}
-      <div className="p-4 mt-auto">
+      <div className="p-4 mt-auto shrink-0">
         <div className="glass-premium rounded-[2rem] p-4 border border-white/5 shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
