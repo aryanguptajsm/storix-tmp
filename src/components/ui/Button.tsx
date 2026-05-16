@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost" | "danger" | "outline";
@@ -15,8 +16,23 @@ export function Button({
   loading = false,
   className = "",
   disabled,
+  onClick,
   ...props
 }: ButtonProps) {
+  const [ripples, setRipples] = useState<{ x: number; y: number; size: number; id: number }[]>([]);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const newRipple = { x, y, size, id: Date.now() };
+    setRipples((prev) => [...prev, newRipple]);
+
+    if (onClick) onClick(e);
+  };
+
   const base =
     "relative inline-flex items-center justify-center gap-2 font-bold rounded-3xl transition-colors duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary/40 overflow-hidden";
 
@@ -53,15 +69,40 @@ export function Button({
       transition={springTransition}
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={disabled || loading}
-      {...(props as any)}
-    >
+      {/* Ripple Effect */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[inherit] z-0">
+        <AnimatePresence>
+          {ripples.map((ripple) => (
+            <motion.span
+              key={ripple.id}
+              initial={{ scale: 0, opacity: 0.5 }}
+              animate={{ scale: 2.5, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              onAnimationComplete={() => {
+                setRipples((prev) => prev.filter((r) => r.id !== ripple.id));
+              }}
+              className="absolute bg-white/30 rounded-full"
+              style={{
+                left: ripple.x,
+                top: ripple.y,
+                width: ripple.size,
+                height: ripple.size,
+                x: "-50%",
+                y: "-50%",
+              }}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+
       {/* Light Sweep Effect for Primary */}
       {variant === "primary" && !disabled && (
         <motion.span
           initial={{ x: "-100%" }}
           whileHover={{ x: "100%" }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] pointer-events-none"
+          className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] pointer-events-none z-0"
         />
       )}
 
