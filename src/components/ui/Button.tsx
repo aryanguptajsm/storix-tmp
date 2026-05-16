@@ -69,6 +69,9 @@ export function Button({
       transition={springTransition}
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={disabled || loading}
+      onClick={handleClick}
+      {...(props as any)}
+    >
       {/* Ripple Effect */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[inherit] z-0">
         <AnimatePresence>
@@ -108,7 +111,7 @@ export function Button({
 
       {loading ? (
         <svg
-          className="animate-spin h-4 w-4"
+          className="animate-spin h-4 w-4 relative z-10"
           viewBox="0 0 24 24"
           fill="none"
         >
