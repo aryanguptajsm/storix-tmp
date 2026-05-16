@@ -159,7 +159,7 @@ export const PLAN_PRESENTATION: Record<PlanId, PlanPresentation> = {
   },
 };
 
-export const PREMIUM_THEMES = ['midnight', 'neon', 'gradient', 'tokyo', 'ocean', 'sunset', 'monochrome', 'amazon', 'flipkart'];
+export const PREMIUM_THEMES = ['midnight', 'neon', 'gradient', 'tokyo', 'ocean', 'cyberpunk', 'sunset', 'monochrome', 'amazon', 'flipkart'];
 
 export function getPlan(planId: string | null | undefined): Plan {
   if (planId && planId in PLANS) {

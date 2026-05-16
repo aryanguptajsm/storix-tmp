@@ -627,6 +627,41 @@ h1, h2, h3, h4, h5, h6 {
   color: white !important;
 }
 
+[data-theme='cyberpunk'] {
+  --store-primary: #FF00E6;
+  --store-primary-rgb: 255, 0, 230;
+  --store-background: #0B0B13;
+  --store-foreground: #FFFFFF;
+  --store-card: #151522;
+  --store-border: rgba(255, 0, 230, 0.2);
+}
+
+[data-theme='cyberpunk'] .glass,
+[data-theme='cyberpunk'] .glass-morphism,
+[data-theme='cyberpunk'] .glass-morphism-premium {
+  background: rgba(21, 21, 34, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 0, 230, 0.2) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 230, 0.1) !important;
+}
+
+[data-theme='ocean'] {
+  --store-primary: #00E5FF;
+  --store-primary-rgb: 0, 229, 255;
+  --store-background: #000B18;
+  --store-foreground: #E0F7FA;
+  --store-card: #001833;
+  --store-border: rgba(0, 229, 255, 0.15);
+}
+
+[data-theme='ocean'] .glass,
+[data-theme='ocean'] .glass-morphism,
+[data-theme='ocean'] .glass-morphism-premium {
+  background: rgba(0, 24, 51, 0.7) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(0, 229, 255, 0.15) !important;
+}
+
 /* ─── Grid Pattern Background ─── */
 .grid-pattern {
   background-image:
