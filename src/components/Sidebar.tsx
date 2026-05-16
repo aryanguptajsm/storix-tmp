@@ -19,6 +19,8 @@ import {
   LayoutGrid,
   Layers,
   ChevronRight,
+  Crown,
+  Zap,
 } from "lucide-react";
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
@@ -183,21 +185,60 @@ export function Sidebar() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
           {user && (
-            <div className="flex items-center gap-3 mb-4 p-2">
-              <div className="relative shrink-0">
-                <div className="w-10 h-10 rounded-xl gradient-accent p-[1px]">
-                  <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center text-sm font-black text-white">
-                    {profile?.store_name?.[0].toUpperCase() || user.email?.[0].toUpperCase()}
+            <div className="mb-4">
+              {/* User info row */}
+              <div className="flex items-center gap-3 p-2">
+                <div className="relative shrink-0">
+                  <div className="w-10 h-10 rounded-xl gradient-accent p-[1px]">
+                    <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center text-sm font-black text-white">
+                      {profile?.store_name?.[0].toUpperCase() || user.email?.[0].toUpperCase()}
+                    </div>
                   </div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-black rounded-full shadow-lg" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-black rounded-full shadow-lg" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[11px] font-black text-white truncate">{profile?.store_name || user.email}</span>
+                  <span className="text-[9px] text-primary font-black uppercase tracking-widest">
+                    {PLANS[normalizePlanId(profile?.plan)].name} Tier
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-[11px] font-black text-white truncate">{profile?.store_name || user.email}</span>
-                <span className="text-[9px] text-primary font-black uppercase tracking-widest">
-                  {PLANS[normalizePlanId(profile?.plan)].name} Tier
-                </span>
-              </div>
+
+              {/* Plan Badge */}
+              {(() => {
+                const plan = normalizePlanId(profile?.plan);
+                if (plan === "free") {
+                  return (
+                    <Link
+                      href="/dashboard/billing"
+                      className="group flex items-center justify-between mx-2 mt-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 hover:border-amber-500/40 transition-all"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Zap size={13} className="text-amber-400" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">Upgrade to Pro</span>
+                      </div>
+                      <ChevronRight size={12} className="text-amber-400/60 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  );
+                }
+                if (plan === "pro") {
+                  return (
+                    <div className="mx-2 mt-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-primary/15 to-emerald-500/10 border border-primary/30 flex items-center gap-2">
+                      <Crown size={13} className="text-primary" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-primary">Pro Plan Active</span>
+                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    </div>
+                  );
+                }
+                // business
+                return (
+                  <div className="mx-2 mt-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-violet-500/15 to-purple-500/10 border border-violet-500/30 flex items-center gap-2">
+                    <Crown size={13} className="text-violet-400" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-violet-400">Business Plan Active</span>
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                  </div>
+                );
+              })()}
             </div>
           )}
 
