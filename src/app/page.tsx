@@ -244,9 +244,9 @@ export default function LandingPage() {
 
                         <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-2 gap-4 flex-1 h-full min-h-[400px]">
                           {[
-                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop", image: "/demo/macbook.jpg", className: "col-span-2 md:col-span-2 row-span-2", imgClass: "scale-100 group-hover:scale-105" },
-                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio", image: "/demo/headphones.jpg", className: "col-span-1 md:col-span-1 row-span-1", imgClass: "scale-90 group-hover:scale-100" },
-                            { title: "DJI Osmo Pocket 3", price: "$519.00", badge: "Camera", image: "/demo/camera.jpg", className: "col-span-1 md:col-span-1 row-span-1", imgClass: "scale-90 group-hover:scale-100" }
+                            { title: "MacBook Pro M3 Max", price: "$3199.00", badge: "Laptop", image: "/demo/macbook.png", className: "col-span-2 md:col-span-2 row-span-2", imgClass: "scale-100 group-hover:scale-105" },
+                            { title: "Sony WH-1000XM5", price: "$348.00", badge: "Audio", image: "/demo/headphones.png", className: "col-span-1 md:col-span-1 row-span-1", imgClass: "scale-90 group-hover:scale-100" },
+                            { title: "DJI Osmo Pocket 3", price: "$519.00", badge: "Camera", image: "/demo/camera.png", className: "col-span-1 md:col-span-1 row-span-1", imgClass: "scale-90 group-hover:scale-100" }
                           ].map((item, i) => (
                             <motion.div
                               key={i}
@@ -257,8 +257,7 @@ export default function LandingPage() {
                                 <img 
                                   src={item.image} 
                                   alt={item.title} 
-                                  className={`object-contain w-full h-full mix-blend-screen transition-transform duration-700 ease-out relative z-10 ${item.imgClass}`} 
-                                  style={{ filter: "invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.2)" }}
+                                  className={`object-contain w-full h-full drop-shadow-2xl transition-transform duration-700 ease-out relative z-10 ${item.imgClass}`} 
                                 />
                                 <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-white/10 z-20 shadow-xl">
                                   <span className="text-[9px] font-black uppercase tracking-widest text-white/90">{item.badge}</span>
