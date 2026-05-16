@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Check, Lock, LayoutTemplate, Crown } from "lucide-react";
-import { getUser, getProfile, updateProfile } from "@/lib/supabase-client";
+import { getUser, getProfile, updateProfile } from "@/lib/auth";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";

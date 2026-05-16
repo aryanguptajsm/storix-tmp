@@ -15,11 +15,12 @@ import {
   Sparkles,
   Menu,
   X,
-  CreditCard,
   ChevronRight,
   Crown,
   Zap,
   Palette,
+  LayoutGrid,
+  Layers,
 } from "lucide-react";
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
@@ -50,7 +51,7 @@ const navSections = [
       { label: "Settings", href: "/dashboard/settings", icon: Settings },
     ]
   }
-];
+] as Array<{ title: string; items: Array<{ label: string; href: string; icon: any; tier?: string }> }>;
 
 export function Sidebar() {
   const pathname = usePathname();
