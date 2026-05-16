@@ -252,12 +252,13 @@ export default function LandingPage() {
                               key={i}
                               className={`relative rounded-3xl bg-[#0A0A0E] border border-white/[0.05] flex flex-col overflow-hidden group shadow-xl hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all duration-500 cursor-pointer ${item.className}`}
                             >
-                              <div className="relative flex-1 overflow-hidden flex items-center justify-center bg-zinc-100 border-b border-white/[0.05] p-6">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-0" />
+                              <div className="relative flex-1 overflow-hidden flex items-center justify-center bg-[#050508] border-b border-white/[0.05] p-6">
+                                <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/10 via-transparent to-transparent z-0" />
                                 <img 
                                   src={item.image} 
                                   alt={item.title} 
-                                  className={`object-contain w-full h-full mix-blend-multiply drop-shadow-xl transition-transform duration-700 ease-out relative z-10 ${item.imgClass}`} 
+                                  className={`object-contain w-full h-full mix-blend-screen transition-transform duration-700 ease-out relative z-10 ${item.imgClass}`} 
+                                  style={{ filter: "invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.2)" }}
                                 />
                                 <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-white/10 z-20 shadow-xl">
                                   <span className="text-[9px] font-black uppercase tracking-widest text-white/90">{item.badge}</span>
