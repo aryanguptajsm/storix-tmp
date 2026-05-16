@@ -21,6 +21,7 @@ import {
   Palette,
   LayoutGrid,
   Layers,
+  CreditCard,
 } from "lucide-react";
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
