@@ -16,11 +16,10 @@ import {
   Menu,
   X,
   CreditCard,
-  LayoutGrid,
-  Layers,
   ChevronRight,
   Crown,
   Zap,
+  Palette,
 } from "lucide-react";
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
@@ -47,6 +46,7 @@ const navSections = [
   {
     title: "Configuration",
     items: [
+      { label: "Templates", href: "/dashboard/templates", icon: Palette, tier: "pro" },
       { label: "Settings", href: "/dashboard/settings", icon: Settings },
     ]
   }
