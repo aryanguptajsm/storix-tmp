@@ -8,9 +8,12 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://dummy.supabase.co";
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy";
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       cookies: {
         getAll() {
